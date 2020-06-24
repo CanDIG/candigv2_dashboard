@@ -56,7 +56,7 @@ class Sidebar extends React.Component {
       >
         <div className="logo">
           <a
-            href="https://www.distributedgenomics.ca/"
+            href="/"
             className="simple-text logo-mini"
           >
             <div className="logo-img">
@@ -64,7 +64,7 @@ class Sidebar extends React.Component {
             </div>
           </a>
           <a
-            href="https://www.distributedgenomics.ca/"
+            href="/"
             className="simple-text logo-normal"
           >
             Dashboard

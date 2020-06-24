@@ -14,8 +14,8 @@ const DatasetsDropdown = (props) => {
 
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-      <DropdownToggle caret>
-        Datasets
+      <DropdownToggle caret nav>
+        Dataset
         </DropdownToggle>
       <DropdownMenu>
           {list}
