@@ -36,10 +36,7 @@ import {
   dashboardNASDAQChart,
 } from "variables/charts.js";
 
-import DatasetsDropdown from "views/Dropdown";
-
 const initialState = {
-  datasets: null,
   dataset: {
     provinces: 0,
     hospitals: 0,
@@ -56,25 +53,75 @@ class Dashboard extends React.Component {
     this.state = initialState
   }
 
-  componentDidMount(){
-    fetch(url + "/datasets/search", {
-      method:"post"})
-    .then(response => response.json())
-    .then(data => {
-      let datasets = {}
-      for(let i = 0; i < data.results.datasets.length; i++){
-        const ds = data.results.datasets[i]
-        datasets[i] = ds
-      }
-      this.setState({datasets: datasets})
+  componentDidMount() {
+    this.getCounters("WyJtb2NrMSJd", "enrollments", ["datasetId", "treatingCentreName", "treatingCentreProvince"])
+    this.getCounters("WyJtb2NrMSJd", "samples", ["datasetId"])
+  }
+
+
+  getCounters(dataset_id, table, fields) {
+    fetch(url + "/count", {
+      method: "post",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        dataset_id: dataset_id,
+        logic: {
+          id: "A"
+        },
+        components: [
+          {
+            id: "A",
+            enrollments: {}
+          }
+        ],
+        results: [
+          {
+            table: table,
+            fields: fields
+          }
+        ]
+      })
     })
+      .then(response => response.json())
+      .then(data => {
+        if (table === "enrollments") {
+          let datasetId = this.getDatadetIdFromEnrollments(data)
+          this.setState({
+            dataset: {
+              patients: data.results.enrollments[0].datasetId[datasetId],
+              hospitals: Object.keys(data.results.enrollments[0].treatingCentreName).length,
+              provinces: Object.keys(data.results.enrollments[0].treatingCentreProvince).length,
+              samples: this.state.dataset.samples
+            }
+          })
+
+        } else if (table == "samples") {
+          let datasetId = this.getDatadetIdFromSamples(data)
+          this.setState({
+            dataset: {
+              patients: this.state.dataset.patients,
+              hospitals: this.state.dataset.hospitals,
+              provinces: this.state.dataset.provinces,
+              samples: data.results.samples[0].datasetId[datasetId]
+            }
+          })
+
+        }
+      })
+  }
+
+  getDatadetIdFromEnrollments(data) {
+    return Object.keys(data.results.enrollments[0].datasetId)[0]
+  }
+
+  getDatadetIdFromSamples(data) {
+    return Object.keys(data.results.samples[0].datasetId)[0]
   }
 
   render() {
     return (
       <>
         <div className="content">
-          <DatasetsDropdown props={this.state.datasets}/>
           <Row>
             <Col lg="3" md="6" sm="6">
               <Card className="card-stats">
