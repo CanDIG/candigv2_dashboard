@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
@@ -9,10 +8,6 @@ class CancerType extends Component {
   constructor(props) {
     super(props)
     this.state = {chartOptions: {}}
-  }
-
-  componentWillReceiveProps(newProps){
-    
   }
 
   componentDidMount() {
@@ -66,10 +61,6 @@ class CancerType extends Component {
         }
         this.setState({chartOptions: chart})
       })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({datasetId: nextProps.datasetId})
   }
 
   render() {

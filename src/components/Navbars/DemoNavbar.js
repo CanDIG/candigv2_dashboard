@@ -29,18 +29,12 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Container,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input,
+  Container
 } from "reactstrap";
 
 import routes from "routes.js";
 
 import DatasetsDropdown from "views/Dropdown";
-
-const url = "http://ga4ghdev01.bcgsc.ca:20127"
 
 class Header extends React.Component {
   constructor(props) {
