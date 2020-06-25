@@ -101,18 +101,6 @@ class Header extends React.Component {
   }
   componentDidMount() {
     window.addEventListener("resize", this.updateColor.bind(this));
-
-    fetch(url + "/datasets/search", {
-      method:"post"})
-    .then(response => response.json())
-    .then(data => {
-      let datasets = {}
-      for(let i = 0; i < data.results.datasets.length; i++){
-        const ds = data.results.datasets[i]
-        datasets[i] = ds
-      }
-      this.setState({datasets: datasets})
-    })
   }
   componentDidUpdate(e) {
     if (
@@ -176,7 +164,7 @@ class Header extends React.Component {
                   </p>
                 </Link>
               </NavItem>
-              <DatasetsDropdown props={this.state.datasets}/>
+              <DatasetsDropdown updateState={this.props.updateState}/>
               <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
