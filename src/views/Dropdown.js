@@ -1,7 +1,8 @@
 import React from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+// Consts
+import {DATASET_SEARCH_URL} from '../constants/constants'
 
-const url = "http://ga4ghdev01.bcgsc.ca:20127"
 
 class DatasetsDropdown extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class DatasetsDropdown extends React.Component {
   }
 
   componentDidMount() {
-    fetch(url + "/datasets/search", {
+    fetch(DATASET_SEARCH_URL, {
       method: "post"
     })
       .then(response => response.json())

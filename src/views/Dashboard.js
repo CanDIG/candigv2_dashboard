@@ -26,6 +26,9 @@ import {
   Col,
 } from "reactstrap";
 
+// Consts
+import BASEURL from '../constants/constants'
+
 import Server from "./Server.js"
 import CancerType from "./CancerType.js"
 
@@ -37,8 +40,6 @@ const initialState = {
   patients: 0,
   samples: 0
 }
-
-const url = "http://ga4ghdev01.bcgsc.ca:20127"
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class Dashboard extends React.Component {
 
 
   getCounters(dataset_id, table, fields) {
-    fetch(url + "/count", {
+    fetch(BASEURL + "/count", {
       method: "post",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

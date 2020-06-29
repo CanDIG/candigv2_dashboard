@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
-const url = "http://ga4ghdev01.bcgsc.ca:20127/datasets/search"
+// Consts
+import {DATASET_SEARCH_URL} from './../constants/constants.js'
 
 class Server extends Component {
   constructor() {
@@ -29,8 +29,8 @@ class Server extends Component {
     }
   }
 
-  componentDidMount() {    
-    fetch(url, { method: 'POST' })
+  componentDidMount() {
+    fetch(DATASET_SEARCH_URL, { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         if (data) {

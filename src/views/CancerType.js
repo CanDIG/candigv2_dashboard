@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
-const url = "http://ga4ghdev01.bcgsc.ca:20127/count"
+// Consts
+import COUNT_URL from "../constants/constants.js"
 
 class CancerType extends Component {
   constructor(props) {
     super(props)
-    this.state = {chartOptions: {}}
+    this.state = {
+      chartOptions: {}, 
+      datasetId: ""
+    }
   }
 
-  componentDidMount() {
-    fetch(url, {
+  componentDidUpdate(prevProps) {
+    if (this.props.datasetId !== prevProps.datasetId) {
+      this.fetchData(this.props.datasetId)
+    }
+  }
+
+  fetchData(datasetId) {
+    fetch(COUNT_URL + "/count", {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({        
-        dataset_id: "WyJtb2NrMSJd",
+      body: JSON.stringify({
+        dataset_id: datasetId,
         logic: {
           id: "A"
         },
@@ -59,11 +68,14 @@ class CancerType extends Component {
             data: graphData
           }]
         }
-        this.setState({chartOptions: chart})
-      })
+        this.setState({ chartOptions: chart })
+      }
+      )
+
   }
 
   render() {
+    console.log(this.state)
     const chartOptions = this.state.chartOptions
     return (
       <div>
