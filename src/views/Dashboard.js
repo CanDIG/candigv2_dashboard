@@ -17,50 +17,46 @@
 
 */
 import React from "react";
-// react plugin used to create charts
-import { Line, Pie } from "react-chartjs-2";
 // reactstrap components
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
   Row,
   Col,
 } from "reactstrap";
-// core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart,
-} from "variables/charts.js";
+
+// Consts
+import BASEURL from '../constants/constants'
+
+import Server from "./Server.js"
+import CancerType from "./CancerType.js"
 
 const initialState = {
-  dataset: {
-    provinces: 0,
-    hospitals: 0,
-    patients: 0,
-    samples: 0
-  }
+  datasetName: "",
+  datasetId: "",
+  provinces: 0,
+  hospitals: 0,
+  patients: 0,
+  samples: 0
 }
 
-const url = "http://ga4ghdev01.bcgsc.ca:20127"
-
 class Dashboard extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = initialState
   }
 
   componentDidMount() {
-    this.getCounters("WyJtb2NrMSJd", "enrollments", ["datasetId", "treatingCentreName", "treatingCentreProvince"])
-    this.getCounters("WyJtb2NrMSJd", "samples", ["datasetId"])
+    if (this.props.datasetId) {
+      this.getCounters(this.props.datasetId, "enrollments", ["datasetId", "treatingCentreName", "treatingCentreProvince"])
+      this.getCounters(this.props.datasetId, "samples", ["datasetId"])
+    }
   }
 
 
   getCounters(dataset_id, table, fields) {
-    fetch(url + "/count", {
+    fetch(BASEURL + "/count", {
       method: "post",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -87,23 +83,19 @@ class Dashboard extends React.Component {
         if (table === "enrollments") {
           let datasetId = this.getDatadetIdFromEnrollments(data)
           this.setState({
-            dataset: {
-              patients: data.results.enrollments[0].datasetId[datasetId],
-              hospitals: Object.keys(data.results.enrollments[0].treatingCentreName).length,
-              provinces: Object.keys(data.results.enrollments[0].treatingCentreProvince).length,
-              samples: this.state.dataset.samples
-            }
+            patients: data.results.enrollments[0].datasetId[datasetId],
+            hospitals: Object.keys(data.results.enrollments[0].treatingCentreName).length,
+            provinces: Object.keys(data.results.enrollments[0].treatingCentreProvince).length,
+            samples: this.state.samples
           })
 
-        } else if (table == "samples") {
+        } else if (table === "samples") {
           let datasetId = this.getDatadetIdFromSamples(data)
           this.setState({
-            dataset: {
-              patients: this.state.dataset.patients,
-              hospitals: this.state.dataset.hospitals,
-              provinces: this.state.dataset.provinces,
-              samples: data.results.samples[0].datasetId[datasetId]
-            }
+            patients: this.state.patients,
+            hospitals: this.state.hospitals,
+            provinces: this.state.provinces,
+            samples: data.results.samples[0].datasetId[datasetId]
           })
 
         }
@@ -118,7 +110,17 @@ class Dashboard extends React.Component {
     return Object.keys(data.results.samples[0].datasetId)[0]
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      datasetId: nextProps.datasetId,
+      datasetName: nextProps.datasetName
+    })
+    this.getCounters(nextProps.datasetId, "enrollments", ["datasetId", "treatingCentreName", "treatingCentreProvince"])
+    this.getCounters(nextProps.datasetId, "samples", ["datasetId"])
+  }
+
   render() {
+
     return (
       <>
         <div className="content">
@@ -135,7 +137,7 @@ class Dashboard extends React.Component {
                     <Col md="8" xs="7">
                       <div className="numbers">
                         <p className="card-category">Provinces</p>
-                        <CardTitle tag="p">{this.state.dataset.provinces}</CardTitle>
+                        <CardTitle tag="p">{this.state.provinces}</CardTitle>
                         <p />
                       </div>
                     </Col>
@@ -155,7 +157,7 @@ class Dashboard extends React.Component {
                     <Col md="8" xs="7">
                       <div className="numbers">
                         <p className="card-category">Hospitals</p>
-                        <CardTitle tag="p">{this.state.dataset.hospitals}</CardTitle>
+                        <CardTitle tag="p">{this.state.hospitals}</CardTitle>
                         <p />
                       </div>
                     </Col>
@@ -175,7 +177,7 @@ class Dashboard extends React.Component {
                     <Col md="8" xs="7">
                       <div className="numbers">
                         <p className="card-category">Patients</p>
-                        <CardTitle tag="p">{this.state.dataset.patients}</CardTitle>
+                        <CardTitle tag="p">{this.state.patients}</CardTitle>
                         <p />
                       </div>
                     </Col>
@@ -195,7 +197,7 @@ class Dashboard extends React.Component {
                     <Col md="8" xs="7">
                       <div className="numbers">
                         <p className="card-category">Samples</p>
-                        <CardTitle tag="p">{this.state.dataset.samples}</CardTitle>
+                        <CardTitle tag="p">{this.state.samples}</CardTitle>
                         <p />
                       </div>
                     </Col>
@@ -204,81 +206,19 @@ class Dashboard extends React.Component {
               </Card>
             </Col>
           </Row>
-          {/* <Row>
-            <Col md="12">
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h5">Users Behavior</CardTitle>
-                  <p className="card-category">24 Hours performance</p>
-                </CardHeader>
-                <CardBody>
-                  <Line
-                    data={dashboard24HoursPerformanceChart.data}
-                    options={dashboard24HoursPerformanceChart.options}
-                    width={400}
-                    height={100}
-                  />
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="fa fa-history" /> Updated 3 minutes ago
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-          </Row> */}
           <Row>
-            <Col md="4">
+            <Col lg="6" md="6" sm="6">
               <Card>
-                <CardHeader>
-                  <CardTitle tag="h5">Email Statistics</CardTitle>
-                  <p className="card-category">Last Campaign Performance</p>
-                </CardHeader>
                 <CardBody>
-                  <Pie
-                    data={dashboardEmailStatisticsChart.data}
-                    options={dashboardEmailStatisticsChart.options}
-                  />
+                  <Server />
                 </CardBody>
-                <CardFooter>
-                  <div className="legend">
-                    <i className="fa fa-circle text-primary" /> Opened{" "}
-                    <i className="fa fa-circle text-warning" /> Read{" "}
-                    <i className="fa fa-circle text-danger" /> Deleted{" "}
-                    <i className="fa fa-circle text-gray" /> Unopened
-                  </div>
-                  <hr />
-                  <div className="stats">
-                    <i className="fa fa-calendar" /> Number of emails sent
-                  </div>
-                </CardFooter>
               </Card>
             </Col>
-            <Col md="8">
-              <Card className="card-chart">
-                <CardHeader>
-                  <CardTitle tag="h5">NASDAQ: AAPL</CardTitle>
-                  <p className="card-category">Line Chart with Points</p>
-                </CardHeader>
+            <Col lg="6" md="6" sm="6">
+              <Card>
                 <CardBody>
-                  <Line
-                    data={dashboardNASDAQChart.data}
-                    options={dashboardNASDAQChart.options}
-                    width={400}
-                    height={100}
-                  />
+                  <CancerType datasetId={this.props.datasetId} />
                 </CardBody>
-                <CardFooter>
-                  <div className="chart-legend">
-                    <i className="fa fa-circle text-info" /> Tesla Model S{" "}
-                    <i className="fa fa-circle text-warning" /> BMW 5 Series
-                  </div>
-                  <hr />
-                  <div className="card-stats">
-                    <i className="fa fa-check" /> Data information certified
-                  </div>
-                </CardFooter>
               </Card>
             </Col>
           </Row>

@@ -24,7 +24,6 @@ import { Route, Switch } from "react-router-dom";
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 
@@ -36,6 +35,8 @@ class Dashboard extends React.Component {
     this.state = {
       backgroundColor: "black",
       activeColor: "info",
+      datasetId: "",
+      datasetName: ""
     };
     this.mainPanel = React.createRef();
   }
@@ -45,6 +46,11 @@ class Dashboard extends React.Component {
       document.body.classList.toggle("perfect-scrollbar-on");
     }
   }
+
+  updateState = (values) => {
+    this.setState(values)
+  }
+
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
@@ -73,26 +79,18 @@ class Dashboard extends React.Component {
           activeColor={this.state.activeColor}
         />
         <div className="main-panel" ref={this.mainPanel}>
-          <DemoNavbar {...this.props} />
+          <DemoNavbar {...this.props} updateState={this.updateState} />
           <Switch>
             {routes.map((prop, key) => {
               return (
-                <Route
-                  path={prop.layout + prop.path}
-                  component={prop.component}
-                  key={key}
-                />
+                <Route path={prop.layout + prop.path} key={key}>
+                  <prop.component updateState={this.updateState} datasetId={this.state.datasetId} datasetName={this.state.datasetName}/>
+                </Route>
               );
             })}
           </Switch>
           <Footer fluid />
         </div>
-        {/* <FixedPlugin
-          bgColor={this.state.backgroundColor}
-          activeColor={this.state.activeColor}
-          handleActiveClick={this.handleActiveClick}
-          handleBgClick={this.handleBgClick}
-        /> */}
       </div>
     );
   }
