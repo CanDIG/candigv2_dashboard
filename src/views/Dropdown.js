@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 // Consts
-import {DATASET_SEARCH_URL} from '../constants/constants'
+import BASE_URL from '../constants/constants'
 
 
 class DatasetsDropdown extends React.Component {
@@ -16,7 +16,7 @@ class DatasetsDropdown extends React.Component {
   }
 
   componentDidMount() {
-    fetch(DATASET_SEARCH_URL, {
+    fetch(BASE_URL + "/datasets/search", {
       method: "post"
     })
       .then(response => response.json())

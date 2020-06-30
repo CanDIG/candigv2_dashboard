@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 // Consts
-import COUNT_URL from "../constants/constants.js"
+import BASE_URL from "../constants/constants.js"
 
 class CancerType extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class CancerType extends Component {
   }
 
   fetchData(datasetId) {
-    fetch(COUNT_URL + "/count", {
+    fetch(BASE_URL + "/count", {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

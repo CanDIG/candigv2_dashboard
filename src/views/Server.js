@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 // Consts
-import {DATASET_SEARCH_URL} from './../constants/constants.js'
+import BASE_URL from './../constants/constants.js'
 
 class Server extends Component {
   constructor() {
@@ -30,7 +30,7 @@ class Server extends Component {
   }
 
   componentDidMount() {
-    fetch(DATASET_SEARCH_URL, { method: 'POST' })
+    fetch(BASE_URL + "/datasets/search", { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         if (data) {
