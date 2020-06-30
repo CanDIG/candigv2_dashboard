@@ -47,6 +47,7 @@ class TreatingCentreProvince extends Component {
     })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const graphData = []
         if (data) {
           let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
@@ -75,7 +76,6 @@ class TreatingCentreProvince extends Component {
   }
 
   render() {
-    console.log(this.state)
     const chartOptions = this.state.chartOptions
     return (
       <div>

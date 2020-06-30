@@ -9,22 +9,24 @@ class Server extends Component {
     super()
     this.state = {
       chartOptions: {
+        credits: {
+          enabled: false
+        },
         chart: {
-          type: "bar"
+          type: "bar",
+          height: "200px; auto"
         },
         title: {
-          text: ""
+          text: "Server Status"
         },
-        series: [
-          {
-            name: "Known peers", data: [0]
-          },
-          {
-            name: "Queried peers", data: [0]
-          },
-          {
-            name: "Successful communications", data: [0]
-          }]
+        xAxis: {
+          categories: ["Known peers", "Queried peers", "Successful communications"]
+        },
+        series: [{
+          colorByPoint: true,
+          showInLegend: false,
+          data: [0, 0, 0]
+        }]
       }
     }
   }
@@ -34,15 +36,14 @@ class Server extends Component {
       .then(response => response.json())
       .then(data => {
         if (data) {
-          let series = { series: [] }
-          let options = {
-            chart: { type: "bar" },
-            title: { text: "Server Status" }
-          }
+          let options = {series: [{data: []}], xAxis: {categories: []}}
           for (const property in data.status) {
-            series["series"].push({ name: property, data: [data.status[property]] })
+            if(property === "Valid response"){
+              continue
+            }
+            options.series[0].data.push(data.status[property])
+            options.xAxis.categories.push(property)
           }
-          options["series"] = series["series"]
           this.setState({ chartOptions: options })
         }
       })

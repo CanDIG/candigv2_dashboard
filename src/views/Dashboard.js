@@ -31,6 +31,7 @@ import BASEURL from '../constants/constants'
 
 import Server from "./Server.js"
 import CancerType from "./CancerType.js"
+import TreatingCentreProvince from "./TreatingCentreProvince"
 
 const initialState = {
   datasetName: "",
@@ -207,10 +208,19 @@ class Dashboard extends React.Component {
             </Col>
           </Row>
           <Row>
+            <Col lg="3" md="3" sm="3">
+              <Card >
+                <CardBody  >
+                  <Server/>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
             <Col lg="6" md="6" sm="6">
               <Card>
                 <CardBody>
-                  <Server />
+                  <TreatingCentreProvince datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
             </Col>
@@ -222,6 +232,7 @@ class Dashboard extends React.Component {
               </Card>
             </Col>
           </Row>
+
         </div>
       </>
     );
