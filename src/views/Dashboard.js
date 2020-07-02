@@ -30,6 +30,9 @@ import {
 import BASEURL from '../constants/constants'
 
 import Server from "./Server.js"
+import Gender from "./Gender.js"
+import Treatments from "./Treatments.js"
+import Enrollments from "./Enrollments.js"
 import CancerType from "./CancerType.js"
 import TreatingCentreProvince from "./TreatingCentreProvince"
 
@@ -212,6 +215,27 @@ class Dashboard extends React.Component {
               <Card >
                 <CardBody  >
                   <Server/>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="3" md="3" sm="3">
+              <Card >
+                <CardBody>
+                  <Gender datasetId={this.props.datasetId}/>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="3" md="3" sm="3">
+              <Card >
+                <CardBody>
+                  <Treatments datasetId={this.props.datasetId}/>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="3" md="3" sm="3">
+              <Card >
+                <CardBody  >
+                  <Enrollments datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
             </Col>

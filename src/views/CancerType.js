@@ -75,7 +75,6 @@ class CancerType extends Component {
   }
 
   render() {
-    console.log(this.state)
     const chartOptions = this.state.chartOptions
     return (
       <div>
