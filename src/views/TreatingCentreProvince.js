@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import HighchartsMap from "highcharts/modules/map";
+import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
 // Consts
 import BASE_URL from "../constants/constants.js"
+
+HighchartsMap(Highcharts);
 
 class TreatingCentreProvince extends Component {
   constructor(props) {
@@ -12,13 +16,11 @@ class TreatingCentreProvince extends Component {
       datasetId: ""
     }
   }
-
   componentDidUpdate(prevProps) {
     if (this.props.datasetId !== prevProps.datasetId) {
       this.fetchData(this.props.datasetId)
     }
   }
-
   fetchData(datasetId) {
     fetch(BASE_URL + "/count", {
       method: 'post',
@@ -43,7 +45,6 @@ class TreatingCentreProvince extends Component {
           }
         ]
       })
-
     })
       .then(response => response.json())
       .then(data => {
@@ -54,39 +55,74 @@ class TreatingCentreProvince extends Component {
             graphData.push({ name: name, y: treatingCentreProvince[name] })
           }
         }
+        // replace this with real data from the response above
+        var data_count = [
+            ['ca-bc', 1],
+            ['ca-nu', 2],
+            ['ca-nt', 3],
+            ['ca-ab', 4],
+            ['ca-nl', 5],
+            ['ca-sk', 6],
+            ['ca-mb', 7],
+            ['ca-qc', 8],
+            ['ca-on', 9],
+            ['ca-nb', 10],
+            ['ca-ns', 11],
+            ['ca-pe', 12],
+            ['ca-yt', 13]
+        ];
         const chart = {
-          chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-          },
+
           title: {
             text: "Treating Centre Province"
           },
-          series: [{
-            data: graphData
+          mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+              verticalAlign: "bottom"
+            }
+          },
+        
+          plotOptions: {
+            map: {
+              states: {
+                hover: {
+                  color: "#EEDD66"
+                }
+              }
+            }
+          },
+          series: [
+            {
+            name: 'Province',
+            mapData: mapDataCanada,
+            data: data_count,
+            states: {
+                hover: {
+                    color: '#BADA55'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
           }]
         }
         this.setState({ chartOptions: chart })
       }
       )
-
   }
-
   render() {
-    console.log(this.state)
     const chartOptions = this.state.chartOptions
     return (
       <div>
         <HighchartsReact
+          contructorType={"mapChart"}
           highcharts={Highcharts}
           options={chartOptions}
         />
       </div>
     );
   }
-
 }
-
 export default TreatingCentreProvince;
