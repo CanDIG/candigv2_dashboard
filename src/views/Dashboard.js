@@ -29,8 +29,12 @@ import {
 // Consts
 import BASEURL from '../constants/constants'
 
-import Server from "./Server.js"
-import CancerType from "./CancerType.js"
+import Server from "./graphs/Server.js"
+import Gender from "./graphs/Gender.js"
+import Treatments from "./graphs/Treatments.js"
+import Enrollments from "./graphs/Enrollments.js"
+import CancerType from "./graphs/CancerType.js"
+import TreatingCentreProvince from "./maps/TreatingCentreProvince"
 
 const initialState = {
   datasetName: "",
@@ -207,10 +211,40 @@ class Dashboard extends React.Component {
             </Col>
           </Row>
           <Row>
+            <Col lg="3" md="6" sm="6">
+              <Card >
+                <CardBody  >
+                  <Server/>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="3" md="6" sm="6">
+              <Card >
+                <CardBody>
+                  <Gender datasetId={this.props.datasetId}/>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="3" md="6" sm="6">
+              <Card >
+                <CardBody>
+                  <Treatments datasetId={this.props.datasetId}/>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="3" md="6" sm="6">
+              <Card >
+                <CardBody  >
+                  <Enrollments datasetId={this.props.datasetId}/>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
             <Col lg="6" md="6" sm="6">
               <Card>
                 <CardBody>
-                  <Server />
+                  <TreatingCentreProvince datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
             </Col>
@@ -222,6 +256,7 @@ class Dashboard extends React.Component {
               </Card>
             </Col>
           </Row>
+
         </div>
       </>
     );

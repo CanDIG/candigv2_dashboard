@@ -5,7 +5,7 @@ import HighchartsMap from "highcharts/modules/map";
 import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
 
 // Consts
-import BASE_URL from "../constants/constants.js"
+import BASE_URL from "../../constants/constants.js"
 
 HighchartsMap(Highcharts);
 
@@ -87,7 +87,6 @@ class TreatingCentreProvince extends Component {
         let hc_prov_codes = ["ca-ab", "ca-bc", "ca-mb", "ca-nb", "ca-nl", "ca-nt", "ca-ns", "ca-nu", "ca-on", "ca-pe", "ca-qc", "ca-sk", "ca-yt"]
         let prov_short_codes = ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
         let prov_full_names = ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territory']
-
 
         if (data) {
           let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
