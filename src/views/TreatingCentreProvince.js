@@ -21,7 +21,32 @@ class TreatingCentreProvince extends Component {
         credits: {
           enabled: false
         },
-        series: []
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+        },
+        colorAxis: {
+          min: 0,
+          minColor: '#E6E7E8',
+          maxColor: '#005645'
+        },
+        series: [
+          {
+            type: 'map',
+            name: 'Province',
+            mapData: mapDataCanada,
+            states: {
+                hover: {
+                    color: '#BADA55'
+                }
+            },
+            dataLabels: {
+                enabled: false,
+                format: '{point.name}'
+            }
+          }
+        ]
       }, 
       datasetId: ""
     }
@@ -84,36 +109,15 @@ class TreatingCentreProvince extends Component {
         }
         
         const chart = {
-          legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-          },
-          colorAxis: {
-            min: 0,
-            minColor: '#E6E7E8',
-            maxColor: '#005645'
-          },
           series: [
             {
-            type: 'map',
-            name: 'Province',
-            mapData: mapDataCanada,
-            data: data_count,
-            states: {
-                hover: {
-                    color: '#BADA55'
-                }
-            },
-            dataLabels: {
-                enabled: false,
-                format: '{point.name}'
+              data: data_count,
             }
-          }]
+          ]
         }
         this.setState({ chartOptions: chart })
       }
-      )
+    )
   }
   render() {
     const chartOptions = this.state.chartOptions
