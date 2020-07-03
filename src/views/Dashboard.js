@@ -211,28 +211,28 @@ class Dashboard extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg="3" md="3" sm="3">
+            <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody  >
                   <Server/>
                 </CardBody>
               </Card>
             </Col>
-            <Col lg="3" md="3" sm="3">
+            <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody>
                   <Gender datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
             </Col>
-            <Col lg="3" md="3" sm="3">
+            <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody>
                   <Treatments datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
             </Col>
-            <Col lg="3" md="3" sm="3">
+            <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody  >
                   <Enrollments datasetId={this.props.datasetId}/>
@@ -241,13 +241,13 @@ class Dashboard extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg="6" md="6" sm="6">
+            {/* <Col lg="6" md="6" sm="6">
               <Card>
                 <CardBody>
                   <TreatingCentreProvince datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
-            </Col>
+            </Col> */}
             <Col lg="6" md="6" sm="6">
               <Card>
                 <CardBody>
