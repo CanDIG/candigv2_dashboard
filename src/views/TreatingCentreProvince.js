@@ -15,6 +15,9 @@ class TreatingCentreProvince extends Component {
     super(props)
     this.state = {
       chartOptions: {
+        title: {
+          text: "Treating Centre Province"
+        },
         series: []
       }, 
       datasetId: ""
@@ -78,10 +81,6 @@ class TreatingCentreProvince extends Component {
         }
         
         const chart = {
-
-          title: {
-            text: "Treating Centre Province"
-          },
           colorAxis: {
             min: 0,
             minColor: '#E6E7E8',
