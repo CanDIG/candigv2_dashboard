@@ -3,7 +3,6 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from "highcharts/modules/map";
 import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
-// import mapDataCanada from './mapDataCanada'
 
 // Consts
 import BASE_URL from "../constants/constants.js"
@@ -18,6 +17,9 @@ class TreatingCentreProvince extends Component {
       chartOptions: {
         title: {
           text: "Treating Centre Province"
+        },
+        credits: {
+          enabled: false
         },
         series: []
       }, 
@@ -82,18 +84,15 @@ class TreatingCentreProvince extends Component {
         }
         
         const chart = {
-          colorAxis: {
-            min: 0,
-            minColor: '#E6E7E8',
-            maxColor: '#005645'
-          },
           legend: {
             layout: 'vertical',
             align: 'right',
             verticalAlign: 'middle'
           },
-          credits: {
-            enabled: false
+          colorAxis: {
+            min: 0,
+            minColor: '#E6E7E8',
+            maxColor: '#005645'
           },
           series: [
             {
