@@ -29,11 +29,11 @@ import {
 // Consts
 import BASEURL from '../constants/constants'
 
-import Server from "./Server.js"
-import Gender from "./Gender.js"
-import Treatments from "./Treatments.js"
-import Enrollments from "./Enrollments.js"
-import CancerType from "./CancerType.js"
+import Server from "./graphs/Server.js"
+import Gender from "./graphs/Gender.js"
+import Treatments from "./graphs/Treatments.js"
+import Enrollments from "./graphs/Enrollments.js"
+import CancerType from "./graphs/CancerType.js"
 import TreatingCentreProvince from "./TreatingCentreProvince"
 
 const initialState = {

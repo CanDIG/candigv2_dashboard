@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 // Consts
-import BASE_URL from "../constants/constants.js"
+import BASE_URL from "../../constants/constants.js"
 
 class CancerType extends Component {
   constructor(props) {
