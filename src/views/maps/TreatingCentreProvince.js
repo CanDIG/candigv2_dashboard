@@ -5,7 +5,7 @@ import HighchartsMap from "highcharts/modules/map";
 import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
 
 // Consts
-import BASE_URL from "../constants/constants.js"
+import BASE_URL from "../../constants/constants.js"
 
 HighchartsMap(Highcharts);
 

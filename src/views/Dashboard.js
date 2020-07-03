@@ -34,7 +34,7 @@ import Gender from "./graphs/Gender.js"
 import Treatments from "./graphs/Treatments.js"
 import Enrollments from "./graphs/Enrollments.js"
 import CancerType from "./graphs/CancerType.js"
-import TreatingCentreProvince from "./TreatingCentreProvince"
+import TreatingCentreProvince from "./maps/TreatingCentreProvince"
 
 const initialState = {
   datasetName: "",
@@ -241,13 +241,13 @@ class Dashboard extends React.Component {
             </Col>
           </Row>
           <Row>
-            {/* <Col lg="6" md="6" sm="6">
+            <Col lg="6" md="6" sm="6">
               <Card>
                 <CardBody>
                   <TreatingCentreProvince datasetId={this.props.datasetId}/>
                 </CardBody>
               </Card>
-            </Col> */}
+            </Col>
             <Col lg="6" md="6" sm="6">
               <Card>
                 <CardBody>
