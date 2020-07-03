@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from "highcharts/modules/map";
-import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
+//import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
+import mapDataCanada from './mapDataCanada'
+
 // Consts
 import BASE_URL from "../constants/constants.js"
 
-HighchartsMap(Highcharts);
+require('highcharts/modules/map')(Highcharts);
 
 class TreatingCentreProvince extends Component {
   constructor(props) {
@@ -48,13 +50,13 @@ class TreatingCentreProvince extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        const graphData = []
-        if (data) {
-          let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
-          for (const name in treatingCentreProvince) {
-            graphData.push({ name: name, y: treatingCentreProvince[name] })
-          }
-        }
+        // const graphData = []
+        // if (data) {
+        //   let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
+        //   for (const name in treatingCentreProvince) {
+        //     graphData.push({ name: name, y: treatingCentreProvince[name] })
+        //   }
+        // }
         // replace this with real data from the response above
         var data_count = [
             ['ca-bc', 1],
