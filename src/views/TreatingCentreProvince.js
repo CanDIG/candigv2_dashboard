@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from "highcharts/modules/map";
-//import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
 import mapDataCanada from './mapDataCanada'
 
 // Consts
 import BASE_URL from "../constants/constants.js"
 
-require('highcharts/modules/map')(Highcharts);
+HighchartsMap(Highcharts);
+
 
 class TreatingCentreProvince extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      chartOptions: {}, 
+      chartOptions: {
+        series: []
+      }, 
       datasetId: ""
     }
   }
@@ -50,52 +52,52 @@ class TreatingCentreProvince extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        // const graphData = []
-        // if (data) {
-        //   let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
-        //   for (const name in treatingCentreProvince) {
-        //     graphData.push({ name: name, y: treatingCentreProvince[name] })
-        //   }
-        // }
-        // replace this with real data from the response above
-        var data_count = [
-            ['ca-bc', 1],
-            ['ca-nu', 2],
-            ['ca-nt', 3],
-            ['ca-ab', 4],
-            ['ca-nl', 5],
-            ['ca-sk', 6],
-            ['ca-mb', 7],
-            ['ca-qc', 8],
-            ['ca-on', 9],
-            ['ca-nb', 10],
-            ['ca-ns', 11],
-            ['ca-pe', 12],
-            ['ca-yt', 13]
-        ];
+        let data_count = []
+        let hc_prov_codes = ["ca-ab", "ca-bc", "ca-mb", "ca-nb", "ca-nl", "ca-nt", "ca-ns", "ca-nu", "ca-on", "ca-pe", "ca-qc", "ca-sk", "ca-yt"]
+        let prov_short_codes = ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
+        let prov_full_names = ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territory']
+
+
+        if (data) {
+          let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
+
+          for (let name in treatingCentreProvince) {
+            if (prov_short_codes.includes(name)) {
+              let temp_data_count = []
+              temp_data_count.push(hc_prov_codes[prov_short_codes.indexOf(name)])
+              temp_data_count.push(treatingCentreProvince[name])
+              data_count.push(temp_data_count)
+            }
+            else if (prov_full_names.includes(name)) {
+              let temp_data_count = []
+              temp_data_count.push(hc_prov_codes[prov_full_names.indexOf(name)])
+              temp_data_count.push(treatingCentreProvince[name])
+              data_count.push(temp_data_count)
+            }
+          }
+        }
+        
         const chart = {
 
           title: {
             text: "Treating Centre Province"
           },
-          mapNavigation: {
-            enabled: true,
-            buttonOptions: {
-              verticalAlign: "bottom"
-            }
+          colorAxis: {
+            min: 0,
+            minColor: '#E6E7E8',
+            maxColor: '#005645'
           },
-        
-          plotOptions: {
-            map: {
-              states: {
-                hover: {
-                  color: "#EEDD66"
-                }
-              }
-            }
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+          },
+          credits: {
+            enabled: false
           },
           series: [
             {
+            type: 'map',
             name: 'Province',
             mapData: mapDataCanada,
             data: data_count,
@@ -105,7 +107,7 @@ class TreatingCentreProvince extends Component {
                 }
             },
             dataLabels: {
-                enabled: true,
+                enabled: false,
                 format: '{point.name}'
             }
           }]
