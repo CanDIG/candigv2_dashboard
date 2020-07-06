@@ -30,9 +30,7 @@ import {
 import BASEURL from '../constants/constants'
 
 import Server from "./graphs/Server.js"
-import Gender from "./graphs/Gender.js"
-import Treatments from "./graphs/Treatments.js"
-import Enrollments from "./graphs/Enrollments.js"
+import BarChart from "./graphs/BarChart.js"
 import CancerType from "./graphs/CancerType.js"
 import TreatingCentreProvince from "./maps/TreatingCentreProvince"
 
@@ -221,21 +219,21 @@ class Dashboard extends React.Component {
             <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody>
-                  <Gender datasetId={this.props.datasetId}/>
+                  <BarChart datasetId={this.props.datasetId} table="patients" field="gender" title="Gender Distribution" />
                 </CardBody>
               </Card>
             </Col>
             <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody>
-                  <Treatments datasetId={this.props.datasetId}/>
+                  <BarChart datasetId={this.props.datasetId} table="treatments" field="therapeuticModality" title="Treatment Modalities" />
                 </CardBody>
               </Card>
             </Col>
             <Col lg="3" md="6" sm="6">
               <Card >
                 <CardBody  >
-                  <Enrollments datasetId={this.props.datasetId}/>
+                  <BarChart datasetId={this.props.datasetId} table="enrollments" field="enrollmentInstitution" title="Enrollment Institutions" />
                 </CardBody>
               </Card>
             </Col>
