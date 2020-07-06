@@ -28,7 +28,7 @@ class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.activeRoute.bind(this);
-    this.sidebar = React.createRef();    
+    this.sidebar = React.createRef();
   }
 
   // verifies if routeName is the one active (in browser input)
