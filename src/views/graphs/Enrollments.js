@@ -40,6 +40,12 @@ class Enrollments extends Component {
     }
   }
 
+  componentDidMount() {
+    if(this.props.datasetId){
+      this.fetchData(this.props.datasetId); 
+    }
+  }
+
   fetchData(datasetId) {
     fetch(BASE_URL + "/count", {
       method: "POST",

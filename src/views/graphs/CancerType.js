@@ -32,6 +32,12 @@ class CancerType extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.datasetId) {
+      this.fetchData(this.props.datasetId);
+    }
+  }
+
   fetchData(datasetId) {
     fetch(BASE_URL + "/count", {
       method: "post",
@@ -68,6 +74,26 @@ class CancerType extends Component {
           series: [
             {
               data: graphData,
+            },
+          ],
+        };
+        this.setState({ chartOptions: chart });
+      })
+      .catch((err) => {
+        const chart = {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+          },
+          title: {
+            text: "No data in pie chart",
+          },
+          series: [
+            {
+              type: "pie",
+              name: "Random data",
+              data: [],
             },
           ],
         };

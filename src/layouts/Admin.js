@@ -77,6 +77,7 @@ class Dashboard extends React.Component {
           routes={routes}
           bgColor={this.state.backgroundColor}
           activeColor={this.state.activeColor}
+          datasetId={this.state.datasetId}
         />
         <div className="main-panel" ref={this.mainPanel}>
           <DemoNavbar {...this.props} updateState={this.updateState} />

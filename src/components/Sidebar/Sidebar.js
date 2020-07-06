@@ -29,7 +29,17 @@ class Sidebar extends React.Component {
     super(props);
     this.activeRoute.bind(this);
     this.sidebar = React.createRef();
+    this.state = {
+      datasetId: "",
+    };
   }
+
+  componentDidUpdate(prevProp) {
+    if (this.props.datasetId !== prevProp.datasetId) {
+      this.setState({ datasetId: this.props.datasetId });
+    }
+  }
+
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -55,18 +65,15 @@ class Sidebar extends React.Component {
         data-active-color={this.props.activeColor}
       >
         <div className="logo">
-          <a
-            href="/"
-            className="simple-text logo-mini"
-          >
+          <a href="/" className="simple-text logo-mini">
             <div className="logo-img">
-              <img src="https://www.distributedgenomics.ca/img/logo_only.png" alt="react-logo" />
+              <img
+                src="https://www.distributedgenomics.ca/img/logo_only.png"
+                alt="react-logo"
+              />
             </div>
           </a>
-          <a
-            href="/"
-            className="simple-text logo-normal"
-          >
+          <a href="/" className="simple-text logo-normal">
             Dashboard
           </a>
         </div>

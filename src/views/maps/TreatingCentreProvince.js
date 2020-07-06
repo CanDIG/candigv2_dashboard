@@ -56,6 +56,13 @@ class TreatingCentreProvince extends Component {
       this.fetchData(this.props.datasetId)
     }
   }
+
+  componentDidMount() {
+    if(this.props.datasetId){
+      this.fetchData(this.props.datasetId); 
+    }
+  }
+
   fetchData(datasetId) {
     fetch(BASE_URL + "/count", {
       method: 'post',
