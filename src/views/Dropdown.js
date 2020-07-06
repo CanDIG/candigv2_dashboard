@@ -23,12 +23,15 @@ class DatasetsDropdown extends React.Component {
       .then(data => {
         let datasets = {}
         for (let i = 0; i < data.results.datasets.length; i++) {
-          datasets[i] = data.results.datasets[i]
+          datasets[data.results.datasets[i].id] = data.results.datasets[i]
         }
         this.setState({ datasets: datasets })
-        this.setState({ selectedDataSetId: datasets[0].id })
-        this.setState({ selectedDataset: datasets[0].name })
-        this.updateParentState(datasets[0].name, datasets[0].id)
+        const firstDataset = datasets[Object.keys(datasets)[0]]
+        this.setState({ selectedDataSetId: firstDataset.id })
+        this.setState({ selectedDataset: firstDataset.name })
+        this.updateParentState(firstDataset.name, firstDataset.id)
+      }).catch(err => {
+        this.setState({ datasets: {} })
       })
   }
 
