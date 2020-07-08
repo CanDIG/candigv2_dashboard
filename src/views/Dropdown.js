@@ -68,9 +68,7 @@ class DatasetsDropdown extends React.Component {
     for (const property in datasets) {
       datasetList.push(
         <DropdownItem
-          center
           default
-          style={{justifyContent:'center'}}
           onClick={this.handleClick}
           key={datasets[property].id}
           id={datasets[property].id}
@@ -86,8 +84,8 @@ class DatasetsDropdown extends React.Component {
         style={{
           borderRadius: "25px",
           backgroundColor: "#212120",
-          "padding-left": "10px",
-          "padding-right": "10px",
+          paddingLeft: "10px",
+          paddingRight: "10px",
         }}
       >
         <DropdownToggle caret nav style={{ color: "white", fontSize: 12}}>
