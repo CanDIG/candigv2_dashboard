@@ -43,14 +43,14 @@ class Dashboard extends React.Component {
     this.state = initialState;
   }
 
-  componentDidMount() {
-    if (this.props.datasetId) {
-      this.getCounters(this.props.datasetId, "enrollments", [
+  fetchData(datasetId) {
+    if (datasetId) {
+      this.getCounters(datasetId, "enrollments", [
         "datasetId",
         "treatingCentreName",
         "treatingCentreProvince",
       ]);
-      this.getCounters(this.props.datasetId, "samples", ["datasetId"]);
+      this.getCounters(datasetId, "samples", ["datasetId"]);
     }
   }
 
@@ -100,6 +100,16 @@ class Dashboard extends React.Component {
             samples: data.results.samples[0].datasetId[datasetId],
           });
         }
+      })
+      .catch((err) => {
+        this.setState({
+          datasetName: "",
+          datasetId: "",
+          provinces: "Not Available",
+          hospitals: "Not Available",
+          patients: "Not Available",
+          samples: "Not Available",
+        });
       });
   }
 
@@ -111,17 +121,19 @@ class Dashboard extends React.Component {
     return Object.keys(data.results.samples[0].datasetId)[0];
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      datasetId: nextProps.datasetId,
-      datasetName: nextProps.datasetName,
-    });
-    this.getCounters(nextProps.datasetId, "enrollments", [
-      "datasetId",
-      "treatingCentreName",
-      "treatingCentreProvince",
-    ]);
-    this.getCounters(nextProps.datasetId, "samples", ["datasetId"]);
+  componentDidUpdate(prevProps) {
+    if (this.props.datasetId !== prevProps.datasetId) {
+      this.setState({
+        datasetId: this.props.datasetId,
+        datasetName: this.props.datasetId,
+      });
+      this.getCounters(this.props.datasetId, "enrollments", [
+        "datasetId",
+        "treatingCentreName",
+        "treatingCentreProvince",
+      ]);
+      this.getCounters(this.props.datasetId, "samples", ["datasetId"]);
+    }
   }
 
   render() {
