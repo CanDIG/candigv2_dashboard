@@ -36,7 +36,7 @@ var routes = [
   },
   {
     path: "/services",
-    name: "Services",
+    name: "Services status",
     icon: "nc-icon nc-tile-56",
     component: Services,
     layout: "/dashboard",
