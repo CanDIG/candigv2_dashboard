@@ -23,10 +23,10 @@ import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
 // Consts
 import BASEURL from "../constants/constants";
 
-import Server from "./graphs/Server.js";
-import BarChart from "./graphs/BarChart.js";
-import CancerType from "./graphs/CancerType.js";
-import TreatingCentreProvince from "./maps/TreatingCentreProvince";
+import Server from "../components/Graphs/Server.js";
+import BarChart from "../components/Graphs/BarChart.js";
+import CancerType from "../components/Graphs/CancerType.js";
+import TreatingCentreProvince from "../components/Maps/TreatingCentreProvince";
 
 const initialState = {
   datasetName: "",
