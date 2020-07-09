@@ -16,7 +16,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.js";
+import Overview from "views/Overview.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
@@ -28,10 +28,10 @@ import APIInfo from "views/APIInfo.js"
 
 var routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: "/overview",
+    name: "Overview",
     icon: "nc-icon nc-bank",
-    component: Dashboard,
+    component: Overview,
     layout: "/dashboard",
   },
   {
