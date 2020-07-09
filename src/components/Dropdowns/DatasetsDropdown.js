@@ -6,7 +6,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 // Consts
-import BASE_URL from "../constants/constants";
+import BASE_URL from "../../constants/constants";
 
 class DatasetsDropdown extends React.Component {
   constructor(props) {
