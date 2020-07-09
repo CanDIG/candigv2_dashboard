@@ -43,6 +43,12 @@ class Dashboard extends React.Component {
     this.state = initialState;
   }
 
+  componentDidMount() {
+    if(this.props.datasetId){
+      this.fetchData(this.props.datasetId); 
+    }
+  }
+
   fetchData(datasetId) {
     if (datasetId) {
       this.getCounters(datasetId, "enrollments", [

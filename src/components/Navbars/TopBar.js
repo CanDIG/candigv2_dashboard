@@ -34,7 +34,7 @@ import {
 
 import routes from "routes.js";
 
-import DatasetsDropdown from "views/Dropdown";
+import DatasetsDropdown from "views/Dropdown.js";
 
 class Header extends React.Component {
   constructor(props) {
