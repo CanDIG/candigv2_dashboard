@@ -7,6 +7,7 @@ import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.js
 // Consts
 import BASE_URL from "../../constants/constants.js"
 
+// Initialize HighchartsMap
 HighchartsMap(Highcharts);
 
 
@@ -90,26 +91,28 @@ class TreatingCentreProvince extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        let data_count = []
-        let hc_prov_codes = ["ca-ab", "ca-bc", "ca-mb", "ca-nb", "ca-nl", "ca-nt", "ca-ns", "ca-nu", "ca-on", "ca-pe", "ca-qc", "ca-sk", "ca-yt"]
-        let prov_short_codes = ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
-        let prov_full_names = ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territory']
+        let data_count = [];
+
+        // Highcharts Map requires a specific set of codes for provinces and territories, as represented by hc_prov_codes below.
+        const hc_prov_codes = ["ca-ab", "ca-bc", "ca-mb", "ca-nb", "ca-nl", "ca-nt", "ca-ns", "ca-nu", "ca-on", "ca-pe", "ca-qc", "ca-sk", "ca-yt"];
+        const prov_short_codes = ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
+        const prov_full_names = ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territory'];
 
         if (data) {
-          let treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince
+          const treatingCentreProvince = data.results.enrollments[0].treatingCentreProvince;
 
           for (let name in treatingCentreProvince) {
             if (prov_short_codes.includes(name)) {
-              let temp_data_count = []
-              temp_data_count.push(hc_prov_codes[prov_short_codes.indexOf(name)])
-              temp_data_count.push(treatingCentreProvince[name])
-              data_count.push(temp_data_count)
+              let temp_data_count = [];
+              temp_data_count.push(hc_prov_codes[prov_short_codes.indexOf(name)]);
+              temp_data_count.push(treatingCentreProvince[name]);
+              data_count.push(temp_data_count);
             }
             else if (prov_full_names.includes(name)) {
-              let temp_data_count = []
-              temp_data_count.push(hc_prov_codes[prov_full_names.indexOf(name)])
-              temp_data_count.push(treatingCentreProvince[name])
-              data_count.push(temp_data_count)
+              let temp_data_count = [];
+              temp_data_count.push(hc_prov_codes[prov_full_names.indexOf(name)]);
+              temp_data_count.push(treatingCentreProvince[name]);
+              data_count.push(temp_data_count);
             }
           }
         }
@@ -126,7 +129,7 @@ class TreatingCentreProvince extends Component {
     )
   }
   render() {
-    const chartOptions = this.state.chartOptions
+    const chartOptions = this.state.chartOptions;
     return (
       <div>
         <HighchartsReact

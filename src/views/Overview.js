@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // reactstrap components
 import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
@@ -23,10 +5,10 @@ import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
 // Consts
 import BASEURL from "../constants/constants";
 
-import Server from "./graphs/Server.js";
-import BarChart from "./graphs/BarChart.js";
-import CancerType from "./graphs/CancerType.js";
-import TreatingCentreProvince from "./maps/TreatingCentreProvince";
+import Server from "../components/Graphs/Server.js";
+import BarChart from "../components/Graphs/BarChart.js";
+import CancerType from "../components/Graphs/CancerType.js";
+import TreatingCentreProvince from "../components/Maps/TreatingCentreProvince";
 
 const initialState = {
   datasetName: "",
@@ -44,8 +26,8 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    if(this.props.datasetId){
-      this.fetchData(this.props.datasetId); 
+    if (this.props.datasetId) {
+      this.fetchData(this.props.datasetId);
     }
   }
 

@@ -6,7 +6,11 @@ import {
   DropdownItem,
 } from "reactstrap";
 // Consts
-import BASE_URL from "../constants/constants";
+import BASE_URL from "../../constants/constants";
+
+/*
+ * Dropdown component listing all the available Datasets
+ */
 
 class DatasetsDropdown extends React.Component {
   constructor(props) {
@@ -18,6 +22,11 @@ class DatasetsDropdown extends React.Component {
       selectedDataSetId: "",
     };
   }
+
+  /*
+   * Fetch dataset information from the server after the Dropdown component is added to the DOM
+   * and update both parent and local state
+   */
 
   componentDidMount() {
     fetch(BASE_URL + "/datasets/search", {
@@ -31,15 +40,21 @@ class DatasetsDropdown extends React.Component {
         }
         this.setState({ datasets: datasets });
         const firstDataset = datasets[Object.keys(datasets)[0]];
-        this.setState({ selectedDataSetId: firstDataset.id });
-        this.setState({ selectedDataset: firstDataset.name });
+        this.setState({
+          selectedDataSetId: firstDataset.id,
+          selectedDataset: firstDataset.name,
+        });
         this.updateParentState(firstDataset.name, firstDataset.id);
       })
       .catch((err) => {
         this.setState({ datasets: {} });
       });
   }
-
+  /*
+   * Update the datasetName and datasetId on the parent component
+   * @param {string} datasetName
+   * @param {string} datasetId
+   */
   updateParentState(datasetName, datasetId) {
     this.props.updateState({
       datasetName: datasetName,
@@ -53,6 +68,9 @@ class DatasetsDropdown extends React.Component {
     });
   }
 
+  /*
+   * Update both parent and local components state
+   */
   handleClick = (e) => {
     this.setState({
       selectedDataset: e.currentTarget.textContent,
@@ -65,6 +83,9 @@ class DatasetsDropdown extends React.Component {
     const datasets = this.state.datasets;
 
     const datasetList = [];
+    /*
+     * This loop builds the dropdown items list
+     */
     for (const property in datasets) {
       datasetList.push(
         <DropdownItem
@@ -88,7 +109,7 @@ class DatasetsDropdown extends React.Component {
           paddingRight: "10px",
         }}
       >
-        <DropdownToggle caret nav style={{ color: "white", fontSize: 12}}>
+        <DropdownToggle caret nav style={{ color: "white", fontSize: 12 }}>
           {this.state.selectedDataset}
         </DropdownToggle>
         <DropdownMenu>{datasetList}</DropdownMenu>
