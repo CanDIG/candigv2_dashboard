@@ -23,9 +23,6 @@ class CustomChart extends Component {
     const table = this.props.table;
     const field = this.props.field;
 
-    console.log(table)
-    console.log(field)
-
     fetch(BASE_URL + "/count", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -50,8 +47,6 @@ class CustomChart extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-
-        console.log(data)
 
         if (data) {
           let result = data.results[table][0][field];
