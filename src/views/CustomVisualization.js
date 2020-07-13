@@ -44,10 +44,10 @@ class CustomVisualization extends React.Component {
           <Row>
             <Col lg="6" md="6" sm="6">
                 <Row>
-                  <Input type="select" id="table1"></Input>
-                  <Input type="select" id="key1"></Input>
-                  <Input type="select"  id="type1"></Input>
-                  <Button id="adv1_confirm" class="btn btn-secondary">Confirm</Button>
+                  <Col xs="3"><Input type="select" id="table1"></Input></Col>
+                  <Col xs="3"><Input type="select" id="key1"></Input></Col>
+                  <Col xs="3"><Input type="select"  id="type1"></Input></Col>
+                  <Col xs="3"><Button class="btn btn-primary">Confirm</Button></Col>
                   </Row>
               <Card>
                 <CardBody>
@@ -57,10 +57,10 @@ class CustomVisualization extends React.Component {
             </Col>
             <Col lg="6" md="6" sm="6">
                 <Row>
-                  <Input type="select" id="table2"></Input>
-                  <Input type="select" id="key2"></Input>
-                  <Input type="select"  id="type2"></Input>
-                  <Button id="adv1_confirm" class="btn btn-secondary">Confirm</Button>
+                  <Col xs="3"><Input type="select" id="table2"></Input></Col>
+                  <Col xs="3"><Input type="select" id="key2"></Input></Col>
+                  <Col xs="3"><Input type="select"  id="type2"></Input></Col>
+                  <Col xs="3"><Button class="btn btn-primary">Confirm</Button></Col>
                   </Row>
               <Card>
                 <CardBody>
