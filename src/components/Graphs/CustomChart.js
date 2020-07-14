@@ -1,20 +1,28 @@
-import React, { Component } from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import React, { Component } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 // Consts
 import BASE_URL from "../../constants/constants.js";
 
 class CustomChart extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props);
     this.state = {
-      chartOptions: {
-      }
-    }
+      chartOptions: {},
+    };
+  }
+
+  componentDidMount() {
+    this.fetchData(this.props.datasetId);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.datasetId !== prevProps.datasetId) {
+    if (
+      this.props.datasetId !== prevProps.datasetId ||
+      this.props.table !== prevProps.table ||
+      this.props.field !== prevProps.field ||
+      this.props.chartType !== prevProps.chartType
+    ) {
       this.fetchData(this.props.datasetId);
     }
   }
@@ -22,6 +30,10 @@ class CustomChart extends Component {
   fetchData(datasetId) {
     const table = this.props.table;
     const field = this.props.field;
+
+    if (!datasetId) {
+      return;
+    }
 
     fetch(BASE_URL + "/count", {
       method: "POST",
@@ -47,7 +59,6 @@ class CustomChart extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-
         if (data) {
           let result = data.results[table][0][field];
           let options = { series: [{ data: [] }], xAxis: { categories: [] } };

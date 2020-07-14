@@ -50,6 +50,13 @@ var routes = [
     layout: "/dashboard",
   },
   {
+    path: "/custom_visualization",
+    name: "Custom Visualization",
+    icon: "nc-icon nc-caps-small",
+    component: CustomVisualization,
+    layout: "/dashboard",
+  },
+  {
     path: "/icons",
     name: "Icons",
     icon: "nc-icon nc-diamond",
@@ -89,13 +96,6 @@ var routes = [
     name: "Typography",
     icon: "nc-icon nc-caps-small",
     component: Typography,
-    layout: "/dashboard",
-  },
-  {
-    path: "/custom_visualization",
-    name: "Custom Visualization",
-    icon: "nc-icon nc-caps-small",
-    component: CustomVisualization,
     layout: "/dashboard",
   },
 ];
