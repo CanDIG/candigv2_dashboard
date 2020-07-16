@@ -10,6 +10,17 @@ import CustomChart from "components/Graphs/CustomChart.js";
  * Dropdown component listing all the available Datasets
  */
 
+// const buildChartList = () => {
+//   const chartList = ["Bar", "Column", "Pie", "Scatter"];
+//   return chartList.map((x) => {
+//     return (
+//       <option key={x} onClick={this.handleChartClick}>
+//         {x}
+//       </option>
+//     );
+//   });
+// }
+
 class CustomVisualizationDropDown extends React.Component {
   constructor(props) {
     super(props);
@@ -19,29 +30,19 @@ class CustomVisualizationDropDown extends React.Component {
       dropdownChartsOpen: false,
       columnsList: [],
       selectedTable: "patients",
-      selectedColumn: "dateofbirth",
+      selectedColumn: "dateOfBirth",
       selectedChart: "bar",
     };
   }
 
-  /*
-   * Fetch dataset information from the server after the Dropdown component is added to the DOM
-   * and update both parent and local state
-   */
-
-  componentDidMount() {
-    this.buildColumnsList(Object.keys(tableSchema)[0]);
-    const selectedTable = Object.keys(tableSchema)[0];
-    const selectColumn = tableSchema[selectedTable][0];
-    this.setState({
-      selectedTable: selectedTable.toLowerCase(),
-      selectedColumn: selectColumn.toLowerCase(),
-    });
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(this.state.selectedTable !== prevState.selectedTable) {
+      this.setState({selectedColumn: tableSchema[this.state.selectedTable][0]})
+    }
   }
 
   handleTableClick = (e) => {
-    let table = e.currentTarget.textContent;
-    this.buildColumnsList(table);
+    this.setState({ selectedTable: e.currentTarget.textContent });
   };
 
   handleColumnClick = (e) => {
@@ -49,38 +50,44 @@ class CustomVisualizationDropDown extends React.Component {
   };
 
   handleChartClick = (e) => {
-    this.setState({ selectedChart: e.currentTarget.textContent.toLowerCase() });
+    this.setState({ selectedChart: e.currentTarget.textContent });
   };
 
   buildTableList() {
     return Object.keys(tableSchema).map((x) => {
-      x = x.charAt(0).toUpperCase() + x.slice(1);
-      return <option onClick={this.handleTableClick}>{x}</option>;
+      return (
+        <option key={x} onClick={this.handleTableClick}>
+          {x}
+        </option>
+      );
     });
   }
 
   buildColumnsList(tableName) {
-    let columnsList = tableSchema[tableName.toLowerCase()].map((x) => {
-      x = x.charAt(0).toUpperCase() + x.slice(1);
-      return <option onClick={this.handleColumnClick}>{x}</option>;
+    let columnsList = tableSchema[tableName].map((x) => {
+      return (
+        <option key={x} onClick={this.handleColumnClick}>
+          {x}
+        </option>
+      );
     });
-    const selectedColumn = tableSchema[tableName.toLowerCase()][0];
-    this.setState({
-      columnsList: columnsList,
-      selectedTable: tableName.toLowerCase(),
-      selectedColumn: selectedColumn,
-    });
+    return columnsList;
   }
 
-  buildChartList() {
+  buildChartList = () => {
     const chartList = ["Bar", "Column", "Pie", "Scatter"];
     return chartList.map((x) => {
-      return <option onClick={this.handleChartClick}>{x}</option>;
+      return (
+        <option key={x} onClick={this.handleChartClick}>
+          {x}
+        </option>
+      );
     });
   }
 
   render() {
     const tables = this.buildTableList();
+    const columns = this.buildColumnsList(this.state.selectedTable);
     return (
       <>
         <Container fluid>
@@ -90,14 +97,15 @@ class CustomVisualizationDropDown extends React.Component {
             </Col>
 
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Input type="select">{this.state.columnsList}</Input>
+              {/* <Input type="select">{this.state.columnsList}</Input> */}
+              <Input type="select">{columns}</Input>
             </Col>
 
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
               <Input type="select">{this.buildChartList()}</Input>
             </Col>
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Button class="btn btn-primary">Confirm</Button>
+              <Button className="btn btn-primary">Confirm</Button>
             </Col>
           </Row>
         </Container>
