@@ -20,7 +20,7 @@ import Dashboard from "views/Dashboard.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
-import TableList from "views/Tables.js";
+import TableList from "views/TablesData.js";
 import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 
@@ -62,7 +62,7 @@ var routes = [
   },
   {
     path: "/tables",
-    name: "Table List",
+    name: "Clinical Metadata",
     icon: "nc-icon nc-tile-56",
     component: TableList,
     layout: "/admin",
