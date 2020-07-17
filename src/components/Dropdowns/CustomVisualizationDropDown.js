@@ -24,6 +24,12 @@ class CustomVisualizationDropDown extends React.Component {
     };
   }
 
+  splitString(newString) {
+    let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
+    let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
+    return capitalized;
+  }
+
   /*
    * It is invoked immediately after updating occurs.
    * This method updates the `selectedColumn` everytime there is a change of `selectedTable`,
@@ -67,7 +73,7 @@ class CustomVisualizationDropDown extends React.Component {
 
   buildTableList() {
     return Object.keys(tableSchema).map((x) => {
-      return <option key={x}>{x}</option>;
+      return <option value={x}>{this.splitString(x)}</option>;
     });
   }
 
@@ -77,7 +83,7 @@ class CustomVisualizationDropDown extends React.Component {
 
   buildColumnsList(tableName) {
     let columnsList = tableSchema[tableName].map((x) => {
-      return <option key={x}>{x}</option>;
+      return <option value={x}>{this.splitString(x)}</option>;
     });
     return columnsList;
   }
@@ -89,7 +95,7 @@ class CustomVisualizationDropDown extends React.Component {
   buildChartList = () => {
     const chartList = ["Bar", "Column", "Scatter"];
     return chartList.map((x) => {
-      return <option key={x.toLowerCase()}>{x}</option>;
+      return <option value={x.toLowerCase()}>{x}</option>;
     });
   };
 
@@ -134,6 +140,7 @@ class CustomVisualizationDropDown extends React.Component {
               <CardBody>
                 <CustomChart
                   datasetId={this.props.datasetId}
+                  datasetName={this.props.datasetName}
                   chartType={this.state.selectedChart}
                   table={this.state.selectedTable}
                   field={this.state.selectedColumn}

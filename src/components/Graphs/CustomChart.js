@@ -12,6 +12,12 @@ class CustomChart extends Component {
     };
   }
 
+  splitString(newString) {
+    let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
+    let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
+    return capitalized;
+  }
+
   componentDidMount() {
     this.fetchData(this.props.datasetId);
   }
@@ -61,7 +67,15 @@ class CustomChart extends Component {
       .then((data) => {
         if (data) {
           let result = data.results[table][0][field];
-          let options = { chart: {type: this.props.chartType}, series: [{ data: [] }], xAxis: { categories: [] } };
+          let options = {
+            chart: { type: this.props.chartType },
+            title: { text: "Distribuition of " + this.splitString(field) },
+            subtitle: {
+              text: this.props.datasetName + " " + this.splitString(table),
+            },
+            series: [{ data: [] }],
+            xAxis: { categories: [] },
+          };
           for (const property in result) {
             options.series[0].data.push(result[property]);
             options.xAxis.categories.push(property);
