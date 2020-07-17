@@ -7,19 +7,8 @@ import { Card, CardBody, Row, Col, Button, Input } from "reactstrap";
 import CustomChart from "components/Graphs/CustomChart.js";
 
 /*
- * Dropdown component listing all the available Datasets
+ * Visualizatiion component to plot tables and its columns values to different kinds of graphs
  */
-
-// const buildChartList = () => {
-//   const chartList = ["Bar", "Column", "Pie", "Scatter"];
-//   return chartList.map((x) => {
-//     return (
-//       <option key={x} onClick={this.handleChartClick}>
-//         {x}
-//       </option>
-//     );
-//   });
-// }
 
 class CustomVisualizationDropDown extends React.Component {
   constructor(props) {
@@ -35,55 +24,74 @@ class CustomVisualizationDropDown extends React.Component {
     };
   }
 
+  /*
+   * It is invoked immediately after updating occurs.
+   * This method updates the `selectedColumn` everytime there is a change of `selectedTable`,
+   * setting the `selectedColumn` to the first element of the columns list
+   */
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(this.state.selectedTable !== prevState.selectedTable) {
-      this.setState({selectedColumn: tableSchema[this.state.selectedTable][0]})
+    if (this.state.selectedTable !== prevState.selectedTable) {
+      this.setState({
+        selectedColumn: tableSchema[this.state.selectedTable][0],
+      });
     }
   }
 
+  /*
+   * Update the `selectedTable` state everytime the component is clicked
+   */
+
   handleTableClick = (e) => {
-    this.setState({ selectedTable: e.currentTarget.textContent });
+    this.setState({ selectedTable: e.currentTarget.value });
   };
+
+  /*
+   * Update the `selectedColumn` state everytime the component is clicked
+   */
 
   handleColumnClick = (e) => {
-    this.setState({ selectedColumn: e.currentTarget.textContent });
+    this.setState({ selectedColumn: e.currentTarget.value });
   };
 
+  /*
+   * Update the `selectedChart` state everytime the component is clicked
+   */
+
   handleChartClick = (e) => {
-    this.setState({ selectedChart: e.currentTarget.textContent });
+    this.setState({ selectedChart: e.currentTarget.value });
   };
+
+  /*
+   * Create dropdown for tables
+   */
 
   buildTableList() {
     return Object.keys(tableSchema).map((x) => {
-      return (
-        <option key={x} onClick={this.handleTableClick}>
-          {x}
-        </option>
-      );
+      return <option key={x}>{x}</option>;
     });
   }
 
+  /*
+   * Create dropdown for columns
+   */
+
   buildColumnsList(tableName) {
     let columnsList = tableSchema[tableName].map((x) => {
-      return (
-        <option key={x} onClick={this.handleColumnClick}>
-          {x}
-        </option>
-      );
+      return <option key={x}>{x}</option>;
     });
     return columnsList;
   }
 
+  /*
+   * Create dropdown for charts
+   */
+
   buildChartList = () => {
     const chartList = ["Bar", "Column", "Pie", "Scatter"];
     return chartList.map((x) => {
-      return (
-        <option key={x} onClick={this.handleChartClick}>
-          {x}
-        </option>
-      );
+      return <option key={x}>{x}</option>;
     });
-  }
+  };
 
   render() {
     const tables = this.buildTableList();
@@ -93,16 +101,25 @@ class CustomVisualizationDropDown extends React.Component {
         <Container fluid>
           <Row>
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Input type="select">{tables}</Input>
+              <Input onChange={this.handleTableClick} type="select">
+                {tables}
+              </Input>
             </Col>
 
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              {/* <Input type="select">{this.state.columnsList}</Input> */}
-              <Input type="select">{columns}</Input>
+              <Input
+                value={this.state.selectedColumn}
+                onChange={this.handleColumnClick}
+                type="select"
+              >
+                {columns}
+              </Input>
             </Col>
 
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Input type="select">{this.buildChartList()}</Input>
+              <Input onChange={this.handleChartClick} type="select">
+                {this.buildChartList()}
+              </Input>
             </Col>
             <Col xs="6" sm="6" md="3" lg="3" xl="3">
               <Button className="btn btn-primary">Confirm</Button>

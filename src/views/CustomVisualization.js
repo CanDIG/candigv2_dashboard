@@ -1,40 +1,12 @@
 import React from "react";
 // reactstrap components
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Row,
-  Col,
-  Button,
-  Input,
-  Container,
-} from "reactstrap";
+import { Row, Col, Container } from "reactstrap";
 
-import CustomChart from "../components/Graphs/CustomChart.js";
 import CustomVisualizationDropDown from "../components/Dropdowns/CustomVisualizationDropDown.js";
-
-const initialState = {
-  datasetName: "",
-  datasetId: "",
-};
 
 class CustomVisualization extends React.Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
-  }
-
-  componentDidMount() {
-    if (this.props.datasetId) {
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      datasetId: nextProps.datasetId,
-      datasetName: nextProps.datasetName,
-    });
   }
 
   render() {
