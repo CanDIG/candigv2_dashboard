@@ -19,7 +19,7 @@
 import React, { useState, useRef } from "react";
 import { useTable, useSortBy } from 'react-table'
 import styled from 'styled-components'
-
+import BASE_URL from 'constants/constants'
 
 // reactstrap components
 import {
@@ -102,10 +102,8 @@ const Styles = styled.div`
 
 
 
-function CreateColumns(metadataType, columnNames) {
+function CreateColumns(columnNames) {
   var columnList = [];
-  const topHeader = metadataType
-  const topHeaderCapitalized = topHeader.charAt(0).toLocaleUpperCase + topHeader.slice(1)
 
   for (let item in columnNames) {
     var value = columnNames[item];
@@ -120,18 +118,43 @@ function CreateColumns(metadataType, columnNames) {
   return columnList
 }
 
-// function getMetadataData(props) {
-//   var data;
-//   var columns;
-//   data = React.useMemo(() => PATIENT["results"][props.selectedMetadata], [])
+function getMetadataData(datasetId, metadata) {
+  var datasets = {};
+  console.log("Calling")
+  fetch(BASE_URL + "/"+ metadata +"/search", {
+    method: "POST",
+    body: JSON.stringify({datasetId: datasetId}),
+    headers: {
+      Content_Type: "application/json"
+    }
+  })
+    .then(function(response) { 
+      if (!response.ok) {
+        console.log(response)
+      } else {
+        response.json()
+        .then(data => {
+          console.log(data);
+          for (let i = 0; i < data.results[metadata].length; i++) {
+            datasets[i] = data.results[metadata][i]
+          }
+        })
+      }})
+      
 
-//   console.log(data)
-  
-//   columns = Object.keys(data[0]);
-//   console.log(columns)
+  console.log(datasets);
+  return datasets
+}
 
-//   return data
-
+// function getMetadataData(datasetId, metadata) {
+//   fetch(BASE_URL + "/" + metadata + "/search",
+//     {
+//       method: "POST",
+//       body: JSON.stringify({datasetId: datasetId})
+//     }
+//   )
+//     .then(response => response.json())
+//     .then()
 // }
 
 
@@ -179,7 +202,7 @@ function TableR({ columns, data }) {
 
 
 
-function TableApp() {
+function TableApp(props) {
 
   const [selectedMetadata, setSelectedMetadata] = useState("Types");
   const [data, setData] = useState([]);
@@ -188,26 +211,28 @@ function TableApp() {
   React.useEffect(() => {
     //fetch data
     try  {
-      setData(PATIENT["results"][selectedMetadata]);
+      // setData(PATIENT["results"][selectedMetadata]);
+      setData(getMetadataData(props.datasetId, selectedMetadata))
+      setColumns(CreateColumns(Object.keys(data[0])))
+
     }
     catch(err) {
       console.log(err)
-      setData([])
     }
-    }, [selectedMetadata, data]
+    }, [selectedMetadata]
   )
 
-  React.useEffect(() => {
-    //Separate Effect since state change is async and columns depends on data - Not entirely sure if necessary
-    try  {
-      setColumns(CreateColumns(selectedMetadata, Object.keys(data[0])))
-    }
-    catch(err) {
-      console.log(err)
-      setColumns([])
-    }
-    }, [selectedMetadata, data]
-  )
+  // React.useEffect(() => {
+  //   //Separate Effect since state change is async and columns depends on data - Not entirely sure if necessary
+  //   try  {
+  //     setColumns(CreateColumns(Object.keys(data[0])))
+  //   }
+  //   catch(err) {
+  //     console.log(err)
+  //     setColumns([])
+  //   }
+  //   }, [data, columns]
+  // )
 
 
   const dataM = React.useMemo(() => data, [data])
