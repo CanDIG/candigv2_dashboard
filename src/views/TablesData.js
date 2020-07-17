@@ -102,9 +102,9 @@ const Styles = styled.div`
 
 
 
-function CreateColumns(columnNames) {
+function CreateColumns(columnNames, cb) {
   var columnList = [];
-
+  console.log(columnNames);
   for (let item in columnNames) {
     var value = columnNames[item];
     var column = {
@@ -115,35 +115,34 @@ function CreateColumns(columnNames) {
   }
 
 
-  return columnList
+  cb(columnList)
 }
 
-function getMetadataData(datasetId, metadata) {
-  var datasets = {};
+function getMetadataData(datasetId, metadata, cb) {
+  var datasets = [];
   console.log("Calling")
-  fetch(BASE_URL + "/"+ metadata +"/search", {
+  return fetch(BASE_URL + "/"+ metadata +"/search", {
     method: "POST",
     body: JSON.stringify({datasetId: datasetId}),
     headers: {
-      Content_Type: "application/json"
+      "Content-Type": "application/json"
     }
   })
     .then(function(response) { 
       if (!response.ok) {
         console.log(response)
       } else {
-        response.json()
-        .then(data => {
-          console.log(data);
-          for (let i = 0; i < data.results[metadata].length; i++) {
-            datasets[i] = data.results[metadata][i]
-          }
-        })
-      }})
-      
-
-  console.log(datasets);
-  return datasets
+        return response.json()
+  }})
+     .then(data => {
+       //console.log(data);
+       //data = JSON.parse(data);
+       for (let i = 0; i < data.results[metadata].length; i++) {
+        datasets.push(data.results[metadata][i]);
+       }
+       console.log([datasets]);
+       cb(datasets)
+     })
 }
 
 // function getMetadataData(datasetId, metadata) {
@@ -212,27 +211,30 @@ function TableApp(props) {
     //fetch data
     try  {
       // setData(PATIENT["results"][selectedMetadata]);
-      setData(getMetadataData(props.datasetId, selectedMetadata))
-      setColumns(CreateColumns(Object.keys(data[0])))
+      //setData(getMetadataData(props.datasetId, selectedMetadata))
+      //setColumns(CreateColumns(Object.keys(data[0])))
+      getMetadataData(props.datasetId, selectedMetadata, setData)
 
     }
     catch(err) {
-      console.log(err)
+      console.log(err);
+      console.log(data);
     }
     }, [selectedMetadata]
   )
 
-  // React.useEffect(() => {
-  //   //Separate Effect since state change is async and columns depends on data - Not entirely sure if necessary
-  //   try  {
-  //     setColumns(CreateColumns(Object.keys(data[0])))
-  //   }
-  //   catch(err) {
-  //     console.log(err)
+  React.useEffect(() => {
+     //Separate Effect since state change is async and columns depends on data - Not entirely sure if necessary
+     try  {
+      CreateColumns(Object.keys(data[0]), setColumns)
+     }
+     catch(err) {
+       console.log(err)
+       
   //     setColumns([])
-  //   }
-  //   }, [data, columns]
-  // )
+     }
+     }, [data]
+  )
 
 
   const dataM = React.useMemo(() => data, [data])
