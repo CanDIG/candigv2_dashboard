@@ -3,7 +3,7 @@ import { Container } from "reactstrap";
 // Consts
 import tableSchema from "../../constants/tableSchema.js";
 
-import { Card, CardBody, Row, Col, Button, Input } from "reactstrap";
+import { Card, CardBody, Row, Col, Input } from "reactstrap";
 import CustomChart from "components/Graphs/CustomChart.js";
 
 /*
@@ -58,7 +58,7 @@ class CustomVisualizationDropDown extends React.Component {
    */
 
   handleChartClick = (e) => {
-    this.setState({ selectedChart: e.currentTarget.value });
+    this.setState({ selectedChart: e.currentTarget.value.toLowerCase() });
   };
 
   /*
@@ -87,9 +87,9 @@ class CustomVisualizationDropDown extends React.Component {
    */
 
   buildChartList = () => {
-    const chartList = ["Bar", "Column", "Pie", "Scatter"];
+    const chartList = ["Bar", "Column", "Scatter"];
     return chartList.map((x) => {
-      return <option key={x}>{x}</option>;
+      return <option key={x.toLowerCase()}>{x}</option>;
     });
   };
 
@@ -99,32 +99,34 @@ class CustomVisualizationDropDown extends React.Component {
     return (
       <>
         <Container fluid>
-          <Row>
-            <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Input onChange={this.handleTableClick} type="select">
-                {tables}
-              </Input>
-            </Col>
+          <div style={{ "margin-bottom": "10px" }}>
+            <Row>
+              <Col xs="6" sm="6" md="4" lg="4" xl="4">
+                <Input onChange={this.handleTableClick} type="select">
+                  {tables}
+                </Input>
+              </Col>
 
-            <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Input
-                value={this.state.selectedColumn}
-                onChange={this.handleColumnClick}
-                type="select"
-              >
-                {columns}
-              </Input>
-            </Col>
+              <Col xs="6" sm="6" md="4" lg="4" xl="4">
+                <Input
+                  value={this.state.selectedColumn}
+                  onChange={this.handleColumnClick}
+                  type="select"
+                >
+                  {columns}
+                </Input>
+              </Col>
 
-            <Col xs="6" sm="6" md="3" lg="3" xl="3">
-              <Input onChange={this.handleChartClick} type="select">
-                {this.buildChartList()}
-              </Input>
-            </Col>
-            <Col xs="6" sm="6" md="3" lg="3" xl="3">
+              <Col xs="6" sm="6" md="4" lg="4" xl="4">
+                <Input onChange={this.handleChartClick} type="select">
+                  {this.buildChartList()}
+                </Input>
+              </Col>
+              {/* <Col xs="6" sm="6" md="3" lg="3" xl="3">
               <Button className="btn btn-primary">Confirm</Button>
-            </Col>
-          </Row>
+            </Col> */}
+            </Row>
+          </div>
         </Container>
         <Row>
           <Col>

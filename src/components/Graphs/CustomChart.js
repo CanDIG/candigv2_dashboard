@@ -61,7 +61,7 @@ class CustomChart extends Component {
       .then((data) => {
         if (data) {
           let result = data.results[table][0][field];
-          let options = { series: [{ data: [] }], xAxis: { categories: [] } };
+          let options = { chart: {type: this.props.chartType}, series: [{ data: [] }], xAxis: { categories: [] } };
           for (const property in result) {
             options.series[0].data.push(result[property]);
             options.xAxis.categories.push(property);
