@@ -24,6 +24,11 @@ class CustomVisualizationDropDown extends React.Component {
     };
   }
 
+  /*
+   * Transform any camelCase string in a capitalized workd
+   * @param {string} newString
+   */
+
   splitString(newString) {
     let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
     let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
