@@ -35,7 +35,7 @@ class CustomVisualizationDropDown extends React.Component {
    * This method updates the `selectedColumn` everytime there is a change of `selectedTable`,
    * setting the `selectedColumn` to the first element of the columns list
    */
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.selectedTable !== prevState.selectedTable) {
       this.setState({
         selectedColumn: tableSchema[this.state.selectedTable][0],
@@ -44,11 +44,13 @@ class CustomVisualizationDropDown extends React.Component {
   }
 
   /*
-   * Update the `selectedTable` state everytime the component is clicked
+   * Update the `selectedTable` and `selectedColumn` state everytime the component is clicked
    */
 
   handleTableClick = (e) => {
-    this.setState({ selectedTable: e.currentTarget.value });
+    const table = e.currentTarget.value;
+    const column = tableSchema[table][0];
+    this.setState({ selectedTable: table, selectedColumn: column });
   };
 
   /*
@@ -73,7 +75,11 @@ class CustomVisualizationDropDown extends React.Component {
 
   buildTableList() {
     return Object.keys(tableSchema).map((x) => {
-      return <option value={x}>{this.splitString(x)}</option>;
+      return (
+        <option key={x} value={x}>
+          {this.splitString(x)}
+        </option>
+      );
     });
   }
 
@@ -83,7 +89,11 @@ class CustomVisualizationDropDown extends React.Component {
 
   buildColumnsList(tableName) {
     let columnsList = tableSchema[tableName].map((x) => {
-      return <option value={x}>{this.splitString(x)}</option>;
+      return (
+        <option key={x} value={x}>
+          {this.splitString(x)}
+        </option>
+      );
     });
     return columnsList;
   }
@@ -93,9 +103,13 @@ class CustomVisualizationDropDown extends React.Component {
    */
 
   buildChartList = () => {
-    const chartList = ["Bar", "Column", "Scatter"];
+    const chartList = ["Bar", "Column", "Scatter", "Pie"];
     return chartList.map((x) => {
-      return <option value={x.toLowerCase()}>{x}</option>;
+      return (
+        <option key={x} value={x.toLowerCase()}>
+          {x}
+        </option>
+      );
     });
   };
 
@@ -105,7 +119,7 @@ class CustomVisualizationDropDown extends React.Component {
     return (
       <>
         <Container fluid>
-          <div style={{ "margin-bottom": "10px" }}>
+          <div style={{ marginBottom: "10px" }}>
             <Row>
               <Col xs="6" sm="6" md="4" lg="4" xl="4">
                 <Input onChange={this.handleTableClick} type="select">
