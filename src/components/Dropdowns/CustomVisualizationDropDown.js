@@ -7,7 +7,7 @@ import { Card, CardBody, Row, Col, Input } from "reactstrap";
 import CustomChart from "components/Graphs/CustomChart.js";
 
 /*
- * Visualizatiion component to plot tables and its columns values to different kinds of graphs
+ * Visualization component to plot tables and its columns values to different kinds of graphs
  */
 
 class CustomVisualizationDropDown extends React.Component {
@@ -25,7 +25,7 @@ class CustomVisualizationDropDown extends React.Component {
   }
 
   /*
-   * Transform any camelCase string in a capitalized workd
+   * Transform any camelCase string in a capitalized word
    * @param {string} newString
    */
 
