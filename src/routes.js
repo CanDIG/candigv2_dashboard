@@ -24,7 +24,8 @@ import TableList from "views/Tables.js";
 import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 import Services from "views/Services.js";
-import APIInfo from "views/APIInfo.js"
+import APIInfo from "views/APIInfo.js";
+import CustomVisualization from "views/CustomVisualization";
 
 var routes = [
   {
@@ -46,6 +47,13 @@ var routes = [
     name: "API info",
     icon: "nc-icon nc-sound-wave",
     component: APIInfo,
+    layout: "/dashboard",
+  },
+  {
+    path: "/custom_visualization",
+    name: "Custom Visualization",
+    icon: "nc-icon nc-caps-small",
+    component: CustomVisualization,
     layout: "/dashboard",
   },
   {
