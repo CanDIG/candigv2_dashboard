@@ -22,7 +22,8 @@ import {
   useSortBy,
   useResizeColumns,
   useFlexLayout,
-  useRowSelect
+  useRowSelect,
+  usePagination
 } from 'react-table'
 import styled from 'styled-components'
 import BASE_URL from 'constants/constants'
@@ -44,29 +45,12 @@ import Dropdown from "../components/Dropdown/ClinMetadataDropdown.js"
 import PATIENT from "constants/patients"
 
 const Styles = styled.div`
-padding: 1rem;
-${'' /* These styles are suggested for the table fill all available space in its containing element */}
-display: block;
-${'' /* These styles are required for a horizontaly scrollable table overflow */}
-overflow: auto;
+  padding: 1rem;
+  overflow: auto;
 
   table {
     border-spacing: 0;
     border: 1px solid black;
-
-    .thead {
-      ${'' /* These styles are required for a scrollable body to align with the header properly */}
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    .tbody {
-      ${'' /* These styles are required for a scrollable table body */}
-      overflow-y: scroll;
-      overflow-x: hidden;
-      height: 250px;
-    }
-
 
     tr {
       :last-child {
@@ -87,6 +71,10 @@ overflow: auto;
         border-right: 0;
       }
     }
+  }
+
+  .pagination {
+    padding: 0.5rem;
   }
 `
 const IndeterminateCheckbox = React.forwardRef(
@@ -116,10 +104,23 @@ function TableC({ columns, data }) {
     allColumns,
     getToggleHideAllColumnsProps,
     state,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
   } = useTable({
     columns,
     data,
-  })
+    initialState: { pageIndex: 0 },
+  },
+    usePagination
+  )
 
   // Render the UI for your table
   return (
@@ -148,6 +149,21 @@ function TableC({ columns, data }) {
       </Card>
       <Card>
         <Styles>
+          <pre>
+            <code>
+              {JSON.stringify(
+                {
+                  pageIndex,
+                  pageSize,
+                  pageCount,
+                  canNextPage,
+                  canPreviousPage,
+                },
+                null,
+                2
+              )}
+            </code>
+          </pre>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -159,7 +175,7 @@ function TableC({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {page.map((row, i) => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
@@ -171,27 +187,56 @@ function TableC({ columns, data }) {
           })}
         </tbody>
       </table>
+      <div className="pagination">
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </button>{' '}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </button>{' '}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </button>{' '}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              gotoPage(page)
+            }}
+            style={{ width: '100px' }}
+          />
+        </span>{' '}
+        <select
+          value={pageSize}
+          onChange={e => {
+            setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
       </Styles>
       </Card>
-      <pre>{JSON.stringify(state, null, 2)}</pre>
     </>
   )
 }
 
-const headerProps = (props, { column }) => getStyles(props, column.align)
-
-const cellProps = (props, { cell }) => getStyles(props, cell.column.align)
-
-const getStyles = (props, align = 'left') => [
-  props,
-  {
-    style: {
-      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-      alignItems: 'flex-start',
-      display: 'flex',
-    },
-  },
-]
 
 function CreateColumns(columnNames, cb) {
   var columnList = [];
@@ -264,44 +309,23 @@ function TableApp(props) {
      }
      catch(err) {
        console.log(err)
-       
-  //     setColumns([])
      }
      }, [data]
   )
 
-
   const dataM = React.useMemo(() => data, [data])
-  // const columnsM = React.useMemo (
-  //   () =>[
-  //     {
-  //       Header: selectedMetadata,
-  //       columns: columns
-  //     }
-  //   ],
-  //   [selectedMetadata, columns]
-  // )
   const columnsM = React.useMemo (() => columns, [columns])
 
 
   return (
         <div className="content">
-
-
           <Row>
-
               <Dropdown metadataCallback = {setSelectedMetadata}/>
-              </Row>
-
-
-<Row>
+          </Row>
+          <Row>
             <TableC columns={columnsM} data={dataM} />
           </Row>
-      
-
-          
         </div>
-      
   )
 }
 
