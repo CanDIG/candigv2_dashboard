@@ -17,7 +17,13 @@
 
 */
 import React, { useState, useRef } from "react";
-import { useTable, useSortBy } from 'react-table'
+import { 
+  useTable,
+  useSortBy,
+  useResizeColumns,
+  useFlexLayout,
+  useRowSelect
+} from 'react-table'
 import styled from 'styled-components'
 import BASE_URL from 'constants/constants'
 
@@ -30,17 +36,37 @@ import {
   Table,
   Row,
   Col,
+  Button,
+  Container
 } from "reactstrap";
 
 import Dropdown from "../components/Dropdown/ClinMetadataDropdown.js"
 import PATIENT from "constants/patients"
 
 const Styles = styled.div`
-  padding: 1rem;
+padding: 1rem;
+${'' /* These styles are suggested for the table fill all available space in its containing element */}
+display: block;
+${'' /* These styles are required for a horizontaly scrollable table overflow */}
+overflow: auto;
 
   table {
     border-spacing: 0;
     border: 1px solid black;
+
+    .thead {
+      ${'' /* These styles are required for a scrollable body to align with the header properly */}
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .tbody {
+      ${'' /* These styles are required for a scrollable table body */}
+      overflow-y: scroll;
+      overflow-x: hidden;
+      height: 250px;
+    }
+
 
     tr {
       :last-child {
@@ -63,44 +89,109 @@ const Styles = styled.div`
     }
   }
 `
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
 
-// class Tables extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.getMetadataName = this.getMetadataName.bind(this)
-//     this.state = {
-//       selectedMetadata: "None"
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
 
-//     }
-//   }
+    return <input type="checkbox" ref={resolvedRef} {...rest} />
 
-//   getMetadataName(metadata){
-//     this.setState(
-//       {selectedMetadata: metadata},
-//       this.getMetadataData
-//     );
-//   }
+    // return <Button color="primary" onClick={() => onCheckboxBtnClick(1)}></Button>
 
+  }
+)
 
+function TableC({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    allColumns,
+    getToggleHideAllColumnsProps,
+    state,
+  } = useTable({
+    columns,
+    data,
+  })
 
+  // Render the UI for your table
+  return (
+    <>
+    <Card>
+      <div>
+        <div>
+          <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
+          All
+        </div>
+        <Container>
+        <Row xs="2">
+        {allColumns.map(column => (
+          <Col key={column.id}>
+            <label>
+              <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
+              {column.id}
+            </label>
+          </Col>
+          
+        ))}
+        </Row>
+        </Container>
+        <br />
+      </div>
+      </Card>
+      <Card>
+        <Styles>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      </Styles>
+      </Card>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+    </>
+  )
+}
 
+const headerProps = (props, { column }) => getStyles(props, column.align)
 
+const cellProps = (props, { cell }) => getStyles(props, cell.column.align)
 
-//   render() {
-//     return (
-//       <>
-//         <div className="content">
-//           <Dropdown metadataCallback = {this.getMetadataName}/>
-
-//         </div>
-//       </>
-//     );
-//   }
-// }
-
-
-
-
+const getStyles = (props, align = 'left') => [
+  props,
+  {
+    style: {
+      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+      alignItems: 'flex-start',
+      display: 'flex',
+    },
+  },
+]
 
 function CreateColumns(columnNames, cb) {
   var columnList = [];
@@ -113,8 +204,6 @@ function CreateColumns(columnNames, cb) {
     }
     columnList.push(column)
   }
-
-
   cb(columnList)
 }
 
@@ -145,65 +234,10 @@ function getMetadataData(datasetId, metadata, cb) {
      })
 }
 
-// function getMetadataData(datasetId, metadata) {
-//   fetch(BASE_URL + "/" + metadata + "/search",
-//     {
-//       method: "POST",
-//       body: JSON.stringify({datasetId: datasetId})
-//     }
-//   )
-//     .then(response => response.json())
-//     .then()
-// }
-
-
-
-function TableR({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
-    columns,
-    data,
-  })
-
-  // Render the UI for your table
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
-  )
-}
-
-
 
 function TableApp(props) {
 
-  const [selectedMetadata, setSelectedMetadata] = useState("Types");
+  const [selectedMetadata, setSelectedMetadata] = useState("patients");
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
 
@@ -211,8 +245,8 @@ function TableApp(props) {
     //fetch data
     try  {
       // setData(PATIENT["results"][selectedMetadata]);
-      //setData(getMetadataData(props.datasetId, selectedMetadata))
-      //setColumns(CreateColumns(Object.keys(data[0])))
+      // Use above for local debugging
+      
       getMetadataData(props.datasetId, selectedMetadata, setData)
 
     }
@@ -252,10 +286,19 @@ function TableApp(props) {
 
   return (
         <div className="content">
-          <Dropdown metadataCallback = {setSelectedMetadata}/>
-          <Styles>
-            <TableR columns={columnsM} data={dataM} />
-          </Styles>
+
+
+          <Row>
+
+              <Dropdown metadataCallback = {setSelectedMetadata}/>
+              </Row>
+
+
+<Row>
+            <TableC columns={columnsM} data={dataM} />
+          </Row>
+      
+
           
         </div>
       
