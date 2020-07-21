@@ -5,10 +5,6 @@ import { Row, Col, Container } from "reactstrap";
 import CustomVisualizationDropDown from "../components/Dropdowns/CustomVisualizationDropDown.js";
 
 class CustomVisualization extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <>
