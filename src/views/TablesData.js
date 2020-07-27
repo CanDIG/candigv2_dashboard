@@ -38,10 +38,24 @@ import {
   Row,
   Col,
   Button,
-  Container
+  Container,
+  ButtonGroup,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  InputGroup,
+  InputGroupAddon,
+  Input,
+  InputGroupText,
+  InputGroupButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  ButtonDropdown,
+  Collapse
 } from "reactstrap";
 
-import Dropdown from "../components/Dropdown/ClinMetadataDropdown.js"
+import MetaDropdown from "../components/Dropdown/ClinMetadataDropdown.js"
 import PATIENT from "constants/patients"
 
 const Styles = styled.div`
@@ -73,9 +87,46 @@ const Styles = styled.div`
     }
   }
 
-  .pagination {
-    padding: 0.5rem;
+  .pageCountBox {
+    margin-left: .3rem;
+    // padding: 10px 10px 10px 10px;
   }
+
+  //Need to figure out how to do this for individual inputs
+
+  .form-group .input-group-prepend .input-group-text, 
+  .form-group .input-group-append .input-group-text, 
+  .input-group .input-group-prepend .input-group-text, 
+  .input-group .input-group-append .input-group-text {
+    padding: 10px 10px 10px 10px;
+  }
+
+  .pageCountOuter {
+    background-color: #e9ecef;
+  }
+
+  .goToPage {
+    background-color: #e9ecef;
+  }
+
+  .tablePageInput {
+    min-width: 0px;
+    width: 10%;
+    flex: none
+  }
+
+  .input-group .input-group-prepend .btn {
+    
+    margin-top: 0%;
+    margin-bottom: 0%;
+    margin-left: 0%;
+    margin-right: 0%;
+  
+  }
+
+  // .pagination {
+  //   padding: 0.5rem;
+  // }
 `
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -89,11 +140,26 @@ const IndeterminateCheckbox = React.forwardRef(
     return <input type="checkbox" ref={resolvedRef} {...rest} />
 
     // return <Button color="primary" onClick={() => onCheckboxBtnClick(1)}></Button>
-
   }
 )
 
-function TableC({ columns, data }) {
+const IndeterminateButton = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return <Button ref={resolvedRef} {...rest} />
+
+    // return <Button color="primary" onClick={() => onCheckboxBtnClick(1)}></Button>
+  }
+)
+
+
+function TableC({ columns, data, metadataCallback }) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -103,6 +169,7 @@ function TableC({ columns, data }) {
     prepareRow,
     allColumns,
     getToggleHideAllColumnsProps,
+    toggleHideAllColumns,
     state,
     page,
     canPreviousPage,
@@ -122,48 +189,47 @@ function TableC({ columns, data }) {
     usePagination
   )
 
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
+  const [dropdownColumnsOpen, setDropdownColumnsOpen] = useState(false);
+  const toggleDropDownColumns = () => setDropdownColumnsOpen(!dropdownColumnsOpen);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
+
+
   // Render the UI for your table
   return (
     <>
-    <Card>
-      <div>
-        <div>
-          <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
-          All
-        </div>
+    <Row xs="6">
+      <ButtonGroup>
+      <MetaDropdown metadataCallback = {metadataCallback}/>
+        <IndeterminateButton onClick={() => toggleHideAllColumns()} > Toggle all </IndeterminateButton>
+        <Button color="primary" onClick={toggleIsCollapsed}>Column Toggles</Button>
+      </ButtonGroup>
+      
+
+    </Row>
+    <Row>
+
+    <Collapse isOpen={isCollapsed}>
+
+      <Card>
         <Container>
-        <Row xs="2">
         {allColumns.map(column => (
-          <Col key={column.id}>
-            <label>
-              <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
-              {column.id}
-            </label>
-          </Col>
+
+               <Button onClick={() => column.toggleHidden()} key={column.id}> {column.id}</Button>
+              
           
         ))}
-        </Row>
+
         </Container>
-        <br />
-      </div>
       </Card>
+      </Collapse>
+      </Row>
+      <Row>
       <Card>
         <Styles>
-          <pre>
-            <code>
-              {JSON.stringify(
-                {
-                  pageIndex,
-                  pageSize,
-                  pageCount,
-                  canNextPage,
-                  canPreviousPage,
-                },
-                null,
-                2
-              )}
-            </code>
-          </pre>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -188,54 +254,60 @@ function TableC({ columns, data }) {
         </tbody>
       </table>
       <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
-        <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
-          <input
+
+        <InputGroup> 
+        <InputGroupAddon className="pageControls" addonType="prepend">
+          <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage} >  &lt; &lt; </Button>
+          <Button onClick={() => previousPage()} disabled={!canPreviousPage}> &lt; </Button>
+          <Button onClick={() => nextPage()} disabled={!canNextPage}>&gt; </Button>
+          <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>&gt;&gt; </Button>
+          <InputGroupText className="pageCountOuter">
+          Page <strong className="pageCountBox">{pageIndex + 1} of {pageOptions.length}</strong>
+        </InputGroupText>
+        <InputGroupText className="goToPage">
+          Go to page:
+        </InputGroupText>
+        </InputGroupAddon>
+        <Input
+            className="tablePageInput"
             type="number"
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               gotoPage(page)
             }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value))
-          }}
-        >
+        />
+        <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggleDropDown}  >
+          <DropdownToggle caret style={{
+            marginTop: "0%",
+            marginBottom: "0%",
+            marginLeft: "0%"
+        }}>
+            Show {pageSize} 
+          </DropdownToggle>
+          <DropdownMenu onClick={e => {
+              setPageSize(Number(e.target.value))
+            }}>
           {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
+            <DropdownItem 
+            key={pageSize} 
+            value={pageSize}
+            >
               Show {pageSize}
-            </option>
+            </DropdownItem>
           ))}
-        </select>
+          </DropdownMenu>
+        </InputGroupButtonDropdown>
+        </InputGroup>
+
       </div>
       </Styles>
       </Card>
+      </Row>
     </>
   )
 }
+
 
 
 function CreateColumns(columnNames, cb) {
@@ -289,10 +361,10 @@ function TableApp(props) {
   React.useEffect(() => {
     //fetch data
     try  {
-      // setData(PATIENT["results"][selectedMetadata]);
+      setData(PATIENT["results"][selectedMetadata]);
       // Use above for local debugging
       
-      getMetadataData(props.datasetId, selectedMetadata, setData)
+      // getMetadataData(props.datasetId, selectedMetadata, setData)
 
     }
     catch(err) {
@@ -319,12 +391,9 @@ function TableApp(props) {
 
   return (
         <div className="content">
-          <Row>
-              <Dropdown metadataCallback = {setSelectedMetadata}/>
-          </Row>
-          <Row>
-            <TableC columns={columnsM} data={dataM} />
-          </Row>
+
+
+            <TableC columns={columnsM} data={dataM} metadataCallback = {setSelectedMetadata}/>
         </div>
   )
 }

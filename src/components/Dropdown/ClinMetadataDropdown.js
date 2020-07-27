@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown ,Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 // Consts
 import { CLIN_METADATA } from 'constants/constants'
 
@@ -48,14 +48,14 @@ class ClinMetadataDropdown extends React.Component {
         </DropdownItem>)
     }
     return (
-      <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+      <ButtonDropdown direction="down" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle caret>
           {this.state.selectedMetadata}
         </DropdownToggle>
         <DropdownMenu>
           {metadataList}
         </DropdownMenu>
-      </Dropdown>
+      </ButtonDropdown>
     );
 
   }
