@@ -52,7 +52,8 @@ import {
   DropdownMenu,
   DropdownItem,
   ButtonDropdown,
-  Collapse
+  Collapse,
+  ButtonToggle
 } from "reactstrap";
 
 import MetaDropdown from "../components/Dropdown/ClinMetadataDropdown.js"
@@ -180,6 +181,7 @@ function TableC({ columns, data, metadataCallback }) {
     nextPage,
     previousPage,
     setPageSize,
+    visibleColumns,
     state: { pageIndex, pageSize },
   } = useTable({
     columns,
@@ -196,6 +198,7 @@ function TableC({ columns, data, metadataCallback }) {
   const toggleDropDownColumns = () => setDropdownColumnsOpen(!dropdownColumnsOpen);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
+
 
 
   // Render the UI for your table
@@ -217,11 +220,10 @@ function TableC({ columns, data, metadataCallback }) {
       <Card>
         <Container>
         {allColumns.map(column => (
-
-               <Button onClick={() => column.toggleHidden()} key={column.id}> {column.id}</Button>
-              
-          
+               <Button onClick={() => column.toggleHidden()} key={column.id} active={column.isVisible}> {column.id} </Button>
         ))}
+
+
 
         </Container>
       </Card>
@@ -361,10 +363,10 @@ function TableApp(props) {
   React.useEffect(() => {
     //fetch data
     try  {
-      setData(PATIENT["results"][selectedMetadata]);
+      // setData(PATIENT["results"][selectedMetadata]);
       // Use above for local debugging
       
-      // getMetadataData(props.datasetId, selectedMetadata, setData)
+      getMetadataData(props.datasetId, selectedMetadata, setData)
 
     }
     catch(err) {
