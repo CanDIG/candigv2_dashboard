@@ -27,6 +27,8 @@ import {
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
+  useGroupBy,
+  useExpanded,
 } from 'react-table'
 import styled from 'styled-components'
 import BASE_URL from 'constants/constants'
@@ -217,7 +219,7 @@ function TableC({ columns, data, metadataCallback }) {
     visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize, groupBy, expanded },
   } = useTable({
     columns,
     data,
@@ -227,8 +229,12 @@ function TableC({ columns, data, metadataCallback }) {
   },
     useFilters,
     useGlobalFilter,
+    useGroupBy,
     useSortBy,
+    useExpanded,
     usePagination,
+
+
 
   )
 
@@ -292,16 +298,22 @@ function TableC({ columns, data, metadataCallback }) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                // <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                <th {...column.getHeaderProps()}>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.canGroupBy ? (
+                    // If the column can be grouped, let's add a toggle
+                    <span {...column.getGroupByToggleProps()}>
+                      {column.isGrouped ? '★ ' : '☆ '}
+                    </span>
+                  ) : null}
 
                   {column.render('Header')}
-                  <div>{column.canFilter ? column.render('Filter') : null}</div>
-{/* 
                   <span>
                     {column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}
               
-                  </span> */}
+                  </span>
+                  <div>{column.canFilter ? column.render('Filter') : null}</div>
+
+
 
                   </th>
               ))}
@@ -314,7 +326,37 @@ function TableC({ columns, data, metadataCallback }) {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  return (
+                  <td {...cell.getCellProps()}
+                    style={{
+                      background: cell.isGrouped
+                        ? '#0aff0082'
+                        : cell.isAggregated
+                        ? '#ffa50078'
+                        : cell.isPlaceholder
+                        ? '#ff000042'
+                        : 'white',
+                    }}
+                  >{cell.isGrouped ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <>
+                      <span {...row.getToggleRowExpandedProps()}>
+                        {row.isExpanded ? '👇' : '👉'}
+                      </span>{' '}
+                      {cell.render('Cell')} ({row.subRows.length})
+                    </>
+                  ) : cell.isAggregated ? (
+                    // If the cell is aggregated, use the Aggregated
+                    // renderer for cell
+                    cell.render('Aggregated')
+                  ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    cell.render('Cell')
+                  )}
+
+                  
+                  </td>
+                  )
                 })}
               </tr>
             )
@@ -386,7 +428,9 @@ function CreateColumns(columnNames, cb) {
     var column = {
       Header: (value.charAt(0).toLocaleUpperCase() + value.slice(1)),
       accessor: value,
-      filter: 'fuzzyText'
+      filter: 'fuzzyText',
+      aggregate: 'count',
+      Aggregated: ({ value }) => `${value} `,
     }
     columnList.push(column)
   }
