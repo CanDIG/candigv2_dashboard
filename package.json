@@ -9,6 +9,7 @@
     "highcharts": "^8.1.2",
     "highcharts-react-official": "^3.0.0",
     "history": "4.10.1",
+    "match-sorter": "^4.2.0",
     "node-sass": "4.14.1",
     "perfect-scrollbar": "1.5.0",
     "react": "16.13.1",
@@ -20,7 +21,7 @@
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
-    "react-table": "^7.2.2",
+    "react-table": "^7.3.2",
     "reactstrap": "8.4.1",
     "styled-components": "^5.1.1"
   },

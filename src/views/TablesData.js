@@ -23,10 +23,21 @@ import {
   useResizeColumns,
   useFlexLayout,
   useRowSelect,
-  usePagination
+  usePagination,
+  useFilters,
+  useGlobalFilter,
+  useAsyncDebounce,
 } from 'react-table'
 import styled from 'styled-components'
 import BASE_URL from 'constants/constants'
+import {
+  GlobalFilter,
+  DefaultColumnFilter,
+  SelectColumnFilter,
+  SliderColumnFilter,
+  FuzzyTextFilterFn
+
+} from 'components/Filters/filters'
 
 // reactstrap components
 import {
@@ -124,25 +135,14 @@ const Styles = styled.div`
     margin-right: 0%;
   
   }
-
-  // .pagination {
-  //   padding: 0.5rem;
-  // }
 `
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef()
-    const resolvedRef = ref || defaultRef
 
-    React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate
-    }, [resolvedRef, indeterminate])
-
-    return <input type="checkbox" ref={resolvedRef} {...rest} />
-
-    // return <Button color="primary" onClick={() => onCheckboxBtnClick(1)}></Button>
+const ButtonStyles = styled.div`
+  .globalSearchBar {
+    margin-top: 0%;
+    margin-bottom: 0%;
   }
-)
+`
 
 const IndeterminateButton = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -159,9 +159,42 @@ const IndeterminateButton = React.forwardRef(
   }
 )
 
+FuzzyTextFilterFn.autoRemove = val => !val
+
 
 function TableC({ columns, data, metadataCallback }) {
   // Use the state and functions returned from useTable to build your UI
+
+  const filterTypes = React.useMemo(
+    () => ({
+      // Add a new fuzzyTextFilterFn filter type.
+      fuzzyText: FuzzyTextFilterFn,
+      // Or, override the default text filter to use
+      // "startWith"
+      text: (rows, id, filterValue) => {
+        return rows.filter(row => {
+          const rowValue = row.values[id]
+          return rowValue !== undefined
+            ? String(rowValue)
+                .toLowerCase()
+                .startsWith(String(filterValue).toLowerCase())
+            : true
+        })
+      },
+    }),
+    []
+  )
+
+
+  const defaultColumn = React.useMemo(
+    () => ({
+      // Let's set up our default Filter UI
+      Filter: DefaultColumnFilter,
+    }),
+    []
+  )
+
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -182,12 +215,18 @@ function TableC({ columns, data, metadataCallback }) {
     previousPage,
     setPageSize,
     visibleColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
     state: { pageIndex, pageSize },
   } = useTable({
     columns,
     data,
     initialState: { pageIndex: 0 },
+    filterTypes,
+    defaultColumn
   },
+    useFilters,
+    useGlobalFilter,
     useSortBy,
     usePagination,
 
@@ -203,16 +242,30 @@ function TableC({ columns, data, metadataCallback }) {
 
 
 
+
+
+
   // Render the UI for your table
   return (
     <>
-    <Row xs="6">
-      <ButtonGroup>
-      <MetaDropdown metadataCallback = {metadataCallback}/>
-        <IndeterminateButton onClick={() => toggleHideAllColumns()} > Toggle all </IndeterminateButton>
-        <Button color="primary" onClick={toggleIsCollapsed}>Column Toggles</Button>
-      </ButtonGroup>
+    <Row >
+    <InputGroup>
+
+
+    <InputGroupAddon className="tableControls" addonType="prepend">
+        <MetaDropdown className="dataDropdown" metadataCallback = {metadataCallback}/>
+        <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()} > Toggle all </IndeterminateButton>
+        <Button className="toggleColumn" color="primary" onClick={toggleIsCollapsed}>Column Toggles</Button>
       
+        <InputGroupText className="globalSearchText">Search</InputGroupText>
+      </InputGroupAddon>
+      <GlobalFilter className="globalSearchBar"
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={state.globalFilter}
+                setGlobalFilter={setGlobalFilter}
+              />
+
+      </InputGroup>
 
     </Row>
     <Row>
@@ -239,12 +292,17 @@ function TableC({ columns, data, metadataCallback }) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                // <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                <th {...column.getHeaderProps()}>
+
                   {column.render('Header')}
+                  <div>{column.canFilter ? column.render('Filter') : null}</div>
+{/* 
                   <span>
                     {column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}
               
-                  </span>
+                  </span> */}
+
                   </th>
               ))}
             </tr>
@@ -327,7 +385,8 @@ function CreateColumns(columnNames, cb) {
     var value = columnNames[item];
     var column = {
       Header: (value.charAt(0).toLocaleUpperCase() + value.slice(1)),
-      accessor: value
+      accessor: value,
+      filter: 'fuzzyText'
     }
     columnList.push(column)
   }
@@ -351,8 +410,7 @@ function getMetadataData(datasetId, metadata, cb) {
         return response.json()
   }})
      .then(data => {
-       //console.log(data);
-       //data = JSON.parse(data);
+
        for (let i = 0; i < data.results[metadata].length; i++) {
         datasets.push(data.results[metadata][i]);
        }
