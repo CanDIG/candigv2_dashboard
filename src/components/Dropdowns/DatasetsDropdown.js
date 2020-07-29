@@ -18,7 +18,7 @@ class DatasetsDropdown extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       dropdownOpen: false,
-      selectedDataset: "Datasets",
+      selectedDataset: "",
       selectedDataSetId: "",
     };
   }
