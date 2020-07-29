@@ -1,6 +1,6 @@
 import React from "react";
 // reactstrap components
-import { Card, CardBody, Row, Col } from "reactstrap";
+import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
 
 import CustomOfflineChart from "../components/Graphs/CustomOfflineChart";
 
@@ -44,6 +44,52 @@ class PatientsOverview extends React.Component {
     return (
       <>
         <div className="content">
+          <Row>
+            <Col lg="6" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-world-2 text-danger" />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Provinces</p>
+                        <CardTitle tag="p">
+                          {Object.keys(provinceOfResidenceObj).length}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="6" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-single-02 text-primary" />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Patients</p>
+                        <CardTitle tag="p">
+                          {this.props.patientsList.length}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
           <Row>
             <Col lg="3" md="6" sm="12">
               <Card>
