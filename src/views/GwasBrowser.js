@@ -1,5 +1,4 @@
 import React, { ReactDOM } from "react";
-
 import { Row, Input } from "reactstrap";
 
 // TODO: Importing from igv.esm.min.js is not working, but it works fine in the standalone test
@@ -16,6 +15,7 @@ class GwasBrowser extends React.Component {
             selectedGwasName: "",
             selectedGwasURL: "",
         }
+        this.gwasFileList = {};
         this.igvOptions =  {
           genome: 'hg38',
           tracks: [
@@ -26,7 +26,6 @@ class GwasBrowser extends React.Component {
                 url: "",
                 indexed: false,
                 height: 300,
-                max: 25,
                 columns: {
                     chromosome: 1,
                     position: 2,
@@ -40,18 +39,20 @@ class GwasBrowser extends React.Component {
     /*
     * It is invoked immediately after updating occurs.
     */
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.selectedGwasURL !== prevState.selectedGwasURL) {
+    componentDidUpdate(prevState) {
+        if (this.state.selectedGwasName !== prevState.selectedGwasName) {
             var igvContainer = document.getElementById('igv-div');
-            this.igvOptions["tracks"][0]["url"] = this.state.selectedGwasURL;
-            return igv.createBrowser(igvContainer, this.igvOptions);
+            igvContainer.innerHTML = "";
+
+            this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
+            this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
+            igv.createBrowser(igvContainer, this.igvOptions);
         }
     }
 
 
-    handleTableClick = (e) => {
-        // this.setState({ selectedGwasName: e.target.key})
-        this.setState({ selectedGwasURL: e.target.value});
+    handleGwasInputClick = (e) => {
+        this.setState({ selectedGwasName: e.target.value});
     };
 
   /*
@@ -70,12 +71,11 @@ class GwasBrowser extends React.Component {
       "ANA_D1_V2_filtered": "/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt"
     }
 
-    // this.setState({ selectedGwasName: Object.keys(mock_data)[0]})
-    // this.setState({ selectedGwasURL: mock_data[Object.keys(mock_data)[0]]})
+    this.gwasFileList = mock_data;
 
     return Object.keys(mock_data).map((x) => {
       return (
-        <option key={x} value={BASE_URL + mock_data[x]}>
+        <option key={x} value={x}>
           {x}
         </option>
       );
@@ -85,8 +85,12 @@ class GwasBrowser extends React.Component {
 
     componentDidMount() {
       var igvContainer = document.getElementById('igv-div');
-      this.igvOptions["tracks"][0]["url"] = this.state.selectedGwasURL;
-      return igv.createBrowser(igvContainer, this.igvOptions);
+      this.state.selectedGwasName = Object.keys(this.gwasFileList)[0];
+
+      this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
+      this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
+
+      igv.createBrowser(igvContainer, this.igvOptions);
     }
 
     render() {
@@ -94,7 +98,7 @@ class GwasBrowser extends React.Component {
         <>
             <div className="content">
                 <Row>
-                    <Input onChange={this.handleTableClick} type="select">
+                    <Input onChange={this.handleGwasInputClick} type="select">
                         { this.buildGwasList()}
                     </Input>
                 </Row>
