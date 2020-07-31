@@ -35,12 +35,13 @@ class GwasBrowser extends React.Component {
         ]}
     }
     
-    /*
-    * Invoked when this.state.selectedGwasName is updated
-    */
+    /**
+     * Invoked when this.state.selectedGwasName is updated
+     */
     componentDidUpdate(prevState) {
         if (this.state.selectedGwasName !== prevState.selectedGwasName) {
             var igvContainer = document.getElementById('igv-div');
+            document.getElementById("igv-div").innerHTML = ""
 
             this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
             this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
@@ -89,7 +90,7 @@ class GwasBrowser extends React.Component {
       var igvContainer = document.getElementById('igv-div');
 
       // Use the first gwas file name as the initial state
-      this.state.selectedGwasName = Object.keys(this.gwasFileList)[0];
+      this.setState({ selectedGwasName: Object.keys(this.gwasFileList)[0] });
 
       this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
       this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
@@ -103,7 +104,7 @@ class GwasBrowser extends React.Component {
             <div className="content">
                 <Row>
                     <Input onChange={this.handleGwasInputClick} type="select">
-                        { this.buildGwasList()}
+                        { this.buildGwasList() }
                     </Input>
                 </Row>
                 <div id="igv-div"></div>
