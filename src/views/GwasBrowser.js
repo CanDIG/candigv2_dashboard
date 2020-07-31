@@ -1,4 +1,4 @@
-import React, { ReactDOM } from "react";
+import React from "react";
 import { Row, Input } from "reactstrap";
 
 // TODO: Importing from igv.esm.min.js is not working, but it works fine in the standalone test
@@ -14,6 +14,7 @@ class GwasBrowser extends React.Component {
         this.state = {
             selectedGwasName: ""
         }
+        this.igvBrowserRef = React.createRef();
         this.gwasFileList = {};
         this.igvOptions =  {
           genome: 'hg38',
@@ -40,12 +41,9 @@ class GwasBrowser extends React.Component {
      */
     componentDidUpdate(prevState) {
         if (this.state.selectedGwasName !== prevState.selectedGwasName) {
-            var igvContainer = document.getElementById('igv-div');
-            document.getElementById("igv-div").innerHTML = ""
-
             this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
             this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
-            igv.createBrowser(igvContainer, this.igvOptions);
+            igv.createBrowser(this.igvBrowserRef.current, this.igvOptions);
         }
     }
 
@@ -87,15 +85,12 @@ class GwasBrowser extends React.Component {
      * By default, load the first gwas file available.
      */
     componentDidMount() {
-      var igvContainer = document.getElementById('igv-div');
-
       // Use the first gwas file name as the initial state
       this.setState({ selectedGwasName: Object.keys(this.gwasFileList)[0] });
-
       this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
       this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
 
-      igv.createBrowser(igvContainer, this.igvOptions);
+      igv.createBrowser(this.igvBrowserRef.current, this.igvOptions);
     }
 
     render() {
@@ -107,7 +102,7 @@ class GwasBrowser extends React.Component {
                         { this.buildGwasList() }
                     </Input>
                 </Row>
-                <div id="igv-div"></div>
+                <div ref={this.igvBrowserRef}></div>
             </div>
         </>
       );
