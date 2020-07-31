@@ -12,8 +12,7 @@ class GwasBrowser extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedGwasName: "",
-            selectedGwasURL: "",
+            selectedGwasName: ""
         }
         this.gwasFileList = {};
         this.igvOptions =  {
@@ -37,12 +36,11 @@ class GwasBrowser extends React.Component {
     }
     
     /*
-    * It is invoked immediately after updating occurs.
+    * Invoked when this.state.selectedGwasName is updated
     */
     componentDidUpdate(prevState) {
         if (this.state.selectedGwasName !== prevState.selectedGwasName) {
             var igvContainer = document.getElementById('igv-div');
-            igvContainer.innerHTML = "";
 
             this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
             this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
@@ -50,41 +48,47 @@ class GwasBrowser extends React.Component {
         }
     }
 
-
+    /**
+     * Invoked when a different option of dropdown is selected.
+     */
     handleGwasInputClick = (e) => {
         this.setState({ selectedGwasName: e.target.value});
     };
 
-  /*
-   * Create dropdown for gwas data files
-   * This method is invoked in render()
-  */
+    /*
+    * Create dropdown for gwas data files
+    * This method is invoked in render()
+    */
+    buildGwasList() {
+      // This should be replaced by an XHR request that retrieves a list of files from an API Server
+      var mock_data = {
+        "ANA_A2_V2_filtered": "/static/COVID19_HGI_ANA_A2_V2_20200701.txt.gz_1.0E-5.txt",
+        "ANA_B1_V2": "/static/COVID19_HGI_ANA_B1_V2.gwas", 
+        "ANA_B2_V2": "/static/minimal.gwas.1e-2.txt",
+        "ANA_C1_V2_filtered": "/static/COVID19_HGI_ANA_C1_V2_20200701.txt.gz_1.0E-5.txt",
+        "ANA_D1_V2_filtered": "/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt"
+      }
 
-  buildGwasList() {
+      this.gwasFileList = mock_data;
 
-    // This should be replaced by an XHR request that retrieves a list of files from an API Server
-    var mock_data = {
-      "ANA_A2_V2_filtered": "/static/COVID19_HGI_ANA_A2_V2_20200701.txt.gz_1.0E-5.txt",
-      "ANA_B1_V2": "/static/COVID19_HGI_ANA_B1_V2.gwas", 
-      "ANA_B2_V2": "/static/minimal.gwas.1e-2.txt",
-      "ANA_C1_V2_filtered": "/static/COVID19_HGI_ANA_C1_V2_20200701.txt.gz_1.0E-5.txt",
-      "ANA_D1_V2_filtered": "/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt"
+      return Object.keys(mock_data).map((x) => {
+          return (
+            <option key={x} value={x}>
+              {x}
+            </option>
+          );
+        });
     }
 
-    this.gwasFileList = mock_data;
 
-    return Object.keys(mock_data).map((x) => {
-      return (
-        <option key={x} value={x}>
-          {x}
-        </option>
-      );
-    });
-  }
-
-
+    /**
+     * Invoked when render() completes
+     * By default, load the first gwas file available.
+     */
     componentDidMount() {
       var igvContainer = document.getElementById('igv-div');
+
+      // Use the first gwas file name as the initial state
       this.state.selectedGwasName = Object.keys(this.gwasFileList)[0];
 
       this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
@@ -102,7 +106,6 @@ class GwasBrowser extends React.Component {
                         { this.buildGwasList()}
                     </Input>
                 </Row>
-
                 <div id="igv-div"></div>
             </div>
         </>
