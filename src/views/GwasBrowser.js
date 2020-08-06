@@ -40,6 +40,8 @@ class GwasBrowser extends React.Component {
      * Invoked when this.state.selectedGwasName is updated
      */
     componentDidUpdate(prevState) {
+      //TODO: Use igv.removeBrowser to remove existing browser instance
+
         if (this.state.selectedGwasName !== prevState.selectedGwasName) {
             this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
             this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
