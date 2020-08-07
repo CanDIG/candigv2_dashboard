@@ -7,7 +7,7 @@ import BASE_URL from "../../constants/constants.js";
 /*
  * Component listing the server status in the form of bar graph
  */
-function Server() {
+function Server({datasetId}) {
   /*
    * chartOptions describes the format and style of the graph.
    * More information on Highcharts website
@@ -42,29 +42,27 @@ function Server() {
     fetch(BASE_URL + "/datasets/search", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
-          const dataList = [];
-          const categoriesList = [];
-          for (const property in data.status) {
-            if (property === "Valid response") {
-              continue;
-            }
-            dataList.push(data.status[property]);
-            categoriesList.push(property);
+        const dataList = [];
+        const categoriesList = [];
+        for (const property in data.status) {
+          if (property === "Valid response") {
+            continue;
           }
-          setChartOptions({
-            xAxis: {
-              categories: categoriesList,
-            },
-            series: [
-              {
-                data: dataList,
-              },
-            ],
-          });
+          dataList.push(data.status[property]);
+          categoriesList.push(property);
         }
+        setChartOptions({
+          xAxis: {
+            categories: categoriesList,
+          },
+          series: [
+            {
+              data: dataList,
+            },
+          ],
+        });
       });
-  });
+  }, [datasetId]);
 
   return (
     <div>
