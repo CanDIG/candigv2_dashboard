@@ -29,7 +29,7 @@ function GwasBrowser() {
               position: 2,
               value: 5
           },
-          dotSize: 1.5
+          dotSize: 1.8
       }
   ]};
 
@@ -40,6 +40,12 @@ function GwasBrowser() {
     "ANA_C1_V2_filtered": "/static/COVID19_HGI_ANA_C1_V2_20200701.txt.gz_1.0E-5.txt",
     "ANA_D1_V2_filtered": "/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt"
   }
+
+  const disabledElementList = [
+    <option key="disabled" value="disabled" disabled>
+      Select a GWAS Sample...
+    </option>
+  ]
 
   const gwasList = Object.keys(mock_data).map((x) => {
     return (
@@ -68,12 +74,12 @@ function GwasBrowser() {
     <>
         <div className="content">
             <Row>
-                <Input 
+                <Input defaultValue={'disabled'}
                   onChange={(e) => {
                     setSelectedGwasName(e.currentTarget.value);
                   }}
                   type="select">
-                  { gwasList }
+                  { disabledElementList.concat(gwasList) }
                 </Input>
             </Row>
             <div ref={igvBrowser}></div>
