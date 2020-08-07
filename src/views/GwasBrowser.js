@@ -45,6 +45,14 @@ class GwasBrowser extends React.Component {
         if (this.state.selectedGwasName !== prevState.selectedGwasName) {
             this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
             this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
+
+            for (let i = 0; i < this.igvBrowserRef.current.childNodes.length; i++){
+              let curr = this.igvBrowserRef.current.childNodes[i];
+              if (curr.className === "igv-root-div") {
+                curr.remove();
+              }
+            }
+            this.igvBrowserRef.current.remove()
             igv.createBrowser(this.igvBrowserRef.current, this.igvOptions);
         }
     }
@@ -92,7 +100,6 @@ class GwasBrowser extends React.Component {
       this.igvOptions["tracks"][0]["name"] = this.state.selectedGwasName;
       this.igvOptions["tracks"][0]["url"] = BASE_URL + this.gwasFileList[this.state.selectedGwasName]
 
-      igv.createBrowser(this.igvBrowserRef.current, this.igvOptions);
     }
 
     render() {
