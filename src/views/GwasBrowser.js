@@ -11,7 +11,6 @@ import BASE_URL from "../constants/constants.js"
 function GwasBrowser() {
   /***
    * A functional component that renders an IGV.js instance
-   * 
    */
   const [selectedGwasName, setSelectedGwasName] = useState("");
   const igvBrowser = useRef(null);
