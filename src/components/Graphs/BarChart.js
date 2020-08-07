@@ -1,17 +1,17 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 // Consts
 import BASE_URL from "../../constants/constants.js";
 
 // Hook
-// Used to keep the previous value of a state or prop 
+// Used to keep the previous value of a state or prop
 function usePrevious(value) {
   const ref = useRef();
 
   useEffect(() => {
     ref.current = value;
-  }, [value]); 
+  }, [value]);
 
   return ref.current;
 }
