@@ -51,14 +51,14 @@ function GwasBrowser() {
   });
 
   useEffect(() => {
-
     // Remove an existing browser instance
     if (igv.getBrowser() !== undefined) {
       igv.removeBrowser(igv.getBrowser());
     }
 
     // Do not create new browser instance when nothing is selected
-    if (selectedGwasName != "") {
+    // This resolves a bug when two IGV instances are rendered
+    if (selectedGwasName !== "") {
       igvOptions["tracks"][0]["name"] = selectedGwasName;
       igvOptions["tracks"][0]["url"] = BASE_URL + mock_data[selectedGwasName];
       igv.createBrowser(igvBrowser.current, igvOptions);
