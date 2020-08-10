@@ -1,50 +1,59 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 window.Highcharts = Highcharts;
 
-class CustomOfflineChart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      chartOptions: {},
-    };
-  }
+function CustomOfflineChart({
+  chartType,
+  barTitle,
+  height,
+  datasetName,
+  dataObject,
+}) {
+  const [chartOptions, setChartOptions] = useState({
+    chart: { type: chartType, height: height },
+    title: {
+      text: "Distribuition of " + splitString(barTitle),
+    },
+    subtitle: {
+      text: datasetName,
+    },
+  });
 
-  splitString(newString) {
+  function splitString(newString) {
     let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
     let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
     return capitalized;
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.dataObject !== this.props.dataObject) {
-      this.fetchData();
+  useEffect(() => {
+    if (chartType === "pie") {
+      createPieChart();
+    } else {
+      createBarChart();
     }
-  }
+  }, [datasetName, dataObject]);
 
-  createBarChart() {
+  function createBarChart() {
     let options = {
-      chart: { type: this.props.chartType, height: this.props.height },
-      title: {
-        text: "Distribuition of " + this.splitString(this.props.barTitle),
-      },
-      subtitle: {
-        text: this.props.datasetName,
-      },
       series: [{ data: [], colorByPoint: true, showInLegend: false }],
       xAxis: { categories: [] },
     };
-    for (const entry in this.props.dataObject) {
-      options.series[0].data.push(this.props.dataObject[entry]);
-      options.xAxis.categories.push(entry);
+    const data = [];
+    const categories = [];
+    for (const entry in dataObject) {
+      data.push(dataObject[entry]);
+      categories.push(entry);
     }
 
-    this.setState({ chartOptions: options });
+    setChartOptions({
+      series: [{ data: data, colorByPoint: true, showInLegend: false }],
+      xAxis: { categories: categories },
+    });
   }
 
-  createPieChart() {
+  function createPieChart() {
     let options = {
       credits: {
         enabled: false,
@@ -53,45 +62,21 @@ class CustomOfflineChart extends Component {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
-        type: this.props.chartType,
-        height: this.props.height,
-      },
-      title: {
-        text: "Distribuition of " + this.splitString(this.props.barTitle),
-      },
-      subtitle: {
-        text: this.props.datasetName,
       },
     };
     const graphData = [];
-    for (const entry in this.props.dataObject) {
-      graphData.push({ name: entry, y: this.props.dataObject[entry] });
+    for (const entry in dataObject) {
+      graphData.push({ name: entry, y: dataObject[entry] });
     }
-    console.log(graphData);
     options["series"] = [{ data: graphData }];
-    this.setState({ chartOptions: options });
+    setChartOptions(options);
   }
 
-  fetchData() {
-    if (this.props.chartType === "pie") {
-      this.createPieChart();
-    } else {
-      this.createBarChart();
-    }
-  }
-
-  // componentDidMount() {
-  //   this.fetchData();
-  // }
-
-  render() {
-    const chartOptions = this.state.chartOptions;
-    return (
-      <div>
-        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+    </div>
+  );
 }
 
 export default CustomOfflineChart;
