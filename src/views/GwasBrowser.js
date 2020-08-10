@@ -29,7 +29,7 @@ function GwasBrowser() {
               position: 2,
               value: 5
           },
-          dotSize: 1.8
+          dotSize: 2.2
       }
   ]};
 
@@ -57,18 +57,17 @@ function GwasBrowser() {
 
   useEffect(() => {
     // Remove an existing browser instance
-    if (igv.getBrowser() !== undefined) {
+    while (igv.getBrowser() !== undefined) {
       igv.removeBrowser(igv.getBrowser());
     }
 
-    // Do not create new browser instance when nothing is selected
-    // This resolves a bug when two IGV instances are rendered
+    // Do not create new browser instance on page load as no sample is selected.
     if (selectedGwasName !== "") {
       igvOptions["tracks"][0]["name"] = selectedGwasName;
       igvOptions["tracks"][0]["url"] = BASE_URL + mock_data[selectedGwasName];
       igv.createBrowser(igvBrowser.current, igvOptions);
     }
-  })
+  }, [selectedGwasName, setSelectedGwasName])
 
   return (
     <>
