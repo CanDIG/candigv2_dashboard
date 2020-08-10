@@ -14,7 +14,7 @@ function CustomOfflineChart({
   const [chartOptions, setChartOptions] = useState({
     chart: { type: chartType, height: height },
     title: {
-      text: "Distribuition of " + splitString(barTitle),
+      text: "Distribution of " + splitString(barTitle),
     },
     subtitle: {
       text: datasetName,
