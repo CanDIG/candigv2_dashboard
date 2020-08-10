@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Row, Input } from "reactstrap";
+import { Row, Input, UncontrolledAlert } from "reactstrap";
 
 // TODO: Importing from igv.esm.min.js is not working, but it works fine in the standalone test
 import igv from 'igv/dist/igv.esm.js'
@@ -73,15 +73,33 @@ function GwasBrowser() {
     <>
         <div className="content">
             <Row>
-                <Input defaultValue={'disabled'}
-                  onChange={(e) => {
-                    setSelectedGwasName(e.currentTarget.value);
-                  }}
-                  type="select">
-                  { disabledElementList.concat(gwasList) }
-                </Input>
+              <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+                  <span
+                    data-notify="icon"
+                    className="nc-icon nc-bell-55"
+                  />
+
+                  <b>
+                    <span>
+                      <p> Reminders: </p>
+                      <p> Select a sample to get started. </p>
+                      <p> To adjust the range of data being plotted, click on the setting icon on the right
+                      of the track and select "Autoscale", or manually adjust the range by clicking on "Set data range".</p>
+                      <p> To adjust the height of the track, use "Set track height". </p>
+                    </span>
+                  </b>
+              </UncontrolledAlert>
             </Row>
-            <div ref={igvBrowser}></div>
+
+            <Input defaultValue={'disabled'}
+              onChange={(e) => {
+                setSelectedGwasName(e.currentTarget.value);
+              }}
+              type="select">
+              { disabledElementList.concat(gwasList) }
+            </Input>
+
+            <div className="ml-auto mr-auto" style={{background: "white", marginTop: "15px"}} ref={igvBrowser}></div>
         </div>
     </>
   );
