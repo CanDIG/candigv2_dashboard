@@ -39,7 +39,7 @@ function GwasInstance({selectedGwasName, selectedGwasUrl}) {
             igvOptions["tracks"][0]["url"] = selectedGwasUrl;
             igv.createBrowser(igvBrowser.current, igvOptions);
         }
-    })
+    });
 
     return (
         <div className="ml-auto mr-auto" style={{background: "white", marginTop: "15px"}} ref={igvBrowser}></div>
