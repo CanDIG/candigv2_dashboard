@@ -83,8 +83,8 @@ function GwasBrowser() {
                     <span>
                       <p> Reminders: </p>
                       <p> Select a sample to get started. </p>
-                      <p> To adjust the range of data being plotted, click on the setting icon on the right
-                      of the track and select "Autoscale", or manually adjust the range by clicking on "Set data range".</p>
+                      <p> To adjust the range of data, click on the setting icon on the right of the track 
+                      and select "Autoscale", or manually adjust the range by clicking on "Set data range".</p>
                       <p> To adjust the height of the track, use "Set track height". </p>
                     </span>
                   </b>
