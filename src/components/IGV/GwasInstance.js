@@ -42,7 +42,11 @@ function GwasInstance({selectedGwasName, selectedGwasUrl}) {
     });
 
     return (
-        <div className="ml-auto mr-auto" style={{background: "white", marginTop: "15px"}} ref={igvBrowser}></div>
+        <div 
+            className="ml-auto mr-auto" 
+            style={{background: "white", marginTop: "15px"}} 
+            ref={igvBrowser}>
+        </div>
     )
 }
 
