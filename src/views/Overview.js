@@ -3,12 +3,12 @@ import React from "react";
 import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
 
 // Consts
-import BASEURL from "../constants/constants";
+import BASEURL from "constants/constants";
 
-import Server from "../components/Graphs/Server.js";
-import BarChart from "../components/Graphs/BarChart.js";
-import CancerType from "../components/Graphs/CancerType.js";
-import TreatingCentreProvince from "../components/Maps/TreatingCentreProvince";
+import Server from "components/Graphs/Server.js";
+import BarChart from "components/Graphs/BarChart.js";
+import CancerType from "components/Graphs/CancerType.js";
+import TreatingCentreProvince from "components/Maps/TreatingCentreProvince";
 
 const initialState = {
   datasetName: "",
