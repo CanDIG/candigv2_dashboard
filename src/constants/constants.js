@@ -1,6 +1,9 @@
-const BASE_URL = "http://ga4ghdev01.bcgsc.ca:20127";
+/*
+ * All the constants should go on this file
+ */
 
-// const BASE_URL = "0.0.0.0";
+ // API URL where the Dashboard get all the data
+const BASE_URL = "http://ga4ghdev01.bcgsc.ca:20127";
 
 export const CLIN_METADATA = [
     "celltransplants",
@@ -22,4 +25,5 @@ export const CLIN_METADATA = [
     "tumourboards"
 ]
 
-export default BASE_URL
+export default BASE_URL;
+

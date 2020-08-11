@@ -16,63 +16,103 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.js";
+import Overview from "views/Overview.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
 import TableList from "views/MetadataTable.js";
 import Maps from "views/Map.js";
 import UserPage from "views/User.js";
+import Services from "views/Services.js";
+import APIInfo from "views/APIInfo.js";
+import CustomVisualization from "views/CustomVisualization";
+import PatientsOverview from "views/PatientsOverview";
+import GwasBrowser from "views/GwasBrowser";
 
 var routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: "/overview",
+    name: "Overview",
     icon: "nc-icon nc-bank",
-    component: Dashboard,
-    layout: "/admin",
+    component: Overview,
+    layout: "/dashboard",
+  },
+  {
+    path: "/patients-overview",
+    name: "Patients Overview",
+    icon: "nc-icon nc-bank",
+    component: PatientsOverview,
+    layout: "/dashboard",
+  },
+  {
+    path: "/services",
+    name: "Services status",
+    icon: "nc-icon nc-tile-56",
+    component: Services,
+    layout: "/dashboard",
+  },
+  {
+    path: "/api_info",
+    name: "API info",
+    icon: "nc-icon nc-sound-wave",
+    component: APIInfo,
+    layout: "/dashboard",
+  },
+  {
+    path: "/gwas_browser",
+    name: "GWAS Browser",
+    icon: "nc-icon nc-compass-05",
+    component: GwasBrowser,
+    layout: "/dashboard",
+  },
+  {
+    path: "/custom_visualization",
+    name: "Custom Visualization",
+    icon: "nc-icon nc-caps-small",
+    component: CustomVisualization,
+    layout: "/dashboard",
   },
   {
     path: "/icons",
     name: "Icons",
     icon: "nc-icon nc-diamond",
     component: Icons,
-    layout: "/admin",
+    layout: "/dashboard",
   },
   {
     path: "/maps",
     name: "Maps",
     icon: "nc-icon nc-pin-3",
     component: Maps,
-    layout: "/admin",
+    layout: "/dashboard",
   },
   {
     path: "/notifications",
     name: "Notifications",
     icon: "nc-icon nc-bell-55",
     component: Notifications,
-    layout: "/admin",
+    layout: "/dashboard",
   },
   {
     path: "/user-page",
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: UserPage,
-    layout: "/admin",
+    layout: "/dashboard",
   },
   {
     path: "/tables",
     name: "Clinical Metadata",
     icon: "nc-icon nc-tile-56",
     component: TableList,
-    layout: "/admin",
+    layout: "/dashboard",
   },
   {
     path: "/typography",
     name: "Typography",
     icon: "nc-icon nc-caps-small",
     component: Typography,
-    layout: "/admin",
+    layout: "/dashboard",
   },
 ];
 export default routes;

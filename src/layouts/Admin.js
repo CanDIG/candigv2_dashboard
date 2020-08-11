@@ -21,13 +21,15 @@ import React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Route, Switch } from "react-router-dom";
 
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
+import TopBar from "components/Navbars/TopBar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
 
-var ps;
+import BASE_URL from "../constants/constants";
+
+let ps;
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -36,7 +38,8 @@ class Dashboard extends React.Component {
       backgroundColor: "black",
       activeColor: "info",
       datasetId: "",
-      datasetName: ""
+      datasetName: "",
+      patientsList: [],
     };
     this.mainPanel = React.createRef();
   }
@@ -45,10 +48,28 @@ class Dashboard extends React.Component {
       ps = new PerfectScrollbar(this.mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
     }
+    this.fetchData(this.state.datasetId);
   }
 
   updateState = (values) => {
-    this.setState(values)
+    this.setState(values);
+  };
+
+  fetchData(datasetId) {
+  
+    if (datasetId) {
+      fetch(BASE_URL + "/patients/search", {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify({
+          datasetId: datasetId,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({ patientsList: data.results.patients });
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -57,10 +78,13 @@ class Dashboard extends React.Component {
       document.body.classList.toggle("perfect-scrollbar-on");
     }
   }
-  componentDidUpdate(e) {
-    if (e.history.action === "PUSH") {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.history.action === "PUSH") {
       this.mainPanel.current.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
+    }
+    if (prevState.datasetId !== this.state.datasetId) {
+      this.fetchData(this.state.datasetId);
     }
   }
   handleActiveClick = (color) => {
@@ -79,12 +103,17 @@ class Dashboard extends React.Component {
           activeColor={this.state.activeColor}
         />
         <div className="main-panel" ref={this.mainPanel}>
-          <DemoNavbar {...this.props} updateState={this.updateState} />
+          <TopBar {...this.props} updateState={this.updateState} />
           <Switch>
             {routes.map((prop, key) => {
               return (
                 <Route path={prop.layout + prop.path} key={key}>
-                  <prop.component updateState={this.updateState} datasetId={this.state.datasetId} datasetName={this.state.datasetName}/>
+                  <prop.component
+                    updateState={this.updateState}
+                    datasetId={this.state.datasetId}
+                    datasetName={this.state.datasetName}
+                    patientsList={this.state.patientsList}
+                  />
                 </Route>
               );
             })}
