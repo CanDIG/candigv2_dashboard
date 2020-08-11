@@ -27,6 +27,7 @@ import Services from "views/Services.js";
 import APIInfo from "views/APIInfo.js";
 import CustomVisualization from "views/CustomVisualization";
 import PatientsOverview from "views/PatientsOverview";
+import GwasBrowser from "views/GwasBrowser";
 
 var routes = [
   {
@@ -55,6 +56,13 @@ var routes = [
     name: "API info",
     icon: "nc-icon nc-sound-wave",
     component: APIInfo,
+    layout: "/dashboard",
+  },
+  {
+    path: "/gwas_browser",
+    name: "GWAS Browser",
+    icon: "nc-icon nc-compass-05",
+    component: GwasBrowser,
     layout: "/dashboard",
   },
   {
