@@ -1,0 +1,4 @@
+/* Overwrite the default wrapper height to auto for APIInfo.js only */ 
+.wrapper {
+    height: auto;
+}
