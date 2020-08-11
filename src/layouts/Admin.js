@@ -58,7 +58,6 @@ class Dashboard extends React.Component {
   fetchData(datasetId) {
   
     if (datasetId) {
-      console.log("request made")
       fetch(BASE_URL + "/patients/search", {
         headers: { "Content-Type": "application/json" },
         method: "POST",
