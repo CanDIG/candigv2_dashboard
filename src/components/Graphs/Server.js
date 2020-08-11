@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 // Consts
@@ -7,73 +7,68 @@ import BASE_URL from "../../constants/constants.js";
 /*
  * Component listing the server status in the form of bar graph
  */
-class Server extends Component {
-  constructor() {
-    super();
-    /*
-     * chartOptions describes the format and style of the graph.
-     * More information on Highcharts website
-     */
-    this.state = {
-      chartOptions: {
-        credits: {
-          enabled: false,
-        },
-        chart: {
-          type: "bar",
-          height: "200px; auto",
-        },
-        title: {
-          text: "Server Status",
-        },
-        xAxis: {
-          categories: [
-            "Known peers",
-            "Queried peers",
-            "Successful communications",
-          ],
-        },
-        series: [
-          {
-            colorByPoint: true,
-            showInLegend: false,
-            data: [0, 0, 0],
-          },
-        ],
+function Server({datasetId}) {
+  /*
+   * chartOptions describes the format and style of the graph.
+   * More information on Highcharts website
+   */
+  const [chartOptions, setChartOptions] = useState({
+    credits: {
+      enabled: false,
+    },
+    chart: {
+      type: "bar",
+      height: "200px; auto",
+    },
+    title: {
+      text: "Server Status",
+    },
+    xAxis: {
+      categories: [],
+    },
+    series: [
+      {
+        colorByPoint: true,
+        showInLegend: false,
+        data: [],
       },
-    };
-  }
-
+    ],
+  });
   /*
    * Fetch server status information from the server after the component is added to the DOM
-   * and create the bar graph by changing the chartOptions state 
+   * and create the bar graph by changing the chartOptions state
    */
-  componentDidMount() {
+  useEffect(() => {
     fetch(BASE_URL + "/datasets/search", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
-          let options = { series: [{ data: [] }], xAxis: { categories: [] } };
-          for (const property in data.status) {
-            if (property === "Valid response") {
-              continue;
-            }
-            options.series[0].data.push(data.status[property]);
-            options.xAxis.categories.push(property);
+        const dataList = [];
+        const categoriesList = [];
+        for (const property in data.status) {
+          if (property === "Valid response") {
+            continue;
           }
-          this.setState({ chartOptions: options });
+          dataList.push(data.status[property]);
+          categoriesList.push(property);
         }
+        setChartOptions({
+          xAxis: {
+            categories: categoriesList,
+          },
+          series: [
+            {
+              data: dataList,
+            },
+          ],
+        });
       });
-  }
+  }, [datasetId]);
 
-  render() {
-    const chartOptions = this.state.chartOptions;
-    return (
-      <div>
-        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+    </div>
+  );
 }
 
 export default Server;

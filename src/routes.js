@@ -26,6 +26,7 @@ import UserPage from "views/User.js";
 import Services from "views/Services.js";
 import APIInfo from "views/APIInfo.js";
 import CustomVisualization from "views/CustomVisualization";
+import PatientsOverview from "views/PatientsOverview";
 
 var routes = [
   {
@@ -33,6 +34,13 @@ var routes = [
     name: "Overview",
     icon: "nc-icon nc-bank",
     component: Overview,
+    layout: "/dashboard",
+  },
+  {
+    path: "/patients-overview",
+    name: "Patients Overview",
+    icon: "nc-icon nc-bank",
+    component: PatientsOverview,
     layout: "/dashboard",
   },
   {
