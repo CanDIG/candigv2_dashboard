@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonDropdown ,Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 // Consts
 import { CLIN_METADATA } from 'constants/constants'
 

@@ -16,17 +16,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { 
   useTable,
   useSortBy,
-  useResizeColumns,
-  useFlexLayout,
-  useRowSelect,
   usePagination,
   useFilters,
   useGlobalFilter,
-  useAsyncDebounce,
   useGroupBy,
   useExpanded,
 } from 'react-table'
@@ -35,8 +31,6 @@ import BASE_URL from 'constants/constants'
 import {
   GlobalFilter,
   DefaultColumnFilter,
-  SelectColumnFilter,
-  SliderColumnFilter,
   FuzzyTextFilterFn
 
 } from 'components/Filters/filters'
@@ -44,18 +38,9 @@ import {
 // reactstrap components
 import {
   Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  Table,
   Row,
-  Col,
   Button,
   Container,
-  ButtonGroup,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
   InputGroup,
   InputGroupAddon,
   Input,
@@ -64,13 +49,12 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  ButtonDropdown,
   Collapse,
-  ButtonToggle
+  
 } from "reactstrap";
 
-import MetaDropdown from "../components/Dropdown/ClinMetadataDropdown.js"
-import PATIENT from "constants/patients"
+import MetaDropdown from "components/Dropdown/ClinMetadataDropdown.js"
+// import PATIENT from "constants/patients"
 
 const Styles = styled.div`
   padding: 1rem;
@@ -139,12 +123,6 @@ const Styles = styled.div`
   }
 `
 
-const ButtonStyles = styled.div`
-  .globalSearchBar {
-    margin-top: 0%;
-    margin-bottom: 0%;
-  }
-`
 
 const IndeterminateButton = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -156,23 +134,18 @@ const IndeterminateButton = React.forwardRef(
     }, [resolvedRef, indeterminate])
 
     return <Button ref={resolvedRef} {...rest} />
-
-    // return <Button color="primary" onClick={() => onCheckboxBtnClick(1)}></Button>
   }
 )
 
 FuzzyTextFilterFn.autoRemove = val => !val
 
 
-function TableC({ columns, data, metadataCallback }) {
-  // Use the state and functions returned from useTable to build your UI
+function Table({ columns, data, metadataCallback }) {
 
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: FuzzyTextFilterFn,
-      // Or, override the default text filter to use
-      // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
           const rowValue = row.values[id]
@@ -201,10 +174,8 @@ function TableC({ columns, data, metadataCallback }) {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
     allColumns,
-    getToggleHideAllColumnsProps,
     toggleHideAllColumns,
     state,
     page,
@@ -216,10 +187,9 @@ function TableC({ columns, data, metadataCallback }) {
     nextPage,
     previousPage,
     setPageSize,
-    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
-    state: { pageIndex, pageSize, groupBy, expanded },
+    state: { pageIndex, pageSize },
   } = useTable({
     columns,
     data,
@@ -233,36 +203,22 @@ function TableC({ columns, data, metadataCallback }) {
     useSortBy,
     useExpanded,
     usePagination,
-
-
-
   )
 
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
-  const [dropdownColumnsOpen, setDropdownColumnsOpen] = useState(false);
-  const toggleDropDownColumns = () => setDropdownColumnsOpen(!dropdownColumnsOpen);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
 
-
-
-
-
-
-  // Render the UI for your table
   return (
     <>
     <Row >
     <InputGroup>
-
-
     <InputGroupAddon className="tableControls" addonType="prepend">
         <MetaDropdown className="dataDropdown" metadataCallback = {metadataCallback}/>
-        <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()} > Toggle all </IndeterminateButton>
-        <Button className="toggleColumn" color="primary" onClick={toggleIsCollapsed}>Column Toggles</Button>
-      
+        <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
+        <Button className="toggleColumn" color="primary" onClick={toggleIsCollapsed}> Column Toggles </Button>
         <InputGroupText className="globalSearchText">Search</InputGroupText>
       </InputGroupAddon>
       <GlobalFilter className="globalSearchBar"
@@ -270,22 +226,15 @@ function TableC({ columns, data, metadataCallback }) {
                 globalFilter={state.globalFilter}
                 setGlobalFilter={setGlobalFilter}
               />
-
       </InputGroup>
-
     </Row>
     <Row>
-
     <Collapse isOpen={isCollapsed}>
-
       <Card>
         <Container>
         {allColumns.map(column => (
                <Button onClick={() => column.toggleHidden()} key={column.id} active={column.isVisible}> {column.id} </Button>
         ))}
-
-
-
         </Container>
       </Card>
       </Collapse>
@@ -298,24 +247,27 @@ function TableC({ columns, data, metadataCallback }) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.canGroupBy ? (
+                <th {...column.getHeaderProps()}>
+                <div>
+                  {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()}>
-                      {column.isGrouped ? '★ ' : '☆ '}
+                      {column.isGrouped ? '🛑 ' : '👊 '}
                     </span>
                   ) : null}
-
-                  {column.render('Header')}
-                  <span>
-                    {column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}
-              
+                  <span {...column.getSortByToggleProps()}>
+                    {column.render('Header')}
+                    {/* Add a sort direction indicator */}
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
                   </span>
-                  <div>{column.canFilter ? column.render('Filter') : null}</div>
-
-
-
-                  </th>
+                </div>
+                {/* Render the columns filter UI */}
+                <div>{column.canFilter ? column.render('Filter') : null}</div>
+              </th>
               ))}
             </tr>
           ))}
@@ -353,8 +305,6 @@ function TableC({ columns, data, metadataCallback }) {
                     // Otherwise, just render the regular cell
                     cell.render('Cell')
                   )}
-
-                  
                   </td>
                   )
                 })}
@@ -364,7 +314,6 @@ function TableC({ columns, data, metadataCallback }) {
         </tbody>
       </table>
       <div className="pagination">
-
         <InputGroup> 
         <InputGroupAddon className="pageControls" addonType="prepend">
           <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage} >  &lt; &lt; </Button>
@@ -409,7 +358,6 @@ function TableC({ columns, data, metadataCallback }) {
           </DropdownMenu>
         </InputGroupButtonDropdown>
         </InputGroup>
-
       </div>
       </Styles>
       </Card>
@@ -475,15 +423,13 @@ function TableApp(props) {
     try  {
       // setData(PATIENT["results"][selectedMetadata]);
       // Use above for local debugging
-      
       getMetadataData(props.datasetId, selectedMetadata, setData)
 
     }
     catch(err) {
       console.log(err);
-      console.log(data);
     }
-    }, [selectedMetadata]
+    }, [selectedMetadata, props.datasetId]
   )
 
   React.useEffect(() => {
@@ -503,9 +449,7 @@ function TableApp(props) {
 
   return (
         <div className="content">
-
-
-            <TableC columns={columnsM} data={dataM} metadataCallback = {setSelectedMetadata}/>
+            <Table columns={columnsM} data={dataM} metadataCallback={setSelectedMetadata}/>
         </div>
   )
 }

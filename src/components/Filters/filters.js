@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React from "react"
 import { useAsyncDebounce } from 'react-table'
 import matchSorter from 'match-sorter'
 import { Input } from 'reactstrap'
