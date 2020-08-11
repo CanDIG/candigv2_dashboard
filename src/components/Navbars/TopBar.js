@@ -34,7 +34,7 @@ import {
 
 import routes from "routes.js";
 
-import DatasetsDropdown from "views/Dropdown";
+import DatasetsDropdown from "../Dropdowns/DatasetsDropdown.js";
 
 class Header extends React.Component {
   constructor(props) {
@@ -150,14 +150,6 @@ class Header extends React.Component {
             className="justify-content-end"
           >
             <Nav navbar>
-              <NavItem>
-                <Link to="#pablo" className="nav-link btn-magnify">
-                  <i className="nc-icon nc-layout-11" />
-                  <p>
-                    <span className="d-lg-none d-md-block">Stats</span>
-                  </p>
-                </Link>
-              </NavItem>
               <DatasetsDropdown updateState={this.props.updateState}/>
               <Dropdown
                 nav

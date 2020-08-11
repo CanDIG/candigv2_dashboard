@@ -1,9 +1,11 @@
 {
-  "name": "paper-dashboard-react",
-  "version": "1.2.0",
+  "name": "candigv2_dashboard",
+  "version": "0.1.0",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/paper-dashboard-react/#/dashboard",
+  "homepage": "https://github.com/CanDIG/candigv2_dashboard",
   "dependencies": {
+    "igv": "2.6.3",
+    "@highcharts/map-collection": "^1.1.3",
     "bootstrap": "4.5.0",
     "chart.js": "2.9.3",
     "highcharts": "^8.1.2",
@@ -23,7 +25,8 @@
     "react-scripts": "3.4.1",
     "react-table": "^7.3.2",
     "reactstrap": "8.4.1",
-    "styled-components": "^5.1.1"
+    "styled-components": "^5.1.1",
+    "swagger-ui-react": "^3.28.0"
   },
   "scripts": {
     "start": "react-scripts start",
