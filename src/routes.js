@@ -73,6 +73,13 @@ var routes = [
     layout: "/dashboard",
   },
   {
+    path: "/tables",
+    name: "Clinical Metadata",
+    icon: "nc-icon nc-tile-56",
+    component: TableList,
+    layout: "/dashboard",
+  },
+  {
     path: "/icons",
     name: "Icons",
     icon: "nc-icon nc-diamond",
@@ -98,13 +105,6 @@ var routes = [
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: UserPage,
-    layout: "/dashboard",
-  },
-  {
-    path: "/tables",
-    name: "Clinical Metadata",
-    icon: "nc-icon nc-tile-56",
-    component: TableList,
     layout: "/dashboard",
   },
   {

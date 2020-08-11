@@ -319,13 +319,12 @@ function getMetadataData(datasetId, metadata, cb) {
        for (let i = 0; i < data.results[metadata].length; i++) {
         datasets.push(data.results[metadata][i]);
        }
-       console.log([datasets]);
        cb(datasets)
      })
 }
 
 
-function TableApp(props) {
+function TableApp({datasetId}) {
 
   const [selectedMetadata, setSelectedMetadata] = useState("patients");
   const [data, setData] = useState([]);
@@ -334,12 +333,12 @@ function TableApp(props) {
   React.useEffect(() => {
     //fetch data
     try  {
-      getMetadataData(props.datasetId, selectedMetadata, setData)
+      getMetadataData(datasetId, selectedMetadata, setData)
     }
     catch(err) {
       console.log(err);
     }
-    }, [selectedMetadata, props.datasetId]
+    }, [selectedMetadata, datasetId]
   )
 
   React.useEffect(() => {
