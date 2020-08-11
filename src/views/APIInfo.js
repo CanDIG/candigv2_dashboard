@@ -2,6 +2,8 @@ import React from "react";
 
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
+// Custom CSS
+import "../assets/css/APIInfo.css";
 
 // reactstrap components
 import { Card, CardBody, Row, Col, Table } from "reactstrap";
