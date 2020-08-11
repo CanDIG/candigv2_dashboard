@@ -54,7 +54,6 @@ import {
 } from "reactstrap";
 
 import MetaDropdown from "components/Dropdown/ClinMetadataDropdown.js"
-// import PATIENT from "constants/patients"
 
 const Styles = styled.div`
   padding: 1rem;
@@ -421,10 +420,7 @@ function TableApp(props) {
   React.useEffect(() => {
     //fetch data
     try  {
-      // setData(PATIENT["results"][selectedMetadata]);
-      // Use above for local debugging
       getMetadataData(props.datasetId, selectedMetadata, setData)
-
     }
     catch(err) {
       console.log(err);
