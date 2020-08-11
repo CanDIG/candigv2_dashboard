@@ -9,6 +9,9 @@ import { Card, CardBody, Row, Col, Table } from "reactstrap";
 // Consts
 import BASE_URL from "../constants/constants.js";
 
+/*
+ * API Info component
+ */
 function APIInfo() {
   return (
     <>

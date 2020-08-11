@@ -4,6 +4,14 @@ import HighchartsReact from "highcharts-react-official";
 
 window.Highcharts = Highcharts;
 
+/*
+ * Component for offline chart
+ * @param {string} chartType
+ * @param {string} barTitle
+ * @param {string} height
+ * @param {string} datasetName
+ *  @param {string} dataObject
+ */
 function CustomOfflineChart({
   chartType,
   barTitle,
@@ -21,6 +29,9 @@ function CustomOfflineChart({
     },
   });
 
+  /*
+   * Transform a camelCase string to a capital spaced string
+   */
   function splitString(newString) {
     let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
     let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
@@ -35,6 +46,9 @@ function CustomOfflineChart({
     }
   }, [datasetName, dataObject]);
 
+  /*
+   * Create Bar chart from props
+   */
   function createBarChart() {
     let options = {
       series: [{ data: [], colorByPoint: true, showInLegend: false }],
@@ -52,6 +66,10 @@ function CustomOfflineChart({
       xAxis: { categories: categories },
     });
   }
+
+  /*
+   * Create a Pie chart from props
+   */
 
   function createPieChart() {
     let options = {

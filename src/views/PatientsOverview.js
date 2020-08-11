@@ -4,7 +4,18 @@ import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
 
 import CustomOfflineChart from "../components/Graphs/CustomOfflineChart";
 
-function PatientsOverview(props) {
+/*
+ * Patient Overview view component
+ * @param {string} patientsList
+ * @param {string} datasetName
+ */
+function PatientsOverview({ patientsList, datasetName }) {
+  /*
+   * Return the aggregation value of a key from an array of objects.
+   * @param {array} objectArray: An array of objects.
+   * @param {object} property: The key to aggregate on.
+   * @return an object with different values of the queried property being the key, and frequency being the value.
+   */
   function groupBy(objectArray, property) {
     return objectArray.reduce((acc, obj) => {
       let key = obj[property];
@@ -17,16 +28,13 @@ function PatientsOverview(props) {
     }, {});
   }
 
-  const genderObj = groupBy(props.patientsList, "gender");
-  const ethnicityObj = groupBy(props.patientsList, "ethnicity");
-  const raceObj = groupBy(props.patientsList, "race");
-  const causeOfDeathObj = groupBy(props.patientsList, "causeOfDeath");
-  const provinceOfResidenceObj = groupBy(
-    props.patientsList,
-    "provinceOfResidence"
-  );
+  const genderObj = groupBy(patientsList, "gender");
+  const ethnicityObj = groupBy(patientsList, "ethnicity");
+  const raceObj = groupBy(patientsList, "race");
+  const causeOfDeathObj = groupBy(patientsList, "causeOfDeath");
+  const provinceOfResidenceObj = groupBy(patientsList, "provinceOfResidence");
   const occupationalOrEnvironmentalExposureObj = groupBy(
-    props.patientsList,
+    patientsList,
     "occupationalOrEnvironmentalExposure"
   );
 
@@ -68,7 +76,7 @@ function PatientsOverview(props) {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Patients</p>
-                      <CardTitle tag="p">{props.patientsList.length}</CardTitle>
+                      <CardTitle tag="p">{patientsList.length}</CardTitle>
                       <p />
                     </div>
                   </Col>
@@ -82,7 +90,7 @@ function PatientsOverview(props) {
             <Card>
               <CardBody>
                 <CustomOfflineChart
-                  datasetName={props.datasetName}
+                  datasetName={datasetName}
                   dataObject={genderObj}
                   chartType={"bar"}
                   barTitle={"Gender"}
@@ -95,7 +103,7 @@ function PatientsOverview(props) {
             <Card>
               <CardBody>
                 <CustomOfflineChart
-                  datasetName={props.datasetName}
+                  datasetName={datasetName}
                   dataObject={ethnicityObj}
                   chartType={"bar"}
                   barTitle={"Ethnicity"}
@@ -109,7 +117,7 @@ function PatientsOverview(props) {
             <Card>
               <CardBody>
                 <CustomOfflineChart
-                  datasetName={props.datasetName}
+                  datasetName={datasetName}
                   dataObject={raceObj}
                   chartType={"bar"}
                   barTitle={"Race"}
@@ -122,7 +130,7 @@ function PatientsOverview(props) {
             <Card>
               <CardBody>
                 <CustomOfflineChart
-                  datasetName={props.datasetName}
+                  datasetName={datasetName}
                   dataObject={causeOfDeathObj}
                   chartType={"bar"}
                   barTitle={"Cause Of Death"}
@@ -137,7 +145,7 @@ function PatientsOverview(props) {
             <Card>
               <CardBody>
                 <CustomOfflineChart
-                  datasetName={props.datasetName}
+                  datasetName={datasetName}
                   dataObject={provinceOfResidenceObj}
                   chartType={"pie"}
                   barTitle={"Province Of Residence"}
@@ -150,7 +158,7 @@ function PatientsOverview(props) {
             <Card>
               <CardBody>
                 <CustomOfflineChart
-                  datasetName={props.datasetName}
+                  datasetName={datasetName}
                   dataObject={occupationalOrEnvironmentalExposureObj}
                   chartType={"pie"}
                   barTitle={"Occupational Or Environmental Exposure"}

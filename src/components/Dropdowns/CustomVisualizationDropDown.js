@@ -15,6 +15,9 @@ function CustomVisualizationDropDown({ datasetId, datasetName }) {
   const [selectedColumn, setSelectedColumn] = useState("dateOfBirth");
   const [selectedChart, setSelectedChart] = useState("bar");
 
+  /*
+   * Transform a camelCase string to a capital spaced string
+   */
   function splitString(newString) {
     let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
     let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);

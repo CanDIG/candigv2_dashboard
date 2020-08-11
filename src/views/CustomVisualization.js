@@ -4,6 +4,11 @@ import { Row, Col, Container } from "reactstrap";
 
 import CustomVisualizationDropDown from "../components/Dropdowns/CustomVisualizationDropDown.js";
 
+/*
+ * Custom visualization view component
+ * @param {string} datasetId
+ * @param {string} datasetName
+ */
 function CustomVisualization({ datasetId, datasetName }) {
   return (
     <>

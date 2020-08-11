@@ -16,6 +16,13 @@ function usePrevious(value) {
   return ref.current;
 }
 
+/*
+ * Component for bar chart graphs
+ * @param {string} datasetId
+ * * @param {string} table
+ * * @param {string} field
+ * * @param {string} title
+ */
 function BarChart({ datasetId, table, field, title }) {
   const [chartOptions, setChartOptions] = useState({
     credits: {

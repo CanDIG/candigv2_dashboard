@@ -46,6 +46,10 @@ function CancerType({ datasetId }) {
 
   const prevDatasetId = usePrevious(datasetId);
 
+  /*
+   * Fetch cancer information from the server after the component is added to the DOM
+   * and create the bar graph by changing the chartOptions state
+   */
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
       fetch(BASE_URL + "/count", {
