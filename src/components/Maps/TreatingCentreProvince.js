@@ -5,7 +5,7 @@ import HighchartsMap from "highcharts/modules/map";
 import mapDataCanada from "@highcharts/map-collection/countries/ca/ca-all.geo.json";
 
 // Consts
-import BASE_URL from "../../constants/constants.js"
+import BASE_URL from "constants/constants.js"
 
 // Initialize HighchartsMap
 HighchartsMap(Highcharts);
@@ -70,7 +70,7 @@ function fetchData(datasetId, chartOptionsUpdate) {
           }
         ]
       }
-      chartOptionsUpdate(chart)
+      chartOptionsUpdate(chart);
     }
   )
 }
@@ -121,7 +121,7 @@ function TreatingCentreProvince(props){
         fetchData(props.datasetId, setChartOptions);
       }
     } catch(err) {
-      console.log(err)
+      console.log(err);
     }
   }, [props.datasetId])
 
