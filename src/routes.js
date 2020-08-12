@@ -20,7 +20,7 @@ import Overview from "views/Overview.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
-import TableList from "views/MetadataTable.js";
+import TableList from "views/MetadataTable";
 import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 import Services from "views/Services.js";
