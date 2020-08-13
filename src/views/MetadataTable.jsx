@@ -18,7 +18,8 @@ import Styles from '../assets/css/StyledComponents/MetadataTableStyled';
 import {
   GlobalFilter, DefaultColumnFilter, FuzzyTextFilterFn,
 } from '../components/Filters/filters';
-
+import {PaginationBar} from  '../components/Tables/Pagination'
+import PATIENT from 'constants/patients_local';
 
 const IndeterminateButton = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -34,6 +35,7 @@ const IndeterminateButton = React.forwardRef(
 );
 
 FuzzyTextFilterFn.autoRemove = (val) => !val;
+
 
 function Table({ columns, data, metadataCallback }) {
   const filterTypes = React.useMemo(
@@ -81,6 +83,10 @@ function Table({ columns, data, metadataCallback }) {
   const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
+
+  const pagination = {canPreviousPage, canNextPage, pageOptions, pageCount,
+    gotoPage, nextPage, previousPage, setPageSize, state: { pageIndex, pageSize },
+  }
 
   return (
     <>
@@ -199,76 +205,8 @@ function Table({ columns, data, metadataCallback }) {
                 })}
               </tbody>
             </table>
-            <div className="pagination">
-              <InputGroup>
-                <InputGroupAddon className="pageControls" addonType="prepend">
-                  <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                    &lt; &lt;
-                  </Button>
-                  <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                    &lt;
-                  </Button>
-                  <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                    &gt;
-                  </Button>
-                  <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                    &gt;&gt;
-                  </Button>
-                  <InputGroupText className="pageCountOuter">
-                    Page
-                    {' '}
-                    <strong className="pageCountBox">
-                      {pageIndex + 1}
-                      {' '}
-                      of
-                      {' '}
-                      {pageOptions.length}
-                    </strong>
-                  </InputGroupText>
-                  <InputGroupText className="goToPage">
-                    Go to page:
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  className="tablePageInput"
-                  type="number"
-                  defaultValue={pageIndex + 1}
-                  onChange={(e) => {
-                    const pageCounter = e.target.value ? Number(e.target.value) - 1 : 0;
-                    gotoPage(pageCounter);
-                  }}
-                />
-                <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggleDropDown}>
-                  <DropdownToggle
-                    caret
-                    style={{
-                      marginTop: '0%',
-                      marginBottom: '0%',
-                      marginLeft: '0%',
-                    }}
-                  >
-                    Show
-                    {' '}
-                    {pageSize}
-                  </DropdownToggle>
-                  <DropdownMenu onClick={(e) => {
-                    setPageSize(Number(e.target.value));
-                  }}
-                  >
-                    {[10, 20, 30, 40, 50].map((rowCount) => (
-                      <DropdownItem
-                        key={rowCount}
-                        value={rowCount}
-                      >
-                        Show
-                        {' '}
-                        {rowCount}
-                      </DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </InputGroupButtonDropdown>
-              </InputGroup>
-            </div>
+            <PaginationBar paginationFxns={pagination}></PaginationBar>
+
           </Styles>
         </Card>
       </Row>
@@ -277,7 +215,7 @@ function Table({ columns, data, metadataCallback }) {
 }
 
 Table.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.string),
+  columns: PropTypes.arrayOf(PropTypes.object),
   data: PropTypes.arrayOf(PropTypes.object),
   metadataCallback: PropTypes.func,
 };
