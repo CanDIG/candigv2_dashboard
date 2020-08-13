@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 // Consts
-import BASE_URL from "../../constants/constants.js";
+import BASE_URL from '../../constants/constants';
 
 // Hook
 // Used to keep the previous value of a state or prop
@@ -30,10 +31,10 @@ function CancerType({ datasetId }) {
       plotBackgroundColor: null,
       plotBorderWidth: null,
       plotShadow: false,
-      type: "pie",
+      type: 'pie',
     },
     title: {
-      text: "Cancer type",
+      text: 'Cancer type',
     },
     series: [
       {
@@ -52,35 +53,34 @@ function CancerType({ datasetId }) {
    */
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      fetch(BASE_URL + "/count", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
+      fetch(`${BASE_URL}/count`, {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           dataset_id: datasetId,
           logic: {
-            id: "A",
+            id: 'A',
           },
           components: [
             {
-              id: "A",
+              id: 'A',
               diagnoses: {},
             },
           ],
           results: [
             {
-              table: "diagnoses",
-              fields: ["cancerType"],
+              table: 'diagnoses',
+              fields: ['cancerType'],
             },
           ],
         }),
       })
         .then((response) => response.json())
         .then((data) => {
-          const cancerType = data.results.diagnoses[0].cancerType;
-          const graphData = [];
-          for (const name in cancerType) {
-            graphData.push({ name: name, y: cancerType[name] });
-          }
+          const { cancerType } = data.results.diagnoses[0];
+
+          const graphData = Object.keys(cancerType).map((key) => ({ key, y: cancerType[key] }));
+
           setChartOptions({
             series: [
               {
@@ -98,5 +98,9 @@ function CancerType({ datasetId }) {
     </div>
   );
 }
+
+CancerType.propTypes = {
+  datasetId: PropTypes.string.isRequired,
+};
 
 export default CancerType;

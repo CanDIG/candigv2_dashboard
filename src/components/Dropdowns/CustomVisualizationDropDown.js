@@ -1,57 +1,53 @@
-import React, { useState } from "react";
-import { Container } from "reactstrap";
-// Consts
-import tableSchema from "../../constants/tableSchema.js";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import { Card, CardBody, Row, Col, Input } from "reactstrap";
-import CustomChart from "components/Graphs/CustomChart.js";
+import {
+  Container, Card, CardBody, Row, Col, Input,
+} from 'reactstrap';
+// Consts
+import CustomChart from '../Graphs/CustomChart';
+import tableSchema from '../../constants/tableSchema';
 
 /*
  * Visualization component to plot tables and its columns values to different kinds of graphs
  */
 
 function CustomVisualizationDropDown({ datasetId, datasetName }) {
-  const [selectedTable, setSelectedTable] = useState("patients");
-  const [selectedColumn, setSelectedColumn] = useState("dateOfBirth");
-  const [selectedChart, setSelectedChart] = useState("bar");
+  const [selectedTable, setSelectedTable] = useState('patients');
+  const [selectedColumn, setSelectedColumn] = useState('dateOfBirth');
+  const [selectedChart, setSelectedChart] = useState('bar');
 
   /*
    * Transform a camelCase string to a capital spaced string
    */
   function splitString(newString) {
-    let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
-    let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
+    const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
+    const capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
     return capitalized;
   }
 
-  const tables = Object.keys(tableSchema).map((x) => {
-    return (
-      <option key={x} value={x}>
-        {splitString(x)}
-      </option>
-    );
-  });
+  const tables = Object.keys(tableSchema).map((x) => (
+    <option key={x} value={x}>
+      {splitString(x)}
+    </option>
+  ));
 
-  const columns = tableSchema[selectedTable].map((x) => {
-    return (
-      <option key={x} value={x}>
-        {splitString(x)}
-      </option>
-    );
-  });
+  const columns = tableSchema[selectedTable].map((x) => (
+    <option key={x} value={x}>
+      {splitString(x)}
+    </option>
+  ));
 
-  const chartList = ["Bar", "Column", "Scatter", "Pie"].map((x) => {
-    return (
-      <option key={x} value={x.toLowerCase()}>
-        {x}
-      </option>
-    );
-  });
+  const chartList = ['Bar', 'Column', 'Scatter', 'Pie'].map((x) => (
+    <option key={x} value={x.toLowerCase()}>
+      {x}
+    </option>
+  ));
 
   return (
     <>
       <Container fluid>
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: '10px' }}>
           <Row>
             <Col xs="6" sm="6" md="4" lg="4" xl="4">
               <Input
@@ -110,5 +106,10 @@ function CustomVisualizationDropDown({ datasetId, datasetName }) {
     </>
   );
 }
+
+CustomVisualizationDropDown.propTypes = {
+  datasetId: PropTypes.string.isRequired,
+  datasetName: PropTypes.string.isRequired,
+};
 
 export default CustomVisualizationDropDown;

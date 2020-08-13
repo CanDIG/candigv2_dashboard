@@ -214,7 +214,7 @@ class Dashboard extends React.Component {
             <Col lg="3" md="6" sm="6">
               <Card>
                 <CardBody>
-                  <Server />
+                  <Server datasetId={this.state.datasetId} />
                 </CardBody>
               </Card>
             </Col>

@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 // Consts
-import BASE_URL from "../../constants/constants.js";
+import BASE_URL from '../../constants/constants';
 
 /*
  * Component listing the server status in the form of bar graph
  */
-function Server({datasetId}) {
+function Server({ datasetId }) {
   /*
    * chartOptions describes the format and style of the graph.
    * More information on Highcharts website
@@ -17,11 +18,11 @@ function Server({datasetId}) {
       enabled: false,
     },
     chart: {
-      type: "bar",
-      height: "200px; auto",
+      type: 'bar',
+      height: '200px; auto',
     },
     title: {
-      text: "Server Status",
+      text: 'Server Status',
     },
     xAxis: {
       categories: [],
@@ -39,18 +40,20 @@ function Server({datasetId}) {
    * and create the bar graph by changing the chartOptions state
    */
   useEffect(() => {
-    fetch(BASE_URL + "/datasets/search", { method: "POST" })
+    fetch(`${BASE_URL}/datasets/search`, { method: 'POST' })
       .then((response) => response.json())
       .then((data) => {
         const dataList = [];
-        const categoriesList = [];
-        for (const property in data.status) {
-          if (property === "Valid response") {
-            continue;
+        // const categoriesList = [];
+        const categoriesList = Object.keys(data.status).filter((key) => {
+          if (key === 'Valid response') {
+            return false;
           }
-          dataList.push(data.status[property]);
-          categoriesList.push(property);
-        }
+          return true;
+        }).map((key) => {
+          dataList.push(data.status[key]);
+          return key;
+        });
         setChartOptions({
           xAxis: {
             categories: categoriesList,
@@ -70,5 +73,9 @@ function Server({datasetId}) {
     </div>
   );
 }
+
+Server.propTypes = {
+  datasetId: PropTypes.string.isRequired,
+};
 
 export default Server;
