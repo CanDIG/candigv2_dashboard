@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from "react";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 window.Highcharts = Highcharts;
+
+/*
+ * Transform a camelCase string to a capital spaced string
+ */
+function splitString(newString) {
+  const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
+  const capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
+  return capitalized;
+}
 
 /*
  * Component for offline chart
@@ -10,7 +20,7 @@ window.Highcharts = Highcharts;
  * @param {string} barTitle
  * @param {string} height
  * @param {string} datasetName
- *  @param {string} dataObject
+ * @param {array} dataObject
  */
 function CustomOfflineChart({
   chartType,
@@ -20,9 +30,9 @@ function CustomOfflineChart({
   dataObject,
 }) {
   const [chartOptions, setChartOptions] = useState({
-    chart: { type: chartType, height: height },
+    chart: { type: chartType, height },
     title: {
-      text: "Distribution of " + splitString(barTitle),
+      text: `Distribution of ${splitString(barTitle)}`,
     },
     subtitle: {
       text: datasetName,
@@ -30,40 +40,19 @@ function CustomOfflineChart({
   });
 
   /*
-   * Transform a camelCase string to a capital spaced string
-   */
-  function splitString(newString) {
-    let splitted = newString.replace(/([a-z])([A-Z])/g, "$1 $2");
-    let capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
-    return capitalized;
-  }
-
-  useEffect(() => {
-    if (chartType === "pie") {
-      createPieChart();
-    } else {
-      createBarChart();
-    }
-  }, [datasetName, dataObject]);
-
-  /*
    * Create Bar chart from props
    */
   function createBarChart() {
-    let options = {
-      series: [{ data: [], colorByPoint: true, showInLegend: false }],
-      xAxis: { categories: [] },
-    };
     const data = [];
-    const categories = [];
-    for (const entry in dataObject) {
-      data.push(dataObject[entry]);
-      categories.push(entry);
-    }
+
+    const categories = Object.keys(dataObject).map((key) => {
+      data.push(dataObject[key]);
+      return key;
+    });
 
     setChartOptions({
-      series: [{ data: data, colorByPoint: true, showInLegend: false }],
-      xAxis: { categories: categories },
+      series: [{ data, colorByPoint: true, showInLegend: false }],
+      xAxis: { categories },
     });
   }
 
@@ -72,7 +61,7 @@ function CustomOfflineChart({
    */
 
   function createPieChart() {
-    let options = {
+    const options = {
       credits: {
         enabled: false,
       },
@@ -82,13 +71,19 @@ function CustomOfflineChart({
         plotShadow: false,
       },
     };
-    const graphData = [];
-    for (const entry in dataObject) {
-      graphData.push({ name: entry, y: dataObject[entry] });
-    }
-    options["series"] = [{ data: graphData }];
+    options.series = [{
+      data: Object.keys(dataObject).map((key) => ({ name: key, y: dataObject[key] })),
+    }];
     setChartOptions(options);
   }
+
+  useEffect(() => {
+    if (chartType === 'pie') {
+      createPieChart();
+    } else {
+      createBarChart();
+    }
+  }, [datasetName, dataObject]);
 
   return (
     <div>
@@ -96,5 +91,13 @@ function CustomOfflineChart({
     </div>
   );
 }
+
+CustomOfflineChart.propTypes = {
+  chartType: PropTypes.string.isRequired,
+  barTitle: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+  datasetName: PropTypes.string.isRequired,
+  dataObject: PropTypes.objectOf(PropTypes.number).isRequired,
+};
 
 export default CustomOfflineChart;
