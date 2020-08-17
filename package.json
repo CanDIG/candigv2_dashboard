@@ -10,7 +10,7 @@
     "highcharts": "^8.1.2",
     "highcharts-react-official": "^3.0.0",
     "history": "4.10.1",
-    "igv": "2.6.3",
+    "igv": "^2.6.6",
     "node-sass": "4.14.1",
     "perfect-scrollbar": "1.5.0",
     "prop-types": "^15.7.2",
