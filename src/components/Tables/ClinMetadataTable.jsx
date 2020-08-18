@@ -7,18 +7,15 @@ import {
 
 // reactstrap components
 import { Card, Row } from 'reactstrap';
-import Styles from 'assets/css/StyledComponents/MetadataTableStyled';
-import { DefaultColumnFilter, FuzzyTextFilterFn } from 'components/Filters/filters';
+import Styles from '../../assets/css/StyledComponents/MetadataTableStyled';
+import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
-import {PaginationBar} from  'components/Tables/Pagination'
-import {DataControl} from 'components/Tables/DataControls'
-
+import { PaginationBar } from './Pagination';
+import { DataControl } from './DataControls';
 
 FuzzyTextFilterFn.autoRemove = (val) => !val;
 
-
-
-export function ClinMetadataTable({ columns, data, metadataCallback }) {
+function ClinMetadataTable({ columns, data, metadataCallback }) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -60,17 +57,73 @@ export function ClinMetadataTable({ columns, data, metadataCallback }) {
   useFilters, useGlobalFilter, useGroupBy,
   useSortBy, useExpanded, usePagination);
 
+  const pagination = {
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  };
+  const topBarFxns = {
+    metadataCallback,
+    toggleHideAllColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    state,
+    allColumns,
+  };
 
-  const pagination = {canPreviousPage, canNextPage, pageOptions, pageCount,
-    gotoPage, nextPage, previousPage, setPageSize, state: { pageIndex, pageSize },
+  function getColumnSortSymbol(column) {
+    if (column.isSorted) {
+      if (column.isSortedDesc) {
+        return (' 🔽');
+      }
+      return (' 🔼');
+    }
+    return ('');
   }
-  const topBarFxns = {metadataCallback, toggleHideAllColumns, preGlobalFilteredRows, 
-    setGlobalFilter, state, allColumns
+
+  function getCellStyle(cell) {
+    if (cell.isGrouped) {
+      return ({ background: '#0aff0082' });
+    } if (cell.isAggregated) {
+      return ({ background: '##ffa50078' });
+    } if (cell.isPlaceholder) {
+      return ({ background: '#ff000042' });
+    }
+    return ({ background: 'white' });
+  }
+
+  function handleAggregation(cell, row) {
+    if (cell.isGrouped) {
+      return (
+        <>
+          <span {...row.getToggleRowExpandedProps()}>
+            {row.isExpanded ? '👇' : '👉'}
+          </span>
+          {' '}
+          {cell.render('Cell')}
+          {' '}
+          (
+          {row.subRows.length}
+          )
+        </>
+      );
+    } if (cell.isAggregated) {
+      return cell.render('Aggregated');
+    } if (cell.isPlaceholder) {
+      return null;
+    }
+    return cell.render('Cell');
   }
 
   return (
     <>
-      <DataControl topBarFxns={topBarFxns}/>
+      <DataControl topBarFxns={topBarFxns} />
       <Row>
         <Card>
           <Styles>
@@ -82,7 +135,7 @@ export function ClinMetadataTable({ columns, data, metadataCallback }) {
                       <th {...column.getHeaderProps()}>
                         <div>
                           {column.canGroupBy ? (
-                          // If the column can be grouped, let's add a toggle
+                          // If the column can be grouped, add a toggle
                             <span {...column.getGroupByToggleProps()}>
                               {column.isGrouped ? '🛑 ' : '👊 '}
                             </span>
@@ -90,11 +143,7 @@ export function ClinMetadataTable({ columns, data, metadataCallback }) {
                           <span {...column.getSortByToggleProps()}>
                             {column.render('Header')}
                             {/* Add a sort direction indicator */}
-                            {column.isSorted
-                              ? column.isSortedDesc
-                                ? ' 🔽'
-                                : ' 🔼'
-                              : ''}
+                            {getColumnSortSymbol(column)}
                           </span>
                         </div>
                         {/* Render the columns filter UI */}
@@ -112,38 +161,9 @@ export function ClinMetadataTable({ columns, data, metadataCallback }) {
                       {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
-                          style={{
-                            background: cell.isGrouped
-                              ? '#0aff0082'
-                              : cell.isAggregated
-                                ? '#ffa50078'
-                                : cell.isPlaceholder
-                                  ? '#ff000042'
-                                  : 'white',
-                          }}
+                          style={getCellStyle(cell)}
                         >
-                          {cell.isGrouped ? (
-                          // If it's a grouped cell, add an expander and row count
-                            <>
-                              <span {...row.getToggleRowExpandedProps()}>
-                                {row.isExpanded ? '👇' : '👉'}
-                              </span>
-                              {' '}
-                              {cell.render('Cell')}
-                              {' '}
-                              (
-                              {row.subRows.length}
-                              )
-                            </>
-                          ) : cell.isAggregated ? (
-                          // If the cell is aggregated, use the Aggregated
-                          // renderer for cell
-                            cell.render('Aggregated')
-                          ) : cell.isPlaceholder ? null : (
-                          // For cells with repeated values, render null
-                          // Otherwise, just render the regular cell
-                            cell.render('Cell')
-                          )}
+                          {handleAggregation(cell, row)}
                         </td>
                       ))}
                     </tr>
@@ -151,7 +171,7 @@ export function ClinMetadataTable({ columns, data, metadataCallback }) {
                 })}
               </tbody>
             </table>
-            <PaginationBar paginationFxns={pagination}/>
+            <PaginationBar paginationFxns={pagination} />
 
           </Styles>
         </Card>
@@ -170,3 +190,5 @@ ClinMetadataTable.defaultProps = {
   data: [],
   metadataCallback: () => {},
 };
+
+export default ClinMetadataTable;

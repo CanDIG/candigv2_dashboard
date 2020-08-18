@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import BASE_URL from '../constants/constants';
-import {ClinMetadataTable} from '../components/Tables/ClinMetadataTable'
-
+import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
-  for (const item in columnNames) {
-    const name = columnNames[item];
+
+  Object.values(columnNames).forEach((name) => {
     const column = {
       Header: (name.charAt(0).toLocaleUpperCase() + name.slice(1)),
       accessor: name,
@@ -16,7 +15,7 @@ function CreateColumns(columnNames, cb) {
       Aggregated: ({ value }) => `${value} `,
     };
     columnList.push(column);
-  }
+  });
   cb(columnList);
 }
 
@@ -35,7 +34,7 @@ function getMetadataData(datasetId, metadata, cb) {
       }
     })
     .then((data) => {
-      for (let i = 0; i < data.results[metadata].length; i++) {
+      for (let i = 0; i < data.results[metadata].length; i += 1) {
         datasets.push(data.results[metadata][i]);
       }
       cb(datasets);
