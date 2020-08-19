@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 // reactstrap components
 import {
@@ -9,10 +9,9 @@ import {
   Table,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap';
 
 function Services() {
-
   return (
     <>
       <div className="content">
@@ -67,7 +66,7 @@ function Services() {
                 </Table>
               </CardBody>
             </Card>
-          </Col>              
+          </Col>
         </Row>
       </div>
     </>

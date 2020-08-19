@@ -2,11 +2,16 @@
     "env": {
         "browser": true,
         "es2020": true
+
     },
     "extends": [
         "plugin:react/recommended",
         "airbnb"
     ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -19,5 +24,7 @@
     ],
     "rules": {
         "react/jsx-props-no-spreading": "off"
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+
     }
 }

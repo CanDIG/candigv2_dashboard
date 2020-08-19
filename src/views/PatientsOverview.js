@@ -1,12 +1,15 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 // reactstrap components
-import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
+import {
+  Card, CardBody, CardTitle, Row, Col,
+} from 'reactstrap';
 
-import CustomOfflineChart from "../components/Graphs/CustomOfflineChart";
+import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 
 /*
  * Patient Overview view component
- * @param {string} patientsList
+ * @param {arrat} patientsList
  * @param {string} datasetName
  */
 function PatientsOverview({ patientsList, datasetName }) {
@@ -14,28 +17,29 @@ function PatientsOverview({ patientsList, datasetName }) {
    * Return the aggregation value of a key from an array of objects.
    * @param {array} objectArray: An array of objects.
    * @param {object} property: The key to aggregate on.
-   * @return an object with different values of the queried property being the key, and frequency being the value.
+   * @return an object with different values of the
+   *  queried property being the key, and frequency being the value.
    */
   function groupBy(objectArray, property) {
     return objectArray.reduce((acc, obj) => {
-      let key = obj[property];
+      const key = obj[property];
       if (!acc[key]) {
         acc[key] = 0;
       }
       acc[key] += 1;
-      delete acc["undefined"];
+      delete acc.undefined;
       return acc;
     }, {});
   }
 
-  const genderObj = groupBy(patientsList, "gender");
-  const ethnicityObj = groupBy(patientsList, "ethnicity");
-  const raceObj = groupBy(patientsList, "race");
-  const causeOfDeathObj = groupBy(patientsList, "causeOfDeath");
-  const provinceOfResidenceObj = groupBy(patientsList, "provinceOfResidence");
+  const genderObj = groupBy(patientsList, 'gender');
+  const ethnicityObj = groupBy(patientsList, 'ethnicity');
+  const raceObj = groupBy(patientsList, 'race');
+  const causeOfDeathObj = groupBy(patientsList, 'causeOfDeath');
+  const provinceOfResidenceObj = groupBy(patientsList, 'provinceOfResidence');
   const occupationalOrEnvironmentalExposureObj = groupBy(
     patientsList,
-    "occupationalOrEnvironmentalExposure"
+    'occupationalOrEnvironmentalExposure',
   );
 
   return (
@@ -92,9 +96,9 @@ function PatientsOverview({ patientsList, datasetName }) {
                 <CustomOfflineChart
                   datasetName={datasetName}
                   dataObject={genderObj}
-                  chartType={"bar"}
-                  barTitle={"Gender"}
-                  height={"200px; auto"}
+                  chartType="bar"
+                  barTitle="Gender"
+                  height="200px; auto"
                 />
               </CardBody>
             </Card>
@@ -105,9 +109,9 @@ function PatientsOverview({ patientsList, datasetName }) {
                 <CustomOfflineChart
                   datasetName={datasetName}
                   dataObject={ethnicityObj}
-                  chartType={"bar"}
-                  barTitle={"Ethnicity"}
-                  height={"200px; auto"}
+                  chartType="bar"
+                  barTitle="Ethnicity"
+                  height="200px; auto"
                 />
               </CardBody>
             </Card>
@@ -119,9 +123,9 @@ function PatientsOverview({ patientsList, datasetName }) {
                 <CustomOfflineChart
                   datasetName={datasetName}
                   dataObject={raceObj}
-                  chartType={"bar"}
-                  barTitle={"Race"}
-                  height={"200px; auto"}
+                  chartType="bar"
+                  barTitle="Race"
+                  height="200px; auto"
                 />
               </CardBody>
             </Card>
@@ -132,9 +136,9 @@ function PatientsOverview({ patientsList, datasetName }) {
                 <CustomOfflineChart
                   datasetName={datasetName}
                   dataObject={causeOfDeathObj}
-                  chartType={"bar"}
-                  barTitle={"Cause Of Death"}
-                  height={"200px; auto"}
+                  chartType="bar"
+                  barTitle="Cause Of Death"
+                  height="200px; auto"
                 />
               </CardBody>
             </Card>
@@ -147,9 +151,9 @@ function PatientsOverview({ patientsList, datasetName }) {
                 <CustomOfflineChart
                   datasetName={datasetName}
                   dataObject={provinceOfResidenceObj}
-                  chartType={"pie"}
-                  barTitle={"Province Of Residence"}
-                  height={"400px; auto"}
+                  chartType="pie"
+                  barTitle="Province Of Residence"
+                  height="400px; auto"
                 />
               </CardBody>
             </Card>
@@ -160,9 +164,9 @@ function PatientsOverview({ patientsList, datasetName }) {
                 <CustomOfflineChart
                   datasetName={datasetName}
                   dataObject={occupationalOrEnvironmentalExposureObj}
-                  chartType={"pie"}
-                  barTitle={"Occupational Or Environmental Exposure"}
-                  height={"400px; auto"}
+                  chartType="pie"
+                  barTitle="Occupational Or Environmental Exposure"
+                  height="400px; auto"
                 />
               </CardBody>
             </Card>
@@ -172,5 +176,10 @@ function PatientsOverview({ patientsList, datasetName }) {
     </>
   );
 }
+
+PatientsOverview.propTypes = {
+  patientsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  datasetName: PropTypes.string.isRequired,
+};
 
 export default PatientsOverview;

@@ -1,8 +1,9 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 // reactstrap components
-import { Row, Col, Container } from "reactstrap";
+import { Row, Col, Container } from 'reactstrap';
 
-import CustomVisualizationDropDown from "../components/Dropdowns/CustomVisualizationDropDown.js";
+import CustomVisualizationDropDown from '../components/Dropdowns/CustomVisualizationDropDown';
 
 /*
  * Custom visualization view component
@@ -33,5 +34,10 @@ function CustomVisualization({ datasetId, datasetName }) {
     </>
   );
 }
+
+CustomVisualization.propTypes = {
+  datasetId: PropTypes.string.isRequired,
+  datasetName: PropTypes.string.isRequired,
+};
 
 export default CustomVisualization;

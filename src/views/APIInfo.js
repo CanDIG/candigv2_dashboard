@@ -1,15 +1,17 @@
-import React from "react";
+import React from 'react';
 
-import SwaggerUI from "swagger-ui-react";
-import "swagger-ui-react/swagger-ui.css";
+import SwaggerUI from 'swagger-ui-react';
+import 'swagger-ui-react/swagger-ui.css';
 // Custom CSS
-import "../assets/css/APIInfo.css";
+import '../assets/css/APIInfo.css';
 
 // reactstrap components
-import { Card, CardBody, Row, Col, Table } from "reactstrap";
+import {
+  Card, CardBody, Row, Col, Table,
+} from 'reactstrap';
 
 // Consts
-import BASE_URL from "../constants/constants.js";
+import BASE_URL from '../constants/constants';
 
 /*
  * API Info component
@@ -23,7 +25,7 @@ function APIInfo() {
             <Card>
               <CardBody className="all-icons">
                 <Table responsive>
-                  <SwaggerUI url={BASE_URL + "/static/api.yaml"} />
+                  <SwaggerUI url={`${BASE_URL}/static/api.yaml`} />
                 </Table>
               </CardBody>
             </Card>

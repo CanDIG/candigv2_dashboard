@@ -10,8 +10,8 @@
     "highcharts": "^8.1.2",
     "highcharts-react-official": "^3.0.0",
     "history": "4.10.1",
-    "igv": "2.6.3",
     "match-sorter": "^4.2.0",
+    "igv": "^2.6.6",
     "node-sass": "4.14.1",
     "perfect-scrollbar": "1.5.0",
     "prop-types": "^15.7.2",
@@ -57,10 +57,11 @@
     "typescript": "3.9.5"
   },
   "devDependencies": {
+    "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.0.8",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8"
