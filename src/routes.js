@@ -20,7 +20,7 @@ import Overview from "views/Overview.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
-import TableList from "views/Tables.js";
+import TableList from "views/MetadataTableApp";
 import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 import Services from "views/Services.js";
@@ -73,6 +73,13 @@ var routes = [
     layout: "/dashboard",
   },
   {
+    path: "/tables",
+    name: "Clinical Metadata",
+    icon: "nc-icon nc-tile-56",
+    component: TableList,
+    layout: "/dashboard",
+  },
+  {
     path: "/icons",
     name: "Icons",
     icon: "nc-icon nc-diamond",
@@ -98,13 +105,6 @@ var routes = [
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: UserPage,
-    layout: "/dashboard",
-  },
-  {
-    path: "/tables",
-    name: "Table List",
-    icon: "nc-icon nc-tile-56",
-    component: TableList,
     layout: "/dashboard",
   },
   {
