@@ -3,7 +3,7 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 // Consts
 import { CLIN_METADATA } from 'constants/constants'
 
-export class ClinMetadataDropdown extends React.Component {
+class ClinMetadataDropdown extends React.Component {
   constructor(props) {
     super(props)
     this.toggle = this.toggle.bind(this);
@@ -59,5 +59,6 @@ export class ClinMetadataDropdown extends React.Component {
     );
 
   }
-}
+};
 
+export default ClinMetadataDropdown;

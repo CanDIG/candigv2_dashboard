@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-
 // reactstrap components
 import {
   Button, InputGroup, InputGroupAddon,
@@ -9,21 +8,24 @@ import {
   DropdownMenu, DropdownItem,
 } from 'reactstrap';
 
+function PaginationBar({
+  gotoPage, previousPage, nextPage, canPreviousPage,
+  canNextPage, pageOptions, pageIndex, pageSize,
+  pageCount, setPageSize,
 
-export function PaginationBar(props) {
-    const {
-      gotoPage, previousPage, nextPage, canPreviousPage,
-      canNextPage, pageOptions, state: { pageIndex, pageSize },
-      pageCount, setPageSize
-  
-    } = props.paginationFxns;
-  
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
-  
-    console.log(props)
-    return (
-      <div className="pagination">
+}) {
+  // const {
+  //   gotoPage, previousPage, nextPage, canPreviousPage,
+  //   canNextPage, pageOptions, state: { pageIndex, pageSize },
+  //   pageCount, setPageSize,
+
+  // } = props.paginationFxns;
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
+
+  return (
+    <div className="pagination">
       <InputGroup>
         <InputGroupAddon className="pageControls" addonType="prepend">
           <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
@@ -93,5 +95,34 @@ export function PaginationBar(props) {
         </InputGroupButtonDropdown>
       </InputGroup>
     </div>
-    );
-  }
+  );
+}
+
+PaginationBar.propTypes = {
+  gotoPage: PropTypes.func,
+  previousPage: PropTypes.func,
+  nextPage: PropTypes.func,
+  canPreviousPage: PropTypes.bool,
+  canNextPage: PropTypes.bool,
+  pageOptions: PropTypes.arrayOf(PropTypes.object),
+  pageIndex: PropTypes.number,
+  pageSize: PropTypes.number,
+  pageCount: PropTypes.number,
+  setPageSize: PropTypes.func,
+
+};
+PaginationBar.defaultProps = {
+  gotoPage: () => {},
+  previousPage: () => {},
+  nextPage: () => {},
+  canPreviousPage: false,
+  canNextPage: true,
+  pageOptions: [],
+  pageIndex: 1,
+  pageSize: 10,
+  pageCount: 1,
+  setPageSize: () => {},
+
+};
+
+export default PaginationBar;

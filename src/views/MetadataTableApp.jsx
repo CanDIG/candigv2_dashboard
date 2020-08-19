@@ -51,6 +51,7 @@ function TableApp({ datasetId }) {
     try {
       getMetadataData(datasetId, selectedMetadata, setData);
     } catch (err) {
+      //Need better reporting
       console.log(err);
     }
   }, [selectedMetadata, datasetId]);
@@ -61,6 +62,7 @@ function TableApp({ datasetId }) {
     try {
       CreateColumns(Object.keys(data[0]), setColumns);
     } catch (err) {
+      //Need better reporting
       console.log(err);
     }
   }, [data]);

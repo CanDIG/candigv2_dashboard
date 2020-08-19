@@ -10,8 +10,8 @@ import { Card, Row } from 'reactstrap';
 import Styles from '../../assets/css/StyledComponents/MetadataTableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
-import { PaginationBar } from './Pagination';
-import { DataControl } from './DataControls';
+import PaginationBar from './Pagination';
+import DataControl from './DataControls';
 
 FuzzyTextFilterFn.autoRemove = (val) => !val;
 
@@ -123,7 +123,15 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
 
   return (
     <>
-      <DataControl topBarFxns={topBarFxns} />
+      <DataControl
+        metadataCallback={metadataCallback}
+        toggleHideAllColumns={toggleHideAllColumns}
+        preGlobalFilteredRows={preGlobalFilteredRows}
+        setGlobalFilter={setGlobalFilter}
+        state={state}
+        allColumns={allColumns}
+      
+      />
       <Row>
         <Card>
           <Styles>
@@ -171,7 +179,18 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
                 })}
               </tbody>
             </table>
-            <PaginationBar paginationFxns={pagination} />
+            <PaginationBar
+              canPreviousPage={canPreviousPage}
+              canNextPage={canNextPage}
+              pageOptions={pageOptions}
+              pageCount={pageCount}
+              gotoPage={gotoPage}
+              nextPage={nextPage}
+              previousPage={previousPage}
+              setPageSize={setPageSize}
+              pageSize={pageSize}
+              pageIndex={pageIndex}
+            />
 
           </Styles>
         </Card>
