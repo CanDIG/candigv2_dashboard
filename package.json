@@ -10,6 +10,7 @@
     "highcharts": "^8.1.2",
     "highcharts-react-official": "^3.0.0",
     "history": "4.10.1",
+    "match-sorter": "^4.2.0",
     "igv": "^2.6.6",
     "node-sass": "4.14.1",
     "perfect-scrollbar": "1.5.0",
@@ -22,8 +23,10 @@
     "react-notification-alert": "0.0.12",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.3",
+    "react-table": "^7.3.2",
     "reactstrap": "8.4.1",
+    "styled-components": "^5.1.1",
     "swagger-ui-react": "^3.28.0"
   },
   "scripts": {
