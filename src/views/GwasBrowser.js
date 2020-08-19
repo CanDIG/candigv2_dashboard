@@ -4,6 +4,7 @@ import GwasInstance from '../components/IGV/GwasInstance';
 
 // Consts
 import BASE_URL from '../constants/constants';
+const DRS = 'http://ga4ghdev01.bcgsc.ca:6000'
 
 function GwasBrowser() {
   /** *
@@ -11,14 +12,7 @@ function GwasBrowser() {
    */
   const [selectedGwasName, setSelectedGwasName] = useState('');
   const [selectedGwasUrl, setSelectedGwasUrl] = useState('');
-
-  const mockData = {
-    ANA_A2_V2_filtered: '/static/COVID19_HGI_ANA_A2_V2_20200701.txt.gz_1.0E-5.txt',
-    ANA_B1_V2: '/static/COVID19_HGI_ANA_B1_V2.gwas',
-    ANA_B2_V2: '/static/minimal.gwas.1e-2.txt',
-    ANA_C1_V2_filtered: '/static/COVID19_HGI_ANA_C1_V2_20200701.txt.gz_1.0E-5.txt',
-    ANA_D1_V2_filtered: '/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt',
-  };
+  let mockData = {};
 
   const disabledElementList = [
     <option key="disabled" value="disabled" disabled>
@@ -26,11 +20,25 @@ function GwasBrowser() {
     </option>,
   ];
 
-  const gwasList = Object.keys(mockData).map((x) => (
-    <option key={x} value={x}>
-      {x}
-    </option>
-  ));
+  function buildGwasList(){
+    console.log("inside build GwasList")
+
+    mockData = {
+      ANA_A2_V2_filtered: '/static/COVID19_HGI_ANA_A2_V2_20200701.txt.gz_1.0E-5.txt',
+      ANA_B1_V2: '/static/COVID19_HGI_ANA_B1_V2.gwas',
+      ANA_B2_V2: '/static/minimal.gwas.1e-2.txt',
+      ANA_C1_V2_filtered: '/static/COVID19_HGI_ANA_C1_V2_20200701.txt.gz_1.0E-5.txt',
+      ANA_D1_V2_filtered: '/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt',
+    };
+
+    const gwasList = Object.keys(mockData).map((x) => (
+      <option key={x} value={x}>
+        {x}
+      </option>
+    ));
+
+    return disabledElementList.concat(gwasList);
+  }
 
   return (
     <>
@@ -66,7 +74,7 @@ function GwasBrowser() {
           }}
           type="select"
         >
-          { disabledElementList.concat(gwasList) }
+          { buildGwasList() }
         </Input>
 
         <GwasInstance selectedGwasName={selectedGwasName} selectedGwasUrl={selectedGwasUrl} />
