@@ -5,4 +5,7 @@ node_js:
 
 script:
   - npm run build
-  - npx eslint .
+  - npx eslint src/components
+  - npx eslint src/constants
+  - npx eslint src/variables
+  - npx eslint src/views
