@@ -44,7 +44,6 @@ function Server({ datasetId }) {
       .then((response) => response.json())
       .then((data) => {
         const dataList = [];
-        // const categoriesList = [];
         const categoriesList = Object.keys(data.status).filter((key) => {
           if (key === 'Valid response') {
             return false;
