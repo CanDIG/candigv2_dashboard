@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
 import GwasInstance from '../components/IGV/GwasInstance';
 
 // Consts
-import BASE_URL from '../constants/constants';
+import { DRS } from '../constants/constants';
 
 function GwasBrowser() {
   /** *
@@ -11,14 +11,8 @@ function GwasBrowser() {
    */
   const [selectedGwasName, setSelectedGwasName] = useState('');
   const [selectedGwasUrl, setSelectedGwasUrl] = useState('');
-
-  const mockData = {
-    ANA_A2_V2_filtered: '/static/COVID19_HGI_ANA_A2_V2_20200701.txt.gz_1.0E-5.txt',
-    ANA_B1_V2: '/static/COVID19_HGI_ANA_B1_V2.gwas',
-    ANA_B2_V2: '/static/minimal.gwas.1e-2.txt',
-    ANA_C1_V2_filtered: '/static/COVID19_HGI_ANA_C1_V2_20200701.txt.gz_1.0E-5.txt',
-    ANA_D1_V2_filtered: '/static/COVID19_HGI_ANA_D1_V2_20200701.txt.gz_1.0E-5.txt',
-  };
+  const [gwasDropdown, setGwasDropdown] = useState([]);
+  const [gwasDataObj, setGwasDataObj] = useState({});
 
   const disabledElementList = [
     <option key="disabled" value="disabled" disabled>
@@ -26,11 +20,29 @@ function GwasBrowser() {
     </option>,
   ];
 
-  const gwasList = Object.keys(mockData).map((x) => (
-    <option key={x} value={x}>
-      {x}
-    </option>
-  ));
+  useEffect(() => {
+    fetch(`${DRS}/search?fuzzy_name=.gwas`)
+      .then((response) => response.json())
+      .then((data) => {
+        const tmpDataObj = {};
+        // File name is set as key, while its url is set as the value
+        data.forEach((element) => {
+          tmpDataObj[element.name] = element.access_methods[0].access_url.url;
+        });
+
+        const gwasList = Object.keys(tmpDataObj).map((x) => (
+          <option key={x} value={x}>
+            {x}
+          </option>
+        ));
+
+        setGwasDataObj(tmpDataObj);
+        setGwasDropdown(gwasList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [selectedGwasName]);
 
   return (
     <>
@@ -62,11 +74,11 @@ function GwasBrowser() {
           defaultValue="disabled"
           onChange={(e) => {
             setSelectedGwasName(e.currentTarget.value);
-            setSelectedGwasUrl(BASE_URL + mockData[e.currentTarget.value]);
+            setSelectedGwasUrl(gwasDataObj[e.currentTarget.value]);
           }}
           type="select"
         >
-          { disabledElementList.concat(gwasList) }
+          { disabledElementList.concat(gwasDropdown) }
         </Input>
 
         <GwasInstance selectedGwasName={selectedGwasName} selectedGwasUrl={selectedGwasUrl} />

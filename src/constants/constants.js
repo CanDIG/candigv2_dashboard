@@ -25,5 +25,7 @@ export const CLIN_METADATA = [
     "tumourboards"
 ]
 
+export const DRS = "http://ga4ghdev01.bcgsc.ca:5000";
+
 export default BASE_URL;
 
