@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 // TODO: Importing from igv.esm.min.js is not working
-import igv from 'igv/dist/igv.esm.js';
+import igv from 'igv/dist/igv.esm';
 
 function GwasInstance({ selectedGwasName, selectedGwasUrl }) {
   /** *
@@ -48,5 +49,10 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl }) {
     />
   );
 }
+
+GwasInstance.propTypes = {
+  selectedGwasName: PropTypes.string.isRequired,
+  selectedGwasUrl: PropTypes.string.isRequired,
+};
 
 export default GwasInstance;
