@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: 0 */  // --> OFF
 import React from "react";
 // reactstrap components
 import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
