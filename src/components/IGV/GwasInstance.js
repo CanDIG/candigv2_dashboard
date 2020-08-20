@@ -39,7 +39,7 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl }) {
       igvOptions.tracks[0].url = selectedGwasUrl;
       igv.createBrowser(igvBrowser.current, igvOptions);
     }
-  }, [selectedGwasName]);
+  }, [selectedGwasName, igvOptions, selectedGwasUrl]);
 
   return (
     <div

@@ -83,7 +83,7 @@ function CustomOfflineChart({
     } else {
       createBarChart();
     }
-  }, [datasetName, dataObject]);
+  }, [datasetName, dataObject, chartType, createBarChart, createPieChart]);
 
   return (
     <div>
