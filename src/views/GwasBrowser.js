@@ -17,7 +17,7 @@ function GwasBrowser() {
   const disabledElementList = [
     <option key="disabled" value="disabled" disabled>
       Select a GWAS Sample...
-    </option>
+    </option>,
   ];
 
   useEffect(() => {
