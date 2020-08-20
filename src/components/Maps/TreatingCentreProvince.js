@@ -54,7 +54,7 @@ function fetchData(datasetId, chartOptionsUpdate) {
       if (data) {
         const { treatingCentreProvince } = data.results.enrollments[0];
 
-        for (const name in treatingCentreProvince) {
+        Object.keys(treatingCentreProvince).forEach((name) => {
           if (provShortCodes.includes(name)) {
             const tempDataCount = [];
             tempDataCount.push(hcProvCodes[provShortCodes.indexOf(name)]);
@@ -66,7 +66,7 @@ function fetchData(datasetId, chartOptionsUpdate) {
             tempDataCount.push(treatingCentreProvince[name]);
             dataCount.push(tempDataCount);
           }
-        }
+        });
       }
 
       const chart = {
