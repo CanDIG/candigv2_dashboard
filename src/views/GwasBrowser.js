@@ -21,31 +21,28 @@ function GwasBrowser() {
   ];
 
   useEffect(() => {
-      fetch(`${DRS}/search?fuzzy_name=.gwas`)
+    fetch(`${DRS}/search?fuzzy_name=.gwas`)
       .then((response) => response.json())
       .then((data) => {
-
-        let tmp_data_obj = {};
+        const tmpDataObj = {};
         // File name is set as key, while its url is set as the value
-        data.forEach(element => {
-          tmp_data_obj[element['name']] = element['access_methods'][0]['access_url']['url']    
+        data.forEach((element) => {
+          tmpDataObj[element.name] = element.access_methods[0].access_url.url;
         });
 
-        const gwasList = Object.keys(tmp_data_obj).map((x) => (
+        const gwasList = Object.keys(tmpDataObj).map((x) => (
           <option key={x} value={x}>
             {x}
           </option>
         ));
 
-        setGwasDataObj(tmp_data_obj);
+        setGwasDataObj(tmpDataObj);
         setGwasDropdown(gwasList);
       })
       .catch((err) => {
         console.log(err);
       });
-
-}, [selectedGwasName]);
-
+  }, [selectedGwasName]);
 
   return (
     <>
