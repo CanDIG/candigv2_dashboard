@@ -26,8 +26,8 @@ function GwasBrowser() {
       .then((response) => response.json())
       .then((data) => {
 
-        let tmp_data_obj = {}
-        
+        let tmp_data_obj = {};
+        // File name is set as key, while its url is set as the value
         data.forEach(element => {
           tmp_data_obj[element['name']] = element['access_methods'][0]['access_url']['url']    
         });
@@ -43,7 +43,7 @@ function GwasBrowser() {
   
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       });
 
 }, [selectedGwasName]);

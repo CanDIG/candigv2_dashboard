@@ -28,7 +28,6 @@ function GwasInstance({selectedGwasName, selectedGwasUrl}) {
       ]};
 
     useEffect(() => {
-
         // Remove existing browser instances
         igv.removeAllBrowsers();
 
