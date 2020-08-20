@@ -42,6 +42,9 @@ class Dashboard extends React.Component {
       datasetName: "",
       patientsList: [],
     };
+    this.updateState = this.updateState.bind(this)
+    this.handleActiveClick = this.handleActiveClick.bind(this)
+    this.handleBgClick = this.handleBgClick.bind(this)
     this.mainPanel = React.createRef();
   }
   componentDidMount() {
@@ -52,7 +55,7 @@ class Dashboard extends React.Component {
     this.fetchData(this.state.datasetId);
   }
 
-  updateState = (values) => {
+  updateState (values){
     this.setState(values);
   };
 
@@ -88,10 +91,10 @@ class Dashboard extends React.Component {
       this.fetchData(this.state.datasetId);
     }
   }
-  handleActiveClick = (color) => {
+  handleActiveClick(color) {
     this.setState({ activeColor: color });
   };
-  handleBgClick = (color) => {
+  handleBgClick(color){
     this.setState({ backgroundColor: color });
   };
   render() {
