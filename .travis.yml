@@ -4,5 +4,5 @@ node_js:
   - "v10.13.0"
 
 script:
-  - npm run
-  - npx eslint
+  - npm run build
+  - npx eslint .
