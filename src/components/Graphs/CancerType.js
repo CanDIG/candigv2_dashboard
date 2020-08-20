@@ -79,7 +79,9 @@ function CancerType({ datasetId }) {
         .then((data) => {
           const { cancerType } = data.results.diagnoses[0];
 
-          const graphData = Object.keys(cancerType).map((key) => ({ name: key, y: cancerType[key] }));
+          const graphData = Object.keys(cancerType).map(
+            (key) => ({ name: key, y: cancerType[key] }),
+          );
 
           setChartOptions({
             series: [
