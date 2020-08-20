@@ -21,7 +21,6 @@ function GwasBrowser() {
   ];
 
   useEffect(() => {
-
       fetch(`${DRS}/search?fuzzy_name=.gwas`)
       .then((response) => response.json())
       .then((data) => {
@@ -40,7 +39,6 @@ function GwasBrowser() {
 
         setGwasDataObj(tmp_data_obj);
         setGwasDropdown(gwasList);
-  
       })
       .catch((err) => {
         console.log(err);
