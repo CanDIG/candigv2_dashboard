@@ -23,6 +23,7 @@ import APIInfo from './views/APIInfo';
 import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
+import TableList from "./views/MetadataTableApp";
 
 const routes = [
   {
@@ -66,6 +67,13 @@ const routes = [
     icon: 'nc-icon nc-caps-small',
     component: CustomVisualization,
     layout: '/dashboard',
+  },
+  {
+    path: "/tables",
+    name: "Clinical Metadata",
+    icon: "nc-icon nc-tile-56",
+    component: TableList,
+    layout: "/dashboard",
   },
 ];
 export default routes;
