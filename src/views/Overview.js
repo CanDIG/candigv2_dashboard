@@ -1,18 +1,21 @@
-import React from "react";
+/* eslint-disable */
+import React from 'react';
 // reactstrap components
-import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
+import {
+  Card, CardBody, CardTitle, Row, Col,
+} from 'reactstrap';
 
 // Consts
-import BASEURL from "constants/constants";
+import BASEURL from 'constants/constants';
 
-import Server from "components/Graphs/Server.js";
-import BarChart from "components/Graphs/BarChart.js";
-import CancerType from "components/Graphs/CancerType.js";
-import TreatingCentreProvince from "components/Maps/TreatingCentreProvince";
+import Server from 'components/Graphs/Server.js';
+import BarChart from 'components/Graphs/BarChart.js';
+import CancerType from 'components/Graphs/CancerType.js';
+import TreatingCentreProvince from 'components/Maps/TreatingCentreProvince';
 
 const initialState = {
-  datasetName: "",
-  datasetId: "",
+  datasetName: '',
+  datasetId: '',
   provinces: 0,
   hospitals: 0,
   patients: 0,
@@ -33,54 +36,54 @@ class Dashboard extends React.Component {
 
   fetchData(datasetId) {
     if (datasetId) {
-      this.getCounters(datasetId, "enrollments", [
-        "datasetId",
-        "treatingCentreName",
-        "treatingCentreProvince",
+      this.getCounters(datasetId, 'enrollments', [
+        'datasetId',
+        'treatingCentreName',
+        'treatingCentreProvince',
       ]);
-      this.getCounters(datasetId, "samples", ["datasetId"]);
+      this.getCounters(datasetId, 'samples', ['datasetId']);
     }
   }
 
   getCounters(dataset_id, table, fields) {
-    fetch(BASEURL + "/count", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
+    fetch(`${BASEURL}/count`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        dataset_id: dataset_id,
+        dataset_id,
         logic: {
-          id: "A",
+          id: 'A',
         },
         components: [
           {
-            id: "A",
+            id: 'A',
             enrollments: {},
           },
         ],
         results: [
           {
-            table: table,
-            fields: fields,
+            table,
+            fields,
           },
         ],
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        if (table === "enrollments") {
-          let datasetId = this.getDatadetIdFromEnrollments(data);
+        if (table === 'enrollments') {
+          const datasetId = this.getDatadetIdFromEnrollments(data);
           this.setState({
             patients: data.results.enrollments[0].datasetId[datasetId],
             hospitals: Object.keys(
-              data.results.enrollments[0].treatingCentreName
+              data.results.enrollments[0].treatingCentreName,
             ).length,
             provinces: Object.keys(
-              data.results.enrollments[0].treatingCentreProvince
+              data.results.enrollments[0].treatingCentreProvince,
             ).length,
             samples: this.state.samples,
           });
-        } else if (table === "samples") {
-          let datasetId = this.getDatadetIdFromSamples(data);
+        } else if (table === 'samples') {
+          const datasetId = this.getDatadetIdFromSamples(data);
           this.setState({
             patients: this.state.patients,
             hospitals: this.state.hospitals,
@@ -91,12 +94,12 @@ class Dashboard extends React.Component {
       })
       .catch((err) => {
         this.setState({
-          datasetName: "",
-          datasetId: "",
-          provinces: "Not Available",
-          hospitals: "Not Available",
-          patients: "Not Available",
-          samples: "Not Available",
+          datasetName: '',
+          datasetId: '',
+          provinces: 'Not Available',
+          hospitals: 'Not Available',
+          patients: 'Not Available',
+          samples: 'Not Available',
         });
       });
   }
@@ -115,12 +118,12 @@ class Dashboard extends React.Component {
         datasetId: this.props.datasetId,
         datasetName: this.props.datasetId,
       });
-      this.getCounters(this.props.datasetId, "enrollments", [
-        "datasetId",
-        "treatingCentreName",
-        "treatingCentreProvince",
+      this.getCounters(this.props.datasetId, 'enrollments', [
+        'datasetId',
+        'treatingCentreName',
+        'treatingCentreProvince',
       ]);
-      this.getCounters(this.props.datasetId, "samples", ["datasetId"]);
+      this.getCounters(this.props.datasetId, 'samples', ['datasetId']);
     }
   }
 
