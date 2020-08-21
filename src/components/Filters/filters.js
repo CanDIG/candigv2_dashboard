@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useAsyncDebounce } from 'react-table';
 import matchSorter from 'match-sorter';
 import { Input } from 'reactstrap';
@@ -10,8 +11,8 @@ export function GlobalFilter({
 }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
+  const onChange = useAsyncDebounce((search) => {
+    setGlobalFilter(search || undefined);
   }, 200);
 
   return (
@@ -32,6 +33,18 @@ export function GlobalFilter({
   );
 }
 
+GlobalFilter.propTypes = {
+  preGlobalFilteredRows: PropTypes.arrayOf(PropTypes.object),
+  globalFilter: PropTypes.string,
+  setGlobalFilter: PropTypes.func,
+};
+
+GlobalFilter.defaultProps = {
+  preGlobalFilteredRows: [],
+  globalFilter: '',
+  setGlobalFilter: () => {},
+};
+
 // Define a default UI for filtering
 export function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
@@ -48,6 +61,14 @@ export function DefaultColumnFilter({
     />
   );
 }
+
+DefaultColumnFilter.propTypes = {
+  column: PropTypes.arrayOf(PropTypes.object),
+};
+
+DefaultColumnFilter.defaultProps = {
+  column: [],
+};
 
 export function FuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
