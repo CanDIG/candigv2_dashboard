@@ -34,7 +34,6 @@ function APIInfo() {
       <div className="content">
 
         <Input
-          style={{ marginBottom: '10px' }}
           onChange={(e) => {
             setApiDef(apiDefinitionObj[e.currentTarget.value]);
           }}
