@@ -57,26 +57,6 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
   useFilters, useGlobalFilter, useGroupBy,
   useSortBy, useExpanded, usePagination);
 
-  const pagination = {
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  };
-  const topBarFxns = {
-    metadataCallback,
-    toggleHideAllColumns,
-    preGlobalFilteredRows,
-    setGlobalFilter,
-    state,
-    allColumns,
-  };
-
   function getColumnSortSymbol(column) {
     if (column.isSorted) {
       if (column.isSortedDesc) {

@@ -21,6 +21,7 @@ function CreateColumns(columnNames, cb) {
 
 function getMetadataData(datasetId, metadata, cb) {
   const datasets = [];
+  if(datasetId) {
   return fetch(`${BASE_URL}/${metadata}/search`, {
     method: 'POST',
     body: JSON.stringify({ datasetId }),
@@ -39,6 +40,7 @@ function getMetadataData(datasetId, metadata, cb) {
       }
       cb(datasets);
     });
+  }
 }
 
 function TableApp({ datasetId }) {
