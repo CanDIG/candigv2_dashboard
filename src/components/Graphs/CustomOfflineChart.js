@@ -39,51 +39,56 @@ function CustomOfflineChart({
     },
   });
 
-  /*
-   * Create Bar chart from props
-   */
-  function createBarChart() {
-    const data = [];
-
-    const categories = Object.keys(dataObject).map((key) => {
-      data.push(dataObject[key]);
-      return key;
-    });
-
-    setChartOptions({
-      series: [{ data, colorByPoint: true, showInLegend: false }],
-      xAxis: { categories },
-    });
-  }
-
-  /*
-   * Create a Pie chart from props
-   */
-
-  function createPieChart() {
-    const options = {
-      credits: {
-        enabled: false,
-      },
-      chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-      },
-    };
-    options.series = [{
-      data: Object.keys(dataObject).map((key) => ({ name: key, y: dataObject[key] })),
-    }];
-    setChartOptions(options);
-  }
-
   useEffect(() => {
+    /*
+     * Create a Pie chart from props
+     */
+
+    function createPieChart() {
+      const options = {
+        credits: {
+          enabled: false,
+        },
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+        },
+      };
+      options.series = [
+        {
+          data: Object.keys(dataObject).map((key) => ({
+            name: key,
+            y: dataObject[key],
+          })),
+        },
+      ];
+      setChartOptions(options);
+    }
+
+    /*
+     * Create Bar chart from props
+     */
+    function createBarChart() {
+      const data = [];
+
+      const categories = Object.keys(dataObject).map((key) => {
+        data.push(dataObject[key]);
+        return key;
+      });
+
+      setChartOptions({
+        series: [{ data, colorByPoint: true, showInLegend: false }],
+        xAxis: { categories },
+      });
+    }
+
     if (chartType === 'pie') {
       createPieChart();
     } else {
       createBarChart();
     }
-  }, [datasetName, dataObject, chartType, createBarChart, createPieChart]);
+  }, [datasetName, dataObject, chartType]);
 
   return (
     <div>
