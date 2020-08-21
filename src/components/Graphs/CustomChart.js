@@ -56,7 +56,7 @@ function CustomChart({
                   plotShadow: false,
                   type: chartType,
                 },
-                title: { text: `Distribuition of ${splitString(field)}` },
+                title: { text: `Distribution of ${splitString(field)}` },
                 subtitle: {
                   text: `${datasetName} ${splitString(table)}`,
                 },
@@ -66,7 +66,7 @@ function CustomChart({
             } else {
               options = {
                 chart: { type: chartType },
-                title: { text: `Distribuition of ${splitString(field)}` },
+                title: { text: `Distribution of ${splitString(field)}` },
                 subtitle: {
                   text: `${datasetName} ${splitString(table)}`,
                 },
