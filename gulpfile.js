@@ -9,13 +9,12 @@ gulp.task("licenses", async function () {
       gap.prependText(`/*!
 
 =========================================================
-* Paper Dashboard React - v1.2.0
+* CanDIG V2 Dashboard - v0.1.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
-* Coded by Creative Tim
+* Homepage: https://github.com/CanDIG/candigv2_dashboard
+* Copyright 2020 CanDIG Team
+* Copyright 2020 Creative Tim
 
 =========================================================
 
@@ -25,20 +24,19 @@ gulp.task("licenses", async function () {
     )
     .pipe(gulp.dest("./", { overwrite: true }));
 
-  // this is to add Creative Tim licenses in the production mode for the minified html
+  // this is to add license in the production mode for the minified html
   gulp
     .src("build/index.html", { base: "./" })
     .pipe(
       gap.prependText(`<!--
 
 =========================================================
-* Paper Dashboard React - v1.2.0
+* CanDIG V2 Dashboard - v0.1.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
-* Coded by Creative Tim
+* Homepage: https://github.com/CanDIG/candigv2_dashboard
+* Copyright 2020 CanDIG Team
+* Copyright 2020 Creative Tim
 
 =========================================================
 
@@ -55,13 +53,12 @@ gulp.task("licenses", async function () {
       gap.prependText(`/*!
 
 =========================================================
-* Paper Dashboard React - v1.2.0
+* CanDIG V2 Dashboard - v0.1.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
-* Coded by Creative Tim
+* Homepage: https://github.com/CanDIG/candigv2_dashboard
+* Copyright 2020 CanDIG Team
+* Copyright 2020 Creative Tim
 
 =========================================================
 
