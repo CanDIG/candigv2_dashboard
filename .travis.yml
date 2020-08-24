@@ -4,8 +4,8 @@ node_js:
   - "v10.13.0"
 
 script:
-  - npx depcheck .
   - npm run build
+  - npx depcheck .
   - npx eslint src/components
   - npx eslint src/constants
   - npx eslint src/variables
