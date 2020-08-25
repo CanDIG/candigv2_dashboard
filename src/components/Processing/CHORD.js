@@ -3,8 +3,6 @@
 //Need to turn each metadata object into four objects easily mapped to tables
 //Flatten and assign higher order ID to smaller objects
 
-import INDIVIDUALS from "constants/individuals_local"
-
 export function ProcessMetadata(metadata) {
     const mainTable = []
     Object.values(metadata).forEach((entry) => {
@@ -14,7 +12,7 @@ export function ProcessMetadata(metadata) {
             Sex: entry.sex,
             KSex: entry.karyotypic_sex,
             taxID: entry.taxonomy.id,
-            taxLabel: entry.taxonomy.taxLabel,
+            taxLabel: entry.taxonomy.label,
             created: entry.created,
             updated: entry.updated
         }

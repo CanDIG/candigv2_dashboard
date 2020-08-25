@@ -4,16 +4,7 @@ import {CHORD_METADATA_URL} from '../constants/constants';
 import {ProcessMetadata} from "components/Processing/CHORD"
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 
-import INDIVIDUALS from "constants/individuals_local"
-
-
-function dummy() {
-    return(
-        <></>
-    )
-}
-
-
+// import INDIVIDUALS from "constants/individuals_local"
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -58,11 +49,12 @@ function TableApp({  }) {
     // fetch data
     try {
       getMetadataData(setData);
+      // setData(ProcessMetadata(INDIVIDUALS.results))
     } catch (err) {
       //Need better reporting
       console.log(err);
     }
-  }, [data]);
+  }, []);
 
   React.useEffect(() => {
     // Separate Effect since state change is async and columns depends on data
