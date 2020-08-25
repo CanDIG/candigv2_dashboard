@@ -26,7 +26,7 @@ import TopBar from "components/Navbars/TopBar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 
-import routes from "routes.js";
+import routes from "./../routes.js";
 
 import BASE_URL from "../constants/constants";
 
