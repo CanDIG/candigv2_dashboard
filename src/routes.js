@@ -24,6 +24,7 @@ import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
+import VariantsSearch from './views/VariantsSearch';
 
 const routes = [
   {
@@ -52,6 +53,13 @@ const routes = [
     name: 'API info',
     icon: 'nc-icon nc-sound-wave',
     component: APIInfo,
+    layout: '/dashboard',
+  },
+  {
+    path: '/variants_search',
+    name: 'Variants Search',
+    icon: 'nc-icon nc-sound-wave',
+    component: VariantsSearch,
     layout: '/dashboard',
   },
   {
