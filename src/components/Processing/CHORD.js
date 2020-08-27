@@ -34,7 +34,6 @@ export function ProcessMetadata(metadata) {
 
 export function ProcessDiseases(ID, diseaseList) {
     const processedDiseases = [];
-    console.log(diseaseList)
     Object.values(diseaseList).forEach((disease) => {
         const diseaseEntry = {
             ID: disease.id,
@@ -46,8 +45,40 @@ export function ProcessDiseases(ID, diseaseList) {
         }
         processedDiseases.push(diseaseEntry)
     })
-    console.log(processedDiseases)
     return {[ID]: processedDiseases};
+}
+
+export function ProcessData(ID, dataList, dataSchema) {
+    const processedData = [];
+    console.log(dataList)
+    Object.values(dataList).forEach((data) => {
+        const dataEntry = dataSchema(data)
+        processedData.push(dataEntry)
+    })
+    return {[ID]: processedData};
+}
+
+export const diseaseSchema = (data) => {
+    const entry = {
+    ID: data.id,
+    term: data.term.id,
+    label: data.term.label,
+    comorbidities: data.extra_properties.comorbidities_group,
+    created: data.created,
+    updated: data.updated
+    }
+    return entry
+}
+
+export const featureSchema = (data) => {
+    const entry = {
+    ID: data.type.id,
+    label: data.type.label,
+    comorbidities: data.extra_properties.comorbidities_group,
+    created: data.created,
+    updated: data.updated
+    }
+    return entry
 }
 
 
