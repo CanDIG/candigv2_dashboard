@@ -24,6 +24,7 @@ import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
+import IndividualsOverview from "./views/IndividualsOverview";
 
 const routes = [
   {
@@ -38,6 +39,13 @@ const routes = [
     name: 'Patients Overview',
     icon: 'nc-icon nc-bank',
     component: PatientsOverview,
+    layout: '/dashboard',
+  },
+  {
+    path: '/individuals-overview',
+    name: 'Individuals Overview',
+    icon: 'nc-icon nc-bank',
+    component: IndividualsOverview,
     layout: '/dashboard',
   },
   {
