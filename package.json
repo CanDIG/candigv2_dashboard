@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://github.com/CanDIG/candigv2_dashboard",
   "dependencies": {
+    "@ag-grid-community/react": "^23.2.1",
     "@highcharts/map-collection": "^1.1.3",
     "bootstrap": "4.5.0",
     "highcharts": "^8.1.2",
@@ -16,6 +17,7 @@
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-dom-factories": "^1.0.2",
     "react-router-dom": "5.2.0",
     "react-scripts": "^3.4.3",
     "react-table": "^7.3.2",
