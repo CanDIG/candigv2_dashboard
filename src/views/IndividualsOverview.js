@@ -9,6 +9,11 @@ import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 
 import { CHORD_METADATA_URL } from '../constants/constants';
 
+/*
+ * Return the aggregation value of a key from an array of objects.
+ * @param {objectArray}... List of objects
+ * @param {property} Property to be grouped by
+ */
 function groupBy(objectArray, property) {
   return objectArray.reduce((acc, obj) => {
     const key = obj[property].charAt(0).toUpperCase()
@@ -22,6 +27,11 @@ function groupBy(objectArray, property) {
   }, {});
 }
 
+/*
+ * Return a specific extra property grouped by gender
+ * @param {data}... Object
+ * @param {property}... Property to be grouped by
+ */
 function groupExtraPropertieByGender(data, property) {
   const extraPropertieList = {};
   for (let i = 0; i < data.results.length; i += 1) {
@@ -37,6 +47,10 @@ function groupExtraPropertieByGender(data, property) {
   return extraPropertieList;
 }
 
+/*
+ * Return the aggregation of diseases
+ * @param {data}... Object
+ */
 function countDiseases(data) {
   const diseases = {};
   for (let i = 0; i < data.results.length; i += 1) {
@@ -57,6 +71,11 @@ function countDiseases(data) {
   return diseases;
 }
 
+/*
+ * Return the aggregation of a especific property under extra_property
+ * @param {data}... Object
+ * @param {property}... Property to be grouped by
+ */
 function getCounterUnderExtraProperties(data, property) {
   const education = {};
   for (let i = 0; i < data.results.length; i += 1) {
@@ -76,6 +95,7 @@ function IndividualsOverview() {
   const [genderObject, setGenderObject] = useState({ '': 0 });
   const [doBObject, setDoBObject] = useState({ '': 0 });
   const [diseasesObject, setDiseasesObject] = useState({ '': 0 });
+  const [diseasesSum, setDiseasesSum] = useState(0);
   const [educationObject, setEducationObject] = useState({ '': 0 });
   const [boxPlotObject, setBoxPlotObject] = useState({ '': [] });
   const [didFetch, setDidFetch] = useState(false);
@@ -104,26 +124,20 @@ function IndividualsOverview() {
         countEthnicity(data);
         countGender(data);
         countDateOfBirth(data);
-        setDiseasesObject(countDiseases(data));
+        const diseases = countDiseases(data);
+        setDiseasesObject(diseases);
+        setDiseasesSum(Object.keys(diseases).length);
         setEducationObject(getCounterUnderExtraProperties(data, 'education'));
         setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
         setDidFetch(true);
       });
   }, [didFetch]);
 
-  // sex, ethnicity - Ok
-  // agregation of labeling under diseases -ok
-  // karyotypic_sex
-  // date_of_birth - ok
-  // extra_properties -> height
-  // extra_properties -> weight
-  // extra_properties -> education
-
   return (
     <>
       <div className="content">
         <Row>
-          <Col lg="12" md="12" sm="12">
+          <Col lg="6" md="6" sm="6">
             <Card className="card-stats">
               <CardBody>
                 <Row>
@@ -143,14 +157,37 @@ function IndividualsOverview() {
               </CardBody>
             </Card>
           </Col>
+          <Col lg="6" md="6" sm="6">
+            <Card className="card-stats">
+              <CardBody>
+                <Row>
+                  <Col md="4" xs="5">
+                    <div className="icon-big text-center icon-warning">
+                      <i className="nc-icon nc-favourite-28 text-danger" />
+                    </div>
+                  </Col>
+                  <Col md="8" xs="7">
+                    <div className="numbers">
+                      <p className="card-category">Diseases</p>
+                      <CardTitle tag="p">{diseasesSum}</CardTitle>
+                      <p />
+                    </div>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
         </Row>
         <Row>
-          <Col lg="6" md="6" sm="6">
+          <Col lg="6" md="12" sm="12">
             <Card>
               <CardBody>
-                <BoxPlotChart
-                  chartTitle="Weight"
-                  plotObject={boxPlotObject}
+                <CustomOfflineChart
+                  datasetName=""
+                  dataObject={genderObject}
+                  chartType="pie"
+                  barTitle="Gender"
+                  height="400px; auto"
                 />
               </CardBody>
             </Card>
@@ -160,9 +197,9 @@ function IndividualsOverview() {
               <CardBody>
                 <CustomOfflineChart
                   datasetName=""
-                  dataObject={genderObject}
+                  dataObject={diseasesObject}
                   chartType="pie"
-                  barTitle="Gender"
+                  barTitle="Diseases"
                   height="400px; auto"
                 />
               </CardBody>
@@ -183,16 +220,10 @@ function IndividualsOverview() {
               </CardBody>
             </Card>
           </Col>
-          <Col lg="6" md="12" sm="12">
+          <Col lg="6" md="6" sm="6">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={diseasesObject}
-                  chartType="pie"
-                  barTitle="Diseases"
-                  height="400px; auto"
-                />
+                <BoxPlotChart chartTitle="Weight" plotObject={boxPlotObject} />
               </CardBody>
             </Card>
           </Col>
