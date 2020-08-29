@@ -11,6 +11,10 @@ import {
   Col,
 } from 'reactstrap';
 
+import { DRS } from '../constants/constants';
+import BASEURL from 'constants/constants';
+import { CHORD_METADATA_URL } from '../constants/constants';
+
 function Services() {
   return (
     <>
@@ -33,20 +37,20 @@ function Services() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Federation Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:37201</td>
-                      <td><i className="nc-icon nc-simple-remove" /></td>
-                      <td className="text-right">Just now</td>
-                    </tr>
-                    <tr>
-                      <td>Datasets Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:37203</td>
+                      <td>CanDIG Server</td>
+                      <td>{ BASEURL }</td>
                       <td><i className="nc-icon nc-simple-remove" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
                       <td>CHORD Metadata Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:20931</td>
+                      <td>{ CHORD_METADATA_URL }</td>
+                      <td><i className="nc-icon nc-simple-remove" /></td>
+                      <td className="text-right">Just now</td>
+                    </tr>
+                    <tr>
+                      <td>Data Repository Service</td>
+                      <td>{ DRS }</td>
                       <td><i className="nc-icon nc-simple-remove" /></td>
                       <td className="text-right">Just now</td>
                     </tr>

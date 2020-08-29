@@ -76,6 +76,7 @@ function DatasetsDropdown({ updateState }) {
 
   return (
     <Dropdown
+      id="dataset_dropdown"
       isOpen={dropdownOpen}
       toggle={toggle}
       style={{
