@@ -56,13 +56,6 @@ const routes = [
     layout: '/dashboard',
   },
   {
-    path: '/variants_search',
-    name: 'Variants Search',
-    icon: 'nc-icon nc-sound-wave',
-    component: VariantsSearch,
-    layout: '/dashboard',
-  },
-  {
     path: '/gwas_browser',
     name: 'GWAS Browser',
     icon: 'nc-icon nc-compass-05',
