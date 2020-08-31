@@ -35,7 +35,7 @@ function VariantsSearch({ datasetId }) {
   let gridOptions = {};
 
   const extraFieldHandler = (results) => {
-    const processedResults = [];
+    let processedResults = [];
 
     if (results === undefined) {
       return [];
