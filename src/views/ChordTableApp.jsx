@@ -23,13 +23,6 @@ function CreateColumns(columnNames, cb) {
   cb(columnList);
 }
 
-// function isEmpty(obj) {
-//   for (const key in obj) {
-//     if (obj.hasOwnProperty(key)) { return false; }
-//   }
-//   return true;
-// }
-
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }

@@ -1,82 +1,80 @@
-//Assume data is present at this state
+// Assume data is present at this state
 
-//Need to turn each metadata object into four objects easily mapped to tables
-//Flatten and assign higher order ID to smaller objects
+// Need to turn each metadata object into four objects easily mapped to tables
+// Flatten and assign higher order ID to smaller objects
 
 export function ProcessMetadata(metadata) {
-    const mainTable = []
-    const phenopacketsList = {}
-    Object.values(metadata).forEach((entry) => {
-        const mainTableEntry = {
-            ID: entry.id,
-            DOB: entry.date_of_birth,
-            Sex: entry.sex,
-            KSex: entry.karyotypic_sex,
-            ethnicity: entry.ethnicity,
-            height: entry.extra_properties.height,
-            weight: entry.extra_properties.weight,
-            education: entry.extra_properties.education,
-            taxID: entry.taxonomy.id,
-            taxLabel: entry.taxonomy.label,
-            created: entry.created,
-            updated: entry.updated,
+  const mainTable = [];
+  const phenopacketsList = {};
+  Object.values(metadata).forEach((entry) => {
+    const mainTableEntry = {
+      ID: entry.id,
+      DOB: entry.date_of_birth,
+      Sex: entry.sex,
+      KSex: entry.karyotypic_sex,
+      ethnicity: entry.ethnicity,
+      height: entry.extra_properties.height,
+      weight: entry.extra_properties.weight,
+      education: entry.extra_properties.education,
+      taxID: entry.taxonomy.id,
+      taxLabel: entry.taxonomy.label,
+      created: entry.created,
+      updated: entry.updated,
 
-        }
-        mainTable.push(mainTableEntry)
-        const ID = entry.id
-        const Pheno = entry.phenopackets[0]
-        phenopacketsList[ID] = Pheno
-    })
+    };
+    mainTable.push(mainTableEntry);
+    const ID = entry.id;
+    const Pheno = entry.phenopackets[0];
+    phenopacketsList[ID] = Pheno;
+  });
 
-    return [mainTable, phenopacketsList];
-
+  return [mainTable, phenopacketsList];
 }
 
 export function ProcessDiseases(ID, diseaseList) {
-    const processedDiseases = [];
-    Object.values(diseaseList).forEach((disease) => {
-        const diseaseEntry = {
-            ID: disease.id,
-            term: disease.term.id,
-            label: disease.term.label,
-            comorbidities: disease.extra_properties.comorbidities_group,
-            created: disease.created,
-            updated: disease.updated
-        }
-        processedDiseases.push(diseaseEntry)
-    })
-    return {[ID]: processedDiseases};
+  const processedDiseases = [];
+  Object.values(diseaseList).forEach((disease) => {
+    const diseaseEntry = {
+      ID: disease.id,
+      term: disease.term.id,
+      label: disease.term.label,
+      comorbidities: disease.extra_properties.comorbidities_group,
+      created: disease.created,
+      updated: disease.updated,
+    };
+    processedDiseases.push(diseaseEntry);
+  });
+  return { [ID]: processedDiseases };
 }
 
 export function ProcessData(ID, dataList, dataSchema) {
-    const processedData = [];
-    console.log(dataList)
-    Object.values(dataList).forEach((data) => {
-        const dataEntry = dataSchema(data)
-        processedData.push(dataEntry)
-    })
-    return {[ID]: processedData};
+  const processedData = [];
+  Object.values(dataList).forEach((data) => {
+    const dataEntry = dataSchema(data);
+    processedData.push(dataEntry);
+  });
+  return { [ID]: processedData };
 }
 
 export const diseaseSchema = (data) => {
-    const entry = {
+  const entry = {
     ID: data.id,
     term: data.term.id,
     label: data.term.label,
     comorbidities: data.extra_properties.comorbidities_group,
     created: data.created,
-    updated: data.updated
-    }
-    return entry
-}
+    updated: data.updated,
+  };
+  return entry;
+};
 
 export const featureSchema = (data) => {
-    const entry = {
+  const entry = {
     ID: data.type.id,
     label: data.type.label,
     comorbidities: data.extra_properties.comorbidities_group,
     created: data.created,
-    updated: data.updated
-    }
-    return entry
-}
+    updated: data.updated,
+  };
+  return entry;
+};
