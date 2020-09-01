@@ -7,6 +7,8 @@ import {
 import BASE_URL from '../constants/constants';
 import VariantsTable from '../components/Tables/VariantsTable';
 
+import '../assets/css/VariantsSearch.css';
+
 function VariantsSearch({ datasetId }) {
   const [rowData, setRowData] = useState([]);
 
@@ -27,6 +29,8 @@ function VariantsSearch({ datasetId }) {
       .then((data) => {
         if (data.results !== undefined) {
           setRowData(data.results.variants);
+        } else {
+          setRowData([]);
         }
       });
   };
@@ -36,19 +40,19 @@ function VariantsSearch({ datasetId }) {
       <div className="content">
 
         <Form inline onSubmit={formHandler}>
-          <FormGroup style={{ marginRight: '20px' }}>
-            <Label style={{ marginRight: '10px' }} for="start">Start</Label>
-            <Input required type="text" name="start" id="start" placeholder="" />
+          <FormGroup>
+            <Label for="start">Start</Label>
+            <Input required type="number" id="start" />
           </FormGroup>
 
-          <FormGroup style={{ marginRight: '20px' }}>
-            <Label style={{ marginRight: '10px' }} for="end">End</Label>
-            <Input required type="text" name="end" id="end" placeholder="" />
+          <FormGroup>
+            <Label for="end">End</Label>
+            <Input required type="number" id="end" />
           </FormGroup>
 
-          <FormGroup style={{ marginRight: '20px' }}>
-            <Label style={{ marginRight: '10px' }} for="referenceName">Reference Name</Label>
-            <Input required type="text" name="referenceName" id="referenceName" placeholder="" />
+          <FormGroup>
+            <Label for="referenceName">Reference Name</Label>
+            <Input required type="text" id="referenceName" />
           </FormGroup>
 
           <Button>Search</Button>
