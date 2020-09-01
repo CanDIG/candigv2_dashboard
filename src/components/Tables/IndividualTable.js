@@ -1,11 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 function IndividualTable({ individualsRowData }) {
-
   const individualsColumnDefs = [
     { headerName: 'ID', field: 'id' },
     { headerName: 'Sex', field: 'sex' },
@@ -34,7 +34,7 @@ function IndividualTable({ individualsRowData }) {
     const processedResults = [];
 
     if (results === undefined) {
-      return []; //TODO: display a warning message
+      return []; // TODO: display a warning message
     }
 
     for (let i = 0; i < results.length; i += 1) {
@@ -51,16 +51,20 @@ function IndividualTable({ individualsRowData }) {
 
   return (
     <>
-        <div className="ag-theme-alpine" style={{ height: '400px', width: '100%', marginTop: '50px' }}>
-          <AgGridReact
-            columnDefs={individualsColumnDefs}
-            rowData={extraFieldHandler(individualsRowData)}
-            gridOptions={individualsGridOptions}
-          />
-        </div>
+      <div className="ag-theme-alpine" style={{ height: '400px', width: '100%', marginTop: '50px' }}>
+        <AgGridReact
+          columnDefs={individualsColumnDefs}
+          rowData={extraFieldHandler(individualsRowData)}
+          gridOptions={individualsGridOptions}
+        />
+      </div>
 
     </>
   );
 }
+
+IndividualTable.propTypes = {
+  individualsRowData: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default IndividualTable;

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-
-import BASE_URL, { CHORD_METADATA_URL } from '../../constants/constants';
-import IndividualTable from '../Tables/IndividualTable';
+import PropTypes from 'prop-types';
 
 import { AgGridReact } from 'ag-grid-react';
+import BASE_URL, { CHORD_METADATA_URL } from '../../constants/constants';
+import IndividualTable from './IndividualTable';
+
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 function VariantsTable({ rowData, datasetId }) {
+  const [individualsRowData, setIndividualsRowData] = useState([]);
+
   const columnDefs = [
     { headerName: 'Reference Name', field: 'referenceName' },
     { headerName: 'Start', field: 'start' },
@@ -15,8 +18,6 @@ function VariantsTable({ rowData, datasetId }) {
     { headerName: 'Reference Bases', field: 'referenceBases' },
     { headerName: 'Alternate Bases', field: 'alternateBases' },
   ];
-
-  const [individualsRowData, setIndividualsRowData] = useState([]);
   let gridOptions = {};
 
   function onSelectionChanged() {
@@ -91,20 +92,23 @@ function VariantsTable({ rowData, datasetId }) {
 
   return (
     <>
+      <div className="ag-theme-alpine" style={{ height: '400px', width: '100%', marginTop: '20px' }}>
+        <AgGridReact
+          columnDefs={columnDefs}
+          rowData={rowData}
+          gridOptions={gridOptions}
+          context={{ datasetId }}
+        />
+      </div>
 
-        <div className="ag-theme-alpine" style={{ height: '400px', width: '100%', marginTop: '20px' }}>
-          <AgGridReact
-            columnDefs={columnDefs}
-            rowData={rowData}
-            gridOptions={gridOptions}
-            context={{ datasetId }}
-          />
-        </div>
-
-        <IndividualTable individualsRowData={individualsRowData}></IndividualTable>
-
+      <IndividualTable individualsRowData={individualsRowData} />
     </>
   );
 }
+
+VariantsTable.propTypes = {
+  rowData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  datasetId: PropTypes.string.isRequired,
+};
 
 export default VariantsTable;

@@ -54,7 +54,7 @@ function VariantsSearch({ datasetId }) {
           <Button>Search</Button>
         </Form>
 
-        <VariantsTable rowData={rowData} datasetId={datasetId}></VariantsTable>>
+        <VariantsTable rowData={rowData} datasetId={datasetId} />
       </div>
     </>
   );
