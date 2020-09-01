@@ -24,7 +24,7 @@ import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
-import IndividualsOverview from "./views/IndividualsOverview";
+import IndividualsOverview from './views/IndividualsOverview';
 import VariantsSearch from './views/VariantsSearch';
 
 const routes = [
