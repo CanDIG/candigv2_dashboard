@@ -79,14 +79,13 @@ function VariantsTable({ rowData, datasetId }) {
       minWidth: 20,
       minHeight: 300,
     },
-    debug: true,
     onSelectionChanged,
     rowSelection: 'single',
     rowData: null,
     rowGroupPanelShow: 'always',
     pivotPanelShow: 'always',
     enableRangeSelection: true,
-    paginationAutoPageSize: false,
+    paginationAutoPageSize: true,
     pagination: true,
   };
 
