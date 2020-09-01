@@ -41,16 +41,16 @@ function VariantsSearch({ datasetId }) {
       return [];
     }
 
-    for (let i = 0; i < results.length; i += 1) {
-      const tempObj = results[i];
-      tempObj.height = results[i].extra_properties.height;
-      tempObj.weight = results[i].extra_properties.height;
-      tempObj.education = results[i].extra_properties.education;
+    // for (let i = 0; i < results.length; i += 1) {
+    //   const tempObj = results[i];
+    //   tempObj.height = results[i].extra_properties.height;
+    //   tempObj.weight = results[i].extra_properties.height;
+    //   tempObj.education = results[i].extra_properties.education;
 
-      processedResults.push(tempObj);
-    }
+    //   processedResults.push(tempObj);
+    // }
 
-    return processedResults;
+    // return processedResults;
   };
 
    function onSelectionChanged() {
