@@ -29,4 +29,6 @@ export const CLIN_METADATA = [
 
 export const DRS = 'http://ga4ghdev01.bcgsc.ca:5000';
 
+export const CHORD_METADATA_URL = 'http://ga4ghdev01.bcgsc.ca:4000';
+
 export default BASE_URL;
