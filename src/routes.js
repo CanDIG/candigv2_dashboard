@@ -25,7 +25,6 @@ import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
 import IndividualsOverview from './views/IndividualsOverview';
-import VariantsSearch from './views/VariantsSearch';
 
 const routes = [
   {
@@ -69,13 +68,6 @@ const routes = [
     icon: 'nc-icon nc-compass-05',
     component: GwasBrowser,
     layout: '/dashboard',
-  },
-  {
-    path: '/variants_search',	
-    name: 'Variants Search',	
-    icon: 'nc-icon nc-zoom-split',	
-    component: VariantsSearch,	
-    layout: '/dashboard',	
   },
   {
     path: '/custom_visualization',
