@@ -15,8 +15,6 @@ import PaginationBar from './Pagination';
 FuzzyTextFilterFn.autoRemove = (val) => !val;
 
 function ChordSubTable({ columns, data }) {
-
-
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -43,10 +41,8 @@ function ChordSubTable({ columns, data }) {
 
   const {
     getTableProps, getTableBodyProps, headerGroups, prepareRow,
-    allColumns, toggleHideAllColumns, state, page,
-    canPreviousPage, canNextPage, pageOptions, pageCount,
-    gotoPage, nextPage, previousPage, setPageSize, preGlobalFilteredRows,
-    setGlobalFilter,
+    page, canPreviousPage, canNextPage, pageOptions, pageCount,
+    gotoPage, nextPage, previousPage, setPageSize,
     state: { pageIndex, pageSize },
   } = useTable({
     columns,
@@ -104,69 +100,72 @@ function ChordSubTable({ columns, data }) {
 
   return (
     <>
-      <Row>
-        <Card>
-          <Styles>
-            <table {...getTableProps()}>
-              <thead>
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>
-                        <div>
-                          {column.canGroupBy ? (
-                          // If the column can be grouped, add a toggle
-                            <span {...column.getGroupByToggleProps()}>
-                              {column.isGrouped ? '🛑 ' : '👊 '}
-                            </span>
-                          ) : null}
-                          <span {...column.getSortByToggleProps()}>
-                            {column.render('Header')}
-                            {/* Add a sort direction indicator */}
-                            {getColumnSortSymbol(column)}
-                          </span>
-                        </div>
-                        {/* Render the columns filter UI */}
-                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                      </th>
+      {data.length > 0
+        ? (
+          <Row>
+            <Card>
+              <Styles>
+                <table {...getTableProps()}>
+                  <thead>
+                    {headerGroups.map((headerGroup) => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column) => (
+                          <th {...column.getHeaderProps()}>
+                            <div>
+                              {column.canGroupBy ? (
+                              // If the column can be grouped, add a toggle
+                                <span {...column.getGroupByToggleProps()}>
+                                  {column.isGrouped ? '🛑 ' : '👊 '}
+                                </span>
+                              ) : null}
+                              <span {...column.getSortByToggleProps()}>
+                                {column.render('Header')}
+                                {/* Add a sort direction indicator */}
+                                {getColumnSortSymbol(column)}
+                              </span>
+                            </div>
+                            {/* Render the columns filter UI */}
+                            <div>{column.canFilter ? column.render('Filter') : null}</div>
+                          </th>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {page.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()} onClick={() => {console.log(row.values.ID)}} >
-                      {row.cells.map((cell) => (
-                        <td
-                          {...cell.getCellProps()}
-                          style={getCellStyle(cell)}
-                        >
-                          {handleAggregation(cell, row)}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <PaginationBar
-              canPreviousPage={canPreviousPage}
-              canNextPage={canNextPage}
-              pageOptions={pageOptions}
-              pageCount={pageCount}
-              gotoPage={gotoPage}
-              nextPage={nextPage}
-              previousPage={previousPage}
-              setPageSize={setPageSize}
-              pageSize={pageSize}
-              pageIndex={pageIndex}
-            />
-
-          </Styles>
-        </Card>
-      </Row>
+                  </thead>
+                  <tbody {...getTableBodyProps()}>
+                    {page.map((row) => {
+                      prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td
+                              {...cell.getCellProps()}
+                              style={getCellStyle(cell)}
+                            >
+                              {handleAggregation(cell, row)}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <PaginationBar
+                  canPreviousPage={canPreviousPage}
+                  canNextPage={canNextPage}
+                  pageOptions={pageOptions}
+                  pageCount={pageCount}
+                  gotoPage={gotoPage}
+                  nextPage={nextPage}
+                  previousPage={previousPage}
+                  setPageSize={setPageSize}
+                  pageSize={pageSize}
+                  pageIndex={pageIndex}
+                />
+              </Styles>
+            </Card>
+          </Row>
+        )
+        : <></>}
     </>
   );
 }
@@ -178,7 +177,6 @@ ChordSubTable.propTypes = {
 ChordSubTable.defaultProps = {
   columns: [],
   data: [],
-  metadataCallback: () => {},
 };
 
 export default ChordSubTable;

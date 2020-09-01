@@ -11,7 +11,7 @@ import Styles from '../../assets/css/StyledComponents/MetadataTableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
 import PaginationBar from './Pagination';
-import DataControl from './DataControls';
+import ColumnControl from './ColumnControls';
 
 FuzzyTextFilterFn.autoRemove = (val) => !val;
 
@@ -103,14 +103,13 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
 
   return (
     <>
-      <DataControl
-        metadataCallback={() => {}}
+      <ColumnControl
         toggleHideAllColumns={toggleHideAllColumns}
         preGlobalFilteredRows={preGlobalFilteredRows}
         setGlobalFilter={setGlobalFilter}
         state={state}
         allColumns={allColumns}
-      
+
       />
       <Row>
         <Card>
@@ -145,7 +144,7 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
                 {page.map((row) => {
                   prepareRow(row);
                   return (
-                    <tr {...row.getRowProps()} onClick={() => {setActiveID(row.values.ID)}} >
+                    <tr {...row.getRowProps()} onClick={() => { setActiveID(row.values.ID); }}>
                       {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
@@ -182,11 +181,12 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
 ChordMetadataTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object),
   data: PropTypes.arrayOf(PropTypes.object),
+  setActiveID: PropTypes.func,
 };
 ChordMetadataTable.defaultProps = {
   columns: [],
   data: [],
-  metadataCallback: () => {},
+  setActiveID: () => {},
 };
 
 export default ChordMetadataTable;
