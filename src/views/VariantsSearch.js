@@ -140,7 +140,7 @@ function VariantsSearch({ datasetId }) {
     rowGroupPanelShow: 'always',
     pivotPanelShow: 'always',
     enableRangeSelection: true,
-    paginationAutoPageSize: false,
+    paginationAutoPageSize: true,
     pagination: true,
   };
 
