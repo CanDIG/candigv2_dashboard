@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import '../../assets/css/VariantsSearch.css';
 
 function IndividualTable({ individualsRowData }) {
   const individualsColumnDefs = [
@@ -51,7 +52,7 @@ function IndividualTable({ individualsRowData }) {
 
   return (
     <>
-      <div className="ag-theme-alpine" style={{ height: '400px', width: '100%', marginTop: '50px' }}>
+      <div className="ag-theme-alpine">
         <AgGridReact
           columnDefs={individualsColumnDefs}
           rowData={extraFieldHandler(individualsRowData)}

@@ -91,7 +91,7 @@ function VariantsTable({ rowData, datasetId }) {
 
   return (
     <>
-      <div className="ag-theme-alpine" style={{ height: '400px', width: '100%', marginTop: '20px' }}>
+      <div className="ag-theme-alpine">
         <AgGridReact
           columnDefs={columnDefs}
           rowData={rowData}

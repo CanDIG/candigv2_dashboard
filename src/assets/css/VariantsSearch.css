@@ -3,5 +3,11 @@
 }
 
 .form-group label {
-    margin-right: 10px
+    margin-right: 10px;
+}
+
+.ag-theme-alpine {
+    height: 400px;
+    width: 100%;
+    margin-top: 25px;
 }
