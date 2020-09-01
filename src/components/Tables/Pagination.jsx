@@ -104,7 +104,7 @@ PaginationBar.propTypes = {
   nextPage: PropTypes.func,
   canPreviousPage: PropTypes.bool,
   canNextPage: PropTypes.bool,
-  pageOptions: PropTypes.arrayOf(PropTypes.object),
+  pageOptions: PropTypes.arrayOf(PropTypes.number),
   pageIndex: PropTypes.number,
   pageSize: PropTypes.number,
   pageCount: PropTypes.number,

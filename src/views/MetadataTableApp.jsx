@@ -21,26 +21,28 @@ function CreateColumns(columnNames, cb) {
 
 function getMetadataData(datasetId, metadata, cb) {
   const datasets = [];
-  if(datasetId) {
-  return fetch(`${BASE_URL}/${metadata}/search`, {
-    method: 'POST',
-    body: JSON.stringify({ datasetId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
+  if (datasetId) {
+    return fetch(`${BASE_URL}/${metadata}/search`, {
+      method: 'POST',
+      body: JSON.stringify({ datasetId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
-    .then((data) => {
-      for (let i = 0; i < data.results[metadata].length; i += 1) {
-        datasets.push(data.results[metadata][i]);
-      }
-      cb(datasets);
-    });
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return {};
+      })
+      .then((data) => {
+        for (let i = 0; i < data.results[metadata].length; i += 1) {
+          datasets.push(data.results[metadata][i]);
+        }
+        cb(datasets);
+      });
   }
+  return [];
 }
 
 function TableApp({ datasetId }) {
@@ -53,7 +55,7 @@ function TableApp({ datasetId }) {
     try {
       getMetadataData(datasetId, selectedMetadata, setData);
     } catch (err) {
-      //Need better reporting
+      // Need better reporting
       console.log(err);
     }
   }, [selectedMetadata, datasetId]);
@@ -64,7 +66,7 @@ function TableApp({ datasetId }) {
     try {
       CreateColumns(Object.keys(data[0]), setColumns);
     } catch (err) {
-      //Need better reporting
+      // Need better reporting
       console.log(err);
     }
   }, [data]);

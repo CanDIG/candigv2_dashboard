@@ -24,6 +24,7 @@ import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
+import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
 
 const routes = [
@@ -81,6 +82,13 @@ const routes = [
     name: "Clinical Metadata",
     icon: "nc-icon nc-tile-56",
     component: TableList,
+    layout: "/dashboard",
+  },
+  {
+    path: "/Chord",
+    name: "Chord Metadata",
+    icon: "nc-icon nc-tile-56",
+    component: ChordTable,
     layout: "/dashboard",
   },
 ];
