@@ -144,6 +144,20 @@ function VariantsSearch({ datasetId }) {
     pagination: true,
   };
 
+  const individualsGridOptions = {
+    defaultColDef: {
+      editable: false,
+      sortable: true,
+      resizable: true,
+      filter: true,
+      flex: 1,
+      minWidth: 20,
+      minHeight: 300,
+    },
+    paginationAutoPageSize: true,
+    pagination: true,
+  };
+
   return (
     <>
       <div className="content">
@@ -180,6 +194,7 @@ function VariantsSearch({ datasetId }) {
           <AgGridReact
             columnDefs={individualsColumnDefs}
             rowData={individualsRowData}
+            gridOptions={individualsGridOptions}
           />
         </div>
 
