@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
-} from '../components/Processing/CHORD';
+} from '../components/Processing/ChordSchemas';
 
 import ChordMetadataTable from '../components/Tables/ChordMetadataTable';
 import ChordSubTable from '../components/Tables/ChordSubTable';

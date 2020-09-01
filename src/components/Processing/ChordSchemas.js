@@ -1,6 +1,6 @@
 // Assume data is present at this state
 
-// Need to turn each metadata object into four objects easily mapped to tables
+// Need to turn each metadata object into objects easily mapped to tables
 // Flatten and assign higher order ID to smaller objects
 
 export function ProcessMetadata(metadata) {

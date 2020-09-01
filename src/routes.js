@@ -24,7 +24,7 @@ import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
-import COGS from "./views/ChordTableApp"
+import ChordTable from "./views/ChordTableApp"
 
 const routes = [
   {
@@ -77,10 +77,10 @@ const routes = [
     layout: "/dashboard",
   },
   {
-    path: "/COG",
-    name: "COG",
+    path: "/Chord",
+    name: "Chord Metadata",
     icon: "nc-icon nc-tile-56",
-    component: COGS,
+    component: ChordTable,
     layout: "/dashboard",
   },
 ];
