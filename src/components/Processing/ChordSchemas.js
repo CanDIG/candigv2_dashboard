@@ -31,22 +31,6 @@ export function ProcessMetadata(metadata) {
   return [mainTable, phenopacketsList];
 }
 
-export function ProcessDiseases(ID, diseaseList) {
-  const processedDiseases = [];
-  Object.values(diseaseList).forEach((disease) => {
-    const diseaseEntry = {
-      ID: disease.id,
-      term: disease.term.id,
-      label: disease.term.label,
-      comorbidities: disease.extra_properties.comorbidities_group,
-      created: disease.created,
-      updated: disease.updated,
-    };
-    processedDiseases.push(diseaseEntry);
-  });
-  return { [ID]: processedDiseases };
-}
-
 export function ProcessData(ID, dataList, dataSchema) {
   const processedData = [];
   Object.values(dataList).forEach((data) => {
