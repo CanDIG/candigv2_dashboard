@@ -41,87 +41,87 @@ function VariantsSearch({ datasetId }) {
       return [];
     }
 
-    // for (let i = 0; i < results.length; i += 1) {
-    //   const tempObj = results[i];
-    //   tempObj.height = results[i].extra_properties.height;
-    //   tempObj.weight = results[i].extra_properties.height;
-    //   tempObj.education = results[i].extra_properties.education;
+    for (let i = 0; i < results.length; i += 1) {
+      const tempObj = results[i];
+      tempObj.height = results[i].extra_properties.height;
+      tempObj.weight = results[i].extra_properties.height;
+      tempObj.education = results[i].extra_properties.education;
 
-    //   processedResults.push(tempObj);
-    // }
+      processedResults.push(tempObj);
+    }
 
-    // return processedResults;
+    return processedResults;
   };
 
-   function onSelectionChanged() {
-     const selectedRows = gridOptions.api.getSelectedRows();
+  function onSelectionChanged() {
+    const selectedRows = gridOptions.api.getSelectedRows();
 
-//     fetch(`${BASE_URL}/search`, {
-//       method: 'post',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(
-//         {
-//           datasetId: gridOptions.context.datasetId,
-//           logic: {
-//             id: 'A',
-//           },
-//           components: [
-//             {
-//               id: 'A',
-//               variants: {
-//                 start: selectedRows[0].start,
-//                 end: selectedRows[0].end,
-//                 referenceName: selectedRows[0].referenceName,
-//               },
-//             },
-//           ],
-//           results: [
-//             {
-//               table: 'patients',
-//               fields: ['patientId'],
-//             },
-//           ],
-//         },
-//       ),
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         if (data.results !== undefined) {
-//           let patientParams = '';
+    fetch(`${BASE_URL}/search`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        {
+          datasetId: gridOptions.context.datasetId,
+          logic: {
+            id: 'A',
+          },
+          components: [
+            {
+              id: 'A',
+              variants: {
+                start: selectedRows[0].start,
+                end: selectedRows[0].end,
+                referenceName: selectedRows[0].referenceName,
+              },
+            },
+          ],
+          results: [
+            {
+              table: 'patients',
+              fields: ['patientId'],
+            },
+          ],
+        },
+      ),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.results !== undefined) {
+          let patientParams = '';
 
-//           for (let i = 0; i < data.results.patients.length; i += 1) {
-//             patientParams += `id=${data.results.patients[i].patientId}&`;
-//           }
+          for (let i = 0; i < data.results.patients.length; i += 1) {
+            patientParams += `id=${data.results.patients[i].patientId}&`;
+          }
 
-//           fetch(`${CHORD_METADATA_URL}/api/individuals?${patientParams}`)
-//             .then((response) => response.json())
-//             .then((chordData) => {
-//               setIndividualsRowData(extraFieldHandler(chordData.results));
-//             });
-//         }
-//       });
-   }
+          fetch(`${CHORD_METADATA_URL}/api/individuals?${patientParams}`)
+            .then((response) => response.json())
+            .then((chordData) => {
+              setIndividualsRowData(extraFieldHandler(chordData.results));
+            });
+        }
+      });
+  }
 
-   const formHandler = (e) => {
-     e.preventDefault(); // Prevent form submission
+  const formHandler = (e) => {
+    e.preventDefault(); // Prevent form submission
 
-//     fetch(`${BASE_URL}/variants/search`, {
-//       method: 'post',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({
-//         start: e.target.start.value,
-//         end: e.target.end.value,
-//         referenceName: e.target.referenceName.value,
-//         datasetId,
-//       }),
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         if (data.results !== undefined) {
-//           setRowData(data.results.variants);
-//         }
-//       });
-   };
+    fetch(`${BASE_URL}/variants/search`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        start: e.target.start.value,
+        end: e.target.end.value,
+        referenceName: e.target.referenceName.value,
+        datasetId,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.results !== undefined) {
+          setRowData(data.results.variants);
+        }
+      });
+  };
 
   gridOptions = {
     defaultColDef: {
