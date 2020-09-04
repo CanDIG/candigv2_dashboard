@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // reactstrap components
 import {
   Card, CardBody, CardTitle, Row, Col,
 } from 'reactstrap';
+import NotificationAlert from 'react-notification-alert';
 
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
+import { notify } from '../utils/alert';
 
 import { CHORD_METADATA_URL } from '../constants/constants';
 
@@ -100,6 +102,8 @@ function IndividualsOverview() {
   const [boxPlotObject, setBoxPlotObject] = useState({ '': [] });
   const [didFetch, setDidFetch] = useState(false);
 
+  const notifyEl = useRef(null);
+
   const countIndividuals = (data) => {
     setIndividualCount(data.results.length);
   };
@@ -130,12 +134,20 @@ function IndividualsOverview() {
         setEducationObject(getCounterUnderExtraProperties(data, 'education'));
         setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
         setDidFetch(true);
+      })
+      .catch(() => {
+        notify(
+          notifyEl,
+          'The resources you requested were not available.',
+          'warning',
+        );
       });
   }, [didFetch]);
 
   return (
     <>
       <div className="content">
+        <NotificationAlert ref={notifyEl} />
         <Row>
           <Col lg="6" md="6" sm="6">
             <Card className="card-stats">
