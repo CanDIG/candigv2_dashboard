@@ -41,7 +41,7 @@ function GwasBrowser() {
         setGwasDataObj(tmpDataObj);
         setGwasDropdown(gwasList);
       })
-      .catch((err) => {
+      .catch(() => {
         notify(
           notifyEl,
           'No GWAS Samples are available.',
