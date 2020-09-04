@@ -35,7 +35,7 @@ function VariantsSearch({ datasetId }) {
         setRowData([]);
         notify(
           notifyEl,
-          'No variants were found for this request.',
+          'No variants were found.',
           'warning',
         );
       });
