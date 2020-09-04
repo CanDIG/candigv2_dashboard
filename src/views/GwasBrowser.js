@@ -6,7 +6,6 @@ import { notify, NotificationAlert } from '../utils/alert';
 // Consts
 import { DRS } from '../constants/constants';
 
-
 function GwasBrowser() {
   /** *
    * A functional component that renders a view with a IGV.js browser.
