@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { AgGridReact } from 'ag-grid-react';
 import BASE_URL, { CHORD_METADATA_URL } from '../../constants/constants';
 import IndividualTable from './IndividualTable';
+import { notify, NotificationAlert } from '../../utils/alert';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -11,6 +12,7 @@ import '../../assets/css/VariantsSearch.css';
 
 function VariantsTable({ rowData, datasetId }) {
   const [individualsRowData, setIndividualsRowData] = useState([]);
+  const notifyEl = useRef(null);
 
   const columnDefs = [
     { headerName: 'Reference Name', field: 'referenceName' },
@@ -54,19 +56,36 @@ function VariantsTable({ rowData, datasetId }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.results !== undefined) {
-          let patientParams = '';
-
-          for (let i = 0; i < data.results.patients.length; i += 1) {
-            patientParams += `id=${data.results.patients[i].patientId}&`;
-          }
-
-          fetch(`${CHORD_METADATA_URL}/api/individuals?${patientParams}`)
-            .then((response) => response.json())
-            .then((chordData) => {
-              setIndividualsRowData(chordData.results);
-            });
+        if (data.results.patients.length === 0) {
+          throw new Error('The variant you selected does not have associated individuals.');
         }
+
+        let patientParams = '';
+
+        for (let i = 0; i < data.results.patients.length; i += 1) {
+          patientParams += `id=${data.results.patients[i].patientId}&`;
+        }
+
+        fetch(`${CHORD_METADATA_URL}/api/individuals?${patientParams}`)
+          .then((response) => response.json())
+          .then((chordData) => {
+            if (chordData.results === undefined) {
+              throw new Error('The variant you selected does not have associated individuals.');
+            }
+            setIndividualsRowData(chordData.results);
+          }).catch((err) => {
+            notify(
+              notifyEl,
+              err.message,
+              'warning',
+            );
+          });
+      }).catch((err) => {
+        notify(
+          notifyEl,
+          err.message,
+          'warning',
+        );
       });
   }
 
@@ -92,6 +111,7 @@ function VariantsTable({ rowData, datasetId }) {
 
   return (
     <>
+      <NotificationAlert ref={notifyEl} />
       <div className="ag-theme-alpine">
         <AgGridReact
           columnDefs={columnDefs}
