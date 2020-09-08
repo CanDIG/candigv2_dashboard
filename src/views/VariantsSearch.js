@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Form, FormGroup, Label, Input,
@@ -7,10 +7,13 @@ import {
 import BASE_URL from '../constants/constants';
 import VariantsTable from '../components/Tables/VariantsTable';
 
+import { notify, NotificationAlert } from '../utils/alert';
+
 import '../assets/css/VariantsSearch.css';
 
 function VariantsSearch({ datasetId }) {
   const [rowData, setRowData] = useState([]);
+  const notifyEl = useRef(null);
 
   const formHandler = (e) => {
     e.preventDefault(); // Prevent form submission
@@ -27,17 +30,21 @@ function VariantsSearch({ datasetId }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.results !== undefined) {
-          setRowData(data.results.variants);
-        } else {
-          setRowData([]);
-        }
+        setRowData(data.results.variants);
+      }).catch(() => {
+        setRowData([]);
+        notify(
+          notifyEl,
+          'No variants were found.',
+          'warning',
+        );
       });
   };
 
   return (
     <>
       <div className="content">
+        <NotificationAlert ref={notifyEl} />
 
         <Form inline onSubmit={formHandler}>
           <FormGroup>

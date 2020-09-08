@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
 import GwasInstance from '../components/IGV/GwasInstance';
+import { notify, NotificationAlert } from '../utils/alert';
 
 // Consts
 import { DRS } from '../constants/constants';
@@ -13,6 +14,7 @@ function GwasBrowser() {
   const [selectedGwasUrl, setSelectedGwasUrl] = useState('');
   const [gwasDropdown, setGwasDropdown] = useState([]);
   const [gwasDataObj, setGwasDataObj] = useState({});
+  const notifyEl = useRef(null);
 
   const disabledElementList = [
     <option key="disabled" value="disabled" disabled>
@@ -39,14 +41,19 @@ function GwasBrowser() {
         setGwasDataObj(tmpDataObj);
         setGwasDropdown(gwasList);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        notify(
+          notifyEl,
+          'No GWAS Samples are available.',
+          'warning',
+        );
       });
   }, [selectedGwasName]);
 
   return (
     <>
       <div className="content">
+        <NotificationAlert ref={notifyEl} />
         <Row>
           <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
             <span

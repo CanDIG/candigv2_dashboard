@@ -1,4 +1,5 @@
 import React from 'react';
+import NotificationAlert from 'react-notification-alert';
 
 /*
  * Return an object for NotificationAlert
@@ -45,3 +46,5 @@ export function createNotificationObject(message, type = 'info') {
 export function notify(refObject, message, type = 'info') {
   refObject.current.notificationAlert(createNotificationObject(message, type));
 }
+
+export { NotificationAlert }
