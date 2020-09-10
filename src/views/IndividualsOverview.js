@@ -4,8 +4,10 @@ import {
   Card, CardBody, CardTitle, Row, Col,
 } from 'reactstrap';
 import NotificationAlert from 'react-notification-alert';
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify } from '../utils/alert';
 
@@ -102,6 +104,8 @@ function IndividualsOverview() {
   const [boxPlotObject, setBoxPlotObject] = useState({ '': [] });
   const [didFetch, setDidFetch] = useState(false);
 
+  const { promiseInProgress } = usePromiseTracker();
+
   const notifyEl = useRef(null);
 
   const countIndividuals = (data) => {
@@ -121,153 +125,164 @@ function IndividualsOverview() {
   };
 
   useEffect(() => {
-    fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`)
-      .then((response) => response.json())
-      .then((data) => {
-        countIndividuals(data);
-        countEthnicity(data);
-        countGender(data);
-        countDateOfBirth(data);
-        const diseases = countDiseases(data);
-        setDiseasesObject(diseases);
-        setDiseasesSum(Object.keys(diseases).length);
-        setEducationObject(getCounterUnderExtraProperties(data, 'education'));
-        setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
-        setDidFetch(true);
-      })
-      .catch(() => {
-        notify(
-          notifyEl,
-          'The resources you requested were not available.',
-          'warning',
-        );
-      });
+    trackPromise(
+      fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`)
+        .then((response) => response.json())
+        .then((data) => {
+          countIndividuals(data);
+          countEthnicity(data);
+          countGender(data);
+          countDateOfBirth(data);
+          const diseases = countDiseases(data);
+          setDiseasesObject(diseases);
+          setDiseasesSum(Object.keys(diseases).length);
+          setEducationObject(getCounterUnderExtraProperties(data, 'education'));
+          setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
+          setDidFetch(true);
+        })
+        .catch(() => {
+          notify(
+            notifyEl,
+            'The resources you requested were not available.',
+            'warning',
+          );
+        }),
+    );
   }, [didFetch]);
 
   return (
     <>
       <div className="content">
-        <NotificationAlert ref={notifyEl} />
-        <Row>
-          <Col lg="6" md="6" sm="6">
-            <Card className="card-stats">
-              <CardBody>
-                <Row>
-                  <Col md="4" xs="5">
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-single-02 text-primary" />
-                    </div>
-                  </Col>
-                  <Col md="8" xs="7">
-                    <div className="numbers">
-                      <p className="card-category">Individuals</p>
-                      <CardTitle tag="p">{individualCounter}</CardTitle>
-                      <p />
-                    </div>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="6" sm="6">
-            <Card className="card-stats">
-              <CardBody>
-                <Row>
-                  <Col md="4" xs="5">
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-favourite-28 text-danger" />
-                    </div>
-                  </Col>
-                  <Col md="8" xs="7">
-                    <div className="numbers">
-                      <p className="card-category">Diseases</p>
-                      <CardTitle tag="p">{diseasesSum}</CardTitle>
-                      <p />
-                    </div>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={genderObject}
-                  chartType="pie"
-                  barTitle="Gender"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={diseasesObject}
-                  chartType="pie"
-                  barTitle="Diseases"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={ethnicityObject}
-                  chartType="bar"
-                  barTitle="Ethnicity"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="6" sm="6">
-            <Card>
-              <CardBody>
-                <BoxPlotChart chartTitle="Weight" plotObject={boxPlotObject} />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={doBObject}
-                  chartType="pie"
-                  barTitle="Date of Birth"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={educationObject}
-                  chartType="bar"
-                  barTitle="Education"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+        {promiseInProgress === true ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            <NotificationAlert ref={notifyEl} />
+            <Row>
+              <Col lg="6" md="6" sm="6">
+                <Card className="card-stats">
+                  <CardBody>
+                    <Row>
+                      <Col md="4" xs="5">
+                        <div className="icon-big text-center icon-warning">
+                          <i className="nc-icon nc-single-02 text-primary" />
+                        </div>
+                      </Col>
+                      <Col md="8" xs="7">
+                        <div className="numbers">
+                          <p className="card-category">Individuals</p>
+                          <CardTitle tag="p">{individualCounter}</CardTitle>
+                          <p />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="6" sm="6">
+                <Card className="card-stats">
+                  <CardBody>
+                    <Row>
+                      <Col md="4" xs="5">
+                        <div className="icon-big text-center icon-warning">
+                          <i className="nc-icon nc-favourite-28 text-danger" />
+                        </div>
+                      </Col>
+                      <Col md="8" xs="7">
+                        <div className="numbers">
+                          <p className="card-category">Diseases</p>
+                          <CardTitle tag="p">{diseasesSum}</CardTitle>
+                          <p />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={genderObject}
+                      chartType="pie"
+                      barTitle="Gender"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={diseasesObject}
+                      chartType="pie"
+                      barTitle="Diseases"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={ethnicityObject}
+                      chartType="bar"
+                      barTitle="Ethnicity"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="6" sm="6">
+                <Card>
+                  <CardBody>
+                    <BoxPlotChart
+                      chartTitle="Weight"
+                      plotObject={boxPlotObject}
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={doBObject}
+                      chartType="pie"
+                      barTitle="Date of Birth"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={educationObject}
+                      chartType="bar"
+                      barTitle="Education"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </>
+        )}
       </div>
     </>
   );
