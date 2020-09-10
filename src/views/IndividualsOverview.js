@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 // reactstrap components
-import {
-  Card, CardBody, CardTitle, Row, Col,
-} from 'reactstrap';
-import NotificationAlert from 'react-notification-alert';
+import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
+import NotificationAlert from "react-notification-alert";
+import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 
-import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
-import BoxPlotChart from '../components/Graphs/BoxPlotChart';
-import { notify } from '../utils/alert';
+import CustomOfflineChart from "../components/Graphs/CustomOfflineChart";
+import LoadingIndicator from "../components/LoadingIndicator/LoadingIndicator"
+import BoxPlotChart from "../components/Graphs/BoxPlotChart";
+import { notify } from "../utils/alert";
 
-import { CHORD_METADATA_URL } from '../constants/constants';
+import { CHORD_METADATA_URL } from "../constants/constants";
 
 /*
  * Return the aggregation value of a key from an array of objects.
@@ -18,8 +18,9 @@ import { CHORD_METADATA_URL } from '../constants/constants';
  */
 function groupBy(objectArray, property) {
   return objectArray.reduce((acc, obj) => {
-    const key = obj[property].charAt(0).toUpperCase()
-      + obj[property].slice(1).toLowerCase().replace('_', ' ');
+    const key =
+      obj[property].charAt(0).toUpperCase() +
+      obj[property].slice(1).toLowerCase().replace("_", " ");
     if (!acc[key]) {
       acc[key] = 0;
     }
@@ -37,13 +38,14 @@ function groupBy(objectArray, property) {
 function groupExtraPropertieByGender(data, property) {
   const extraPropertieList = {};
   for (let i = 0; i < data.results.length; i += 1) {
-    const key = data.results[i].sex.charAt(0).toUpperCase()
-      + data.results[i].sex.slice(1).toLowerCase().replace('_', ' ');
+    const key =
+      data.results[i].sex.charAt(0).toUpperCase() +
+      data.results[i].sex.slice(1).toLowerCase().replace("_", " ");
     if (!extraPropertieList[key]) {
       extraPropertieList[key] = [];
     }
     extraPropertieList[key].push(
-      parseFloat(data.results[i].extra_properties[property]),
+      parseFloat(data.results[i].extra_properties[property])
     );
   }
   return extraPropertieList;
@@ -93,14 +95,16 @@ function getCounterUnderExtraProperties(data, property) {
 
 function IndividualsOverview() {
   const [individualCounter, setIndividualCount] = useState(0);
-  const [ethnicityObject, setEthnicityObject] = useState({ '': 0 });
-  const [genderObject, setGenderObject] = useState({ '': 0 });
-  const [doBObject, setDoBObject] = useState({ '': 0 });
-  const [diseasesObject, setDiseasesObject] = useState({ '': 0 });
+  const [ethnicityObject, setEthnicityObject] = useState({ "": 0 });
+  const [genderObject, setGenderObject] = useState({ "": 0 });
+  const [doBObject, setDoBObject] = useState({ "": 0 });
+  const [diseasesObject, setDiseasesObject] = useState({ "": 0 });
   const [diseasesSum, setDiseasesSum] = useState(0);
-  const [educationObject, setEducationObject] = useState({ '': 0 });
-  const [boxPlotObject, setBoxPlotObject] = useState({ '': [] });
+  const [educationObject, setEducationObject] = useState({ "": 0 });
+  const [boxPlotObject, setBoxPlotObject] = useState({ "": [] });
   const [didFetch, setDidFetch] = useState(false);
+
+  const { promiseInProgress } = usePromiseTracker();
 
   const notifyEl = useRef(null);
 
@@ -109,165 +113,176 @@ function IndividualsOverview() {
   };
 
   const countEthnicity = (data) => {
-    setEthnicityObject(groupBy(data.results, 'ethnicity'));
+    setEthnicityObject(groupBy(data.results, "ethnicity"));
   };
 
   const countGender = (data) => {
-    setGenderObject(groupBy(data.results, 'sex'));
+    setGenderObject(groupBy(data.results, "sex"));
   };
 
   const countDateOfBirth = (data) => {
-    setDoBObject(groupBy(data.results, 'date_of_birth'));
+    setDoBObject(groupBy(data.results, "date_of_birth"));
   };
 
   useEffect(() => {
-    fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`)
-      .then((response) => response.json())
-      .then((data) => {
-        countIndividuals(data);
-        countEthnicity(data);
-        countGender(data);
-        countDateOfBirth(data);
-        const diseases = countDiseases(data);
-        setDiseasesObject(diseases);
-        setDiseasesSum(Object.keys(diseases).length);
-        setEducationObject(getCounterUnderExtraProperties(data, 'education'));
-        setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
-        setDidFetch(true);
-      })
-      .catch(() => {
-        notify(
-          notifyEl,
-          'The resources you requested were not available.',
-          'warning',
-        );
-      });
+    trackPromise(
+      fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`)
+        .then((response) => response.json())
+        .then((data) => {
+          countIndividuals(data);
+          countEthnicity(data);
+          countGender(data);
+          countDateOfBirth(data);
+          const diseases = countDiseases(data);
+          setDiseasesObject(diseases);
+          setDiseasesSum(Object.keys(diseases).length);
+          setEducationObject(getCounterUnderExtraProperties(data, "education"));
+          setBoxPlotObject(groupExtraPropertieByGender(data, "weight"));
+          setDidFetch(true);
+        })
+        .catch(() => {
+          notify(
+            notifyEl,
+            "The resources you requested were not available.",
+            "warning"
+          );
+        })
+    );
   }, [didFetch]);
 
   return (
     <>
       <div className="content">
-        <NotificationAlert ref={notifyEl} />
-        <Row>
-          <Col lg="6" md="6" sm="6">
-            <Card className="card-stats">
-              <CardBody>
-                <Row>
-                  <Col md="4" xs="5">
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-single-02 text-primary" />
-                    </div>
-                  </Col>
-                  <Col md="8" xs="7">
-                    <div className="numbers">
-                      <p className="card-category">Individuals</p>
-                      <CardTitle tag="p">{individualCounter}</CardTitle>
-                      <p />
-                    </div>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="6" sm="6">
-            <Card className="card-stats">
-              <CardBody>
-                <Row>
-                  <Col md="4" xs="5">
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-favourite-28 text-danger" />
-                    </div>
-                  </Col>
-                  <Col md="8" xs="7">
-                    <div className="numbers">
-                      <p className="card-category">Diseases</p>
-                      <CardTitle tag="p">{diseasesSum}</CardTitle>
-                      <p />
-                    </div>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={genderObject}
-                  chartType="pie"
-                  barTitle="Gender"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={diseasesObject}
-                  chartType="pie"
-                  barTitle="Diseases"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={ethnicityObject}
-                  chartType="bar"
-                  barTitle="Ethnicity"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="6" sm="6">
-            <Card>
-              <CardBody>
-                <BoxPlotChart chartTitle="Weight" plotObject={boxPlotObject} />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={doBObject}
-                  chartType="pie"
-                  barTitle="Date of Birth"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                <CustomOfflineChart
-                  datasetName=""
-                  dataObject={educationObject}
-                  chartType="bar"
-                  barTitle="Education"
-                  height="400px; auto"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+        {promiseInProgress == true ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            <NotificationAlert ref={notifyEl} />
+            <Row>
+              <Col lg="6" md="6" sm="6">
+                <Card className="card-stats">
+                  <CardBody>
+                    <Row>
+                      <Col md="4" xs="5">
+                        <div className="icon-big text-center icon-warning">
+                          <i className="nc-icon nc-single-02 text-primary" />
+                        </div>
+                      </Col>
+                      <Col md="8" xs="7">
+                        <div className="numbers">
+                          <p className="card-category">Individuals</p>
+                          <CardTitle tag="p">{individualCounter}</CardTitle>
+                          <p />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="6" sm="6">
+                <Card className="card-stats">
+                  <CardBody>
+                    <Row>
+                      <Col md="4" xs="5">
+                        <div className="icon-big text-center icon-warning">
+                          <i className="nc-icon nc-favourite-28 text-danger" />
+                        </div>
+                      </Col>
+                      <Col md="8" xs="7">
+                        <div className="numbers">
+                          <p className="card-category">Diseases</p>
+                          <CardTitle tag="p">{diseasesSum}</CardTitle>
+                          <p />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={genderObject}
+                      chartType="pie"
+                      barTitle="Gender"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={diseasesObject}
+                      chartType="pie"
+                      barTitle="Diseases"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={ethnicityObject}
+                      chartType="bar"
+                      barTitle="Ethnicity"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="6" sm="6">
+                <Card>
+                  <CardBody>
+                    <BoxPlotChart
+                      chartTitle="Weight"
+                      plotObject={boxPlotObject}
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={doBObject}
+                      chartType="pie"
+                      barTitle="Date of Birth"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="6" md="12" sm="12">
+                <Card>
+                  <CardBody>
+                    <CustomOfflineChart
+                      datasetName=""
+                      dataObject={educationObject}
+                      chartType="bar"
+                      barTitle="Education"
+                      height="400px; auto"
+                    />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </>
+        )}
       </div>
     </>
   );
