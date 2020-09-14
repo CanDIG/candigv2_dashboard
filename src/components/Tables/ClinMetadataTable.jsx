@@ -7,7 +7,7 @@ import {
 
 // reactstrap components
 import { Card, Row } from 'reactstrap';
-import Styles from '../../assets/css/StyledComponents/MetadataTableStyled';
+import Styles from '../../assets/css/StyledComponents/TableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
 import PaginationBar from './Pagination';

@@ -7,6 +7,7 @@ import {
   Input, InputGroupText, InputGroupButtonDropdown, DropdownToggle,
   DropdownMenu, DropdownItem,
 } from 'reactstrap';
+import {PaginationStyle} from 'assets/css/StyledComponents/PaginationStyled'
 
 function PaginationBar({
   gotoPage, previousPage, nextPage, canPreviousPage,
@@ -14,18 +15,14 @@ function PaginationBar({
   pageCount, setPageSize,
 
 }) {
-  // const {
-  //   gotoPage, previousPage, nextPage, canPreviousPage,
-  //   canNextPage, pageOptions, state: { pageIndex, pageSize },
-  //   pageCount, setPageSize,
 
-  // } = props.paginationFxns;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
 
   return (
     <div className="pagination">
+      <PaginationStyle>
       <InputGroup>
         <InputGroupAddon className="pageControls" addonType="prepend">
           <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
@@ -94,6 +91,7 @@ function PaginationBar({
           </DropdownMenu>
         </InputGroupButtonDropdown>
       </InputGroup>
+      </PaginationStyle>
     </div>
   );
 }

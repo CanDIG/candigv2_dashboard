@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useAsyncDebounce } from 'react-table';
 import matchSorter from 'match-sorter';
 import { Input } from 'reactstrap';
+import {FilterStyle} from 'assets/css/StyledComponents/ChordTableStyled'
 
 export function GlobalFilter({
   preGlobalFilteredRows,
@@ -16,7 +17,9 @@ export function GlobalFilter({
   }, 200);
 
   return (
+    // <FilterStyle>
     <Input
+      className="globalFilter"
       value={value || ''}
       onChange={(e) => {
         setValue(e.target.value);
@@ -30,6 +33,7 @@ export function GlobalFilter({
         marginBottom: '0%',
       }}
     />
+    // </FilterStyle>
   );
 }
 

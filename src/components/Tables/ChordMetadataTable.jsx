@@ -7,7 +7,7 @@ import {
 
 // reactstrap components
 import { Card, Row } from 'reactstrap';
-import Styles from '../../assets/css/StyledComponents/MetadataTableStyled';
+import Styles from '../../assets/css/StyledComponents/TableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
 import PaginationBar from './Pagination';
@@ -75,7 +75,7 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
     } if (cell.isPlaceholder) {
       return ({ background: '#ff000042' });
     }
-    return ({ background: 'white' });
+    return ({  });
   }
 
   function handleAggregation(cell, row) {
@@ -112,14 +112,15 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
 
       />
       <Row>
-        <Card>
-          <Styles>
-            <table {...getTableProps()}>
+      <Styles>
+
+        <Card className="mainTableCard">
+            <table className="ChordMainTable" {...getTableProps()}>
               <thead>
                 {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr {...headerGroup.getHeaderGroupProps()} >
                     {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>
+                      <th scope="row" {...column.getHeaderProps()}>
                         <div>
                           {column.canGroupBy ? (
                           // If the column can be grouped, add a toggle
@@ -158,6 +159,11 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
                 })}
               </tbody>
             </table>
+
+            </Card>
+            </Styles>
+
+
             <PaginationBar
               canPreviousPage={canPreviousPage}
               canNextPage={canNextPage}
@@ -171,8 +177,6 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
               pageIndex={pageIndex}
             />
 
-          </Styles>
-        </Card>
       </Row>
     </>
   );
