@@ -70,6 +70,7 @@ function VariantsTable({ rowData, datasetId }) {
           .then((response) => response.json())
           .then((chordData) => {
             if (chordData.results === undefined) {
+              setIndividualsRowData([]);
               throw new Error('The variant you selected does not have associated individuals.');
             }
             setIndividualsRowData(chordData.results);

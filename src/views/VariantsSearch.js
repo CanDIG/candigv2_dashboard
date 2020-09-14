@@ -13,6 +13,7 @@ import '../assets/css/VariantsSearch.css';
 
 function VariantsSearch({ datasetId }) {
   const [rowData, setRowData] = useState([]);
+  const [hideVariantsTable, setHideVariantsTable] = useState(false);
   const notifyEl = useRef(null);
 
   const formHandler = (e) => {
@@ -30,6 +31,7 @@ function VariantsSearch({ datasetId }) {
     })
       .then((response) => response.json())
       .then((data) => {
+        setHideVariantsTable(true);
         setRowData(data.results.variants);
       }).catch(() => {
         setRowData([]);
@@ -65,7 +67,7 @@ function VariantsSearch({ datasetId }) {
           <Button>Search</Button>
         </Form>
 
-        <VariantsTable rowData={rowData} datasetId={datasetId} />
+        {hideVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
       </div>
     </>
   );
