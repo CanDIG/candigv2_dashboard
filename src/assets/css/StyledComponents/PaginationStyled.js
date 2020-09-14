@@ -1,7 +1,7 @@
-import styled from 'styled-components'
-import {InputGroup} from 'reactstrap'
+import styled from 'styled-components';
+import { InputGroup } from 'reactstrap';
 
-export const PaginationStyle = styled(InputGroup)`
+const Styles = styled(InputGroup)`
   .pageCountBox {
     margin-left: .3rem;
     // padding: 10px 10px 10px 10px;
@@ -46,3 +46,5 @@ export const PaginationStyle = styled(InputGroup)`
   
   }
 `;
+
+export default Styles;

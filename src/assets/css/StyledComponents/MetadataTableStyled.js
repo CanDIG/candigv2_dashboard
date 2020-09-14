@@ -1,5 +1,4 @@
-import styled from 'styled-components'
-
+import styled from 'styled-components';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -66,6 +65,6 @@ const Styles = styled.div`
     margin-right: 0%;
   
   }
-`
+`;
 
-export default Styles
+export default Styles;

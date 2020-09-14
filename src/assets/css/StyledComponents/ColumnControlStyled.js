@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import {InputGroup} from 'reactstrap'
+import styled from 'styled-components';
+import { InputGroup } from 'reactstrap';
 
 const Style = styled(InputGroup)`
   min-width: 0px;
@@ -29,6 +29,6 @@ const Style = styled(InputGroup)`
   .input-group .input-group-prepend .input-group-text {
     padding: 10px 10px 10px 10px;
   }
-`
+`;
 
-export default Style
+export default Style;

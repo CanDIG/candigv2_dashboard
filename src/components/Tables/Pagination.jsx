@@ -7,7 +7,7 @@ import {
   Input, InputGroupText, InputGroupButtonDropdown, DropdownToggle,
   DropdownMenu, DropdownItem,
 } from 'reactstrap';
-import {PaginationStyle} from 'assets/css/StyledComponents/PaginationStyled'
+import PaginationStyle from 'assets/css/StyledComponents/PaginationStyled'
 
 function PaginationBar({
   gotoPage, previousPage, nextPage, canPreviousPage,
