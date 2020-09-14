@@ -13,7 +13,7 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
    */
   const igvBrowser = useRef(null);
   const [rowData, setRowData] = useState([]);
-  const [hideVariantsTable, setHideVariantsTable] = useState(false);
+  const [displayVariantsTable, setDisplayVariantsTable] = useState(false);
   const notifyEl = useRef(null);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
             })
               .then((response) => response.json())
               .then((data) => {
-                setHideVariantsTable(true)
+                setDisplayVariantsTable(true)
                 setRowData(data.results.variants);
               }).catch(() => {
                 setRowData([]);
@@ -85,7 +85,7 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
           ref={igvBrowser}
         />
 
-        {hideVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
+        {displayVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
       </div>
     </>
   );
