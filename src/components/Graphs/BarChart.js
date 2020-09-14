@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 // Consts
 import BASE_URL from '../../constants/constants';
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 
 // Hook
 // Used to keep the previous value of a state or prop
@@ -17,6 +18,27 @@ function usePrevious(value) {
   return ref.current;
 }
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'addSeries':
+      return {
+        ...state,
+        ...{
+          series: [
+            {
+              data: action.payload,
+              colorByPoint: true,
+              showInLegend: false,
+            }],
+        },
+      };
+    case 'addCategories':
+      return { ...state, ...{ xAxis: { categories: action.payload } } };
+    default:
+      throw new Error();
+  }
+}
+
 /*
  * Component for bar chart graphs
  * @param {string} datasetId
@@ -27,7 +49,7 @@ function usePrevious(value) {
 function BarChart({
   datasetId, table, field, title,
 }) {
-  const [chartOptions, setChartOptions] = useState({
+  const initialState = {
     credits: {
       enabled: false,
     },
@@ -48,13 +70,17 @@ function BarChart({
         data: [],
       },
     ],
-  });
+  };
+
+  const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
+
+  const { promiseInProgress } = usePromiseTracker();
 
   const prevDatasetId = usePrevious(datasetId);
 
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      fetch(`${BASE_URL}/count`, {
+      trackPromise(fetch(`${BASE_URL}/count`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,23 +113,21 @@ function BarChart({
             return counts[key];
           });
 
-          setChartOptions({
-            xAxis: {
-              categories,
-            },
-            series: [
-              {
-                data: dataList,
-              },
-            ],
-          });
-        });
+          dispatchChartOptions({ type: 'addSeries', payload: dataList });
+          dispatchChartOptions({ type: 'addCategories', payload: categories });
+        }));
     }
   });
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-    </div>
+    <>
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <div>
+          <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+        </div>
+      )}
+    </>
   );
 }
 

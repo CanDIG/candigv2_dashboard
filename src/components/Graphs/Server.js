@@ -1,19 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 // Consts
 import BASE_URL from '../../constants/constants';
 
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'addSeries':
+      return {
+        ...state,
+        ...{
+          series: [
+            {
+              data: action.payload,
+              colorByPoint: true,
+              showInLegend: false,
+            }],
+        },
+      };
+    case 'addCategories':
+      return { ...state, ...{ xAxis: { categories: action.payload } } };
+    default:
+      throw new Error();
+  }
+}
+
 /*
  * Component listing the server status in the form of bar graph
  */
 function Server({ datasetId }) {
-  /*
-   * chartOptions describes the format and style of the graph.
-   * More information on Highcharts website
-   */
-  const [chartOptions, setChartOptions] = useState({
+  const initialState = {
     credits: {
       enabled: false,
     },
@@ -29,18 +48,25 @@ function Server({ datasetId }) {
     },
     series: [
       {
-        colorByPoint: true,
-        showInLegend: false,
         data: [],
       },
     ],
-  });
+  };
+
+  /*
+   * chartOptions describes the format and style of the graph.
+   * More information on Highcharts website
+   */
+  const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
+
+  const { promiseInProgress } = usePromiseTracker();
+
   /*
    * Fetch server status information from the server after the component is added to the DOM
    * and create the bar graph by changing the chartOptions state
    */
   useEffect(() => {
-    fetch(`${BASE_URL}/datasets/search`, { method: 'POST' })
+    trackPromise(fetch(`${BASE_URL}/datasets/search`, { method: 'POST' })
       .then((response) => response.json())
       .then((data) => {
         const dataList = [];
@@ -53,23 +79,22 @@ function Server({ datasetId }) {
           dataList.push(data.status[key]);
           return key;
         });
-        setChartOptions({
-          xAxis: {
-            categories: categoriesList,
-          },
-          series: [
-            {
-              data: dataList,
-            },
-          ],
-        });
-      });
+
+        dispatchChartOptions({ type: 'addSeries', payload: dataList });
+        dispatchChartOptions({ type: 'addCategories', payload: categoriesList });
+      }));
   }, [datasetId]);
 
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-    </div>
+    <>
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <div>
+          <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+        </div>
+      )}
+    </>
   );
 }
 

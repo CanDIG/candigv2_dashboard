@@ -4,10 +4,9 @@ import {
   Card, CardBody, CardTitle, Row, Col,
 } from 'reactstrap';
 import NotificationAlert from 'react-notification-alert';
-import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
-import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../components/LoadingIndicator/LoadingIndicator';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify } from '../utils/alert';
 
