@@ -58,7 +58,7 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
             })
               .then((response) => response.json())
               .then((data) => {
-                setDisplayVariantsTable(true)
+                setDisplayVariantsTable(true);
                 setRowData(data.results.variants);
               }).catch(() => {
                 setRowData([]);
