@@ -27,7 +27,6 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
           url: '',
           indexed: false,
           height: 300,
-          autoscale: false,
           columns: {
             chromosome: 1,
             position: 2,
