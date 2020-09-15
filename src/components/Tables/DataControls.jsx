@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {
   Card, Row, Button, Container, InputGroup, InputGroupAddon,
-  InputGroupText, Collapse,
+  InputGroupText, Collapse, Col
 } from 'reactstrap';
 
 import  ClinMetadataDropdown  from '../Dropdown/ClinMetadataDropdown';
