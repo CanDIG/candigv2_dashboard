@@ -2,9 +2,11 @@ import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+
 // Consts
 import BASE_URL from '../../constants/constants';
-import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 
 // Hook
 // Used to keep the previous value of a state or prop
