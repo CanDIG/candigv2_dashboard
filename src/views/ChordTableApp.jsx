@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
 } from '../components/Processing/ChordSchemas';
@@ -6,6 +7,8 @@ import {
 import ChordMetadataTable from '../components/Tables/ChordMetadataTable';
 import ChordSubTable from '../components/Tables/ChordSubTable';
 import { CHORD_METADATA_URL } from '../constants/constants';
+
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -59,10 +62,31 @@ function TableApp() {
   const [featuresTableData, setFeaturesTableData] = useState([]);
   const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
 
+  const { promiseInProgress } = usePromiseTracker();
+
   React.useEffect(() => {
     // fetch data
     try {
-      getMetadataData(setData, setPhenopackets);
+      trackPromise(
+        fetch(`${CHORD_METADATA_URL}/api/individuals`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            return {};
+          })
+          .then((dataResponse) => {
+            const [dataset, phenopacket] = ProcessMetadata(dataResponse.results);
+            setData(dataset);
+            setPhenopackets(phenopacket);
+            CreateColumns(Object.keys(dataset[0]), setColumns);
+          }),
+      );
     } catch (err) {
       // Need better reporting
       console.log(err);
@@ -167,9 +191,15 @@ function TableApp() {
 
   return (
     <div className="content">
-      <ChordMetadataTable columns={columnsM} data={dataM} setActiveID={setActiveID} />
-      <ChordSubTable columns={columnsD} data={dataD} />
-      <ChordSubTable columns={columnsF} data={dataF} />
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          <ChordMetadataTable columns={columnsM} data={dataM} setActiveID={setActiveID} />
+          <ChordSubTable columns={columnsD} data={dataD} />
+          <ChordSubTable columns={columnsF} data={dataF} />
+        </>
+      )}
     </div>
   );
 }

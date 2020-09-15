@@ -75,7 +75,7 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
     } if (cell.isPlaceholder) {
       return ({ background: '#ff000042' });
     }
-    return ({ background: 'white' });
+    return ({ });
   }
 
   function handleAggregation(cell, row) {

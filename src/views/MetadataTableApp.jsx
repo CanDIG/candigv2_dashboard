@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import BASE_URL from '../constants/constants';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
-import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 
 function CreateColumns(columnNames, cb) {
@@ -54,7 +54,6 @@ function TableApp({ datasetId }) {
 
   const { promiseInProgress } = usePromiseTracker();
 
-
   React.useEffect(() => {
     // fetch data
     try {
@@ -74,14 +73,14 @@ function TableApp({ datasetId }) {
               }
               return {};
             })
-            .then((data) => {
-              for (let i = 0; i < data.results[selectedMetadata].length; i += 1) {
-                datasets.push(data.results[selectedMetadata][i]);
+            .then((dataResponse) => {
+              for (let i = 0; i < dataResponse.results[selectedMetadata].length; i += 1) {
+                datasets.push(dataResponse.results[selectedMetadata][i]);
               }
               setData(datasets);
               CreateColumns(Object.keys(datasets[0]), setColumns);
-            })
-          );
+            }),
+        );
       }
     } catch (err) {
       // Need better reporting
@@ -107,9 +106,9 @@ function TableApp({ datasetId }) {
     <div className="content">
       {promiseInProgress === true ? (
         <LoadingIndicator />
-        ) : (
+      ) : (
         <>
-        <ClinMetadataTable columns={columnsM} data={dataM} metadataCallback={setSelectedMetadata} />
+          <ClinMetadataTable columns={columnsM} data={dataM} metadataCallback={setSelectedMetadata} />
         </>
       )}
     </div>
