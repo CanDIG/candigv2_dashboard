@@ -58,9 +58,10 @@ function TableApp({ datasetId }) {
   React.useEffect(() => {
     // fetch data
     try {
+      const datasets = [];
       if (datasetId) {
         trackPromise(
-          fetch(`${BASE_URL}/${metadata}/search`, {
+          fetch(`${BASE_URL}/${selectedMetadata}/search`, {
             method: 'POST',
             body: JSON.stringify({ datasetId }),
             headers: {
@@ -74,8 +75,8 @@ function TableApp({ datasetId }) {
               return {};
             })
             .then((data) => {
-              for (let i = 0; i < data.results[metadata].length; i += 1) {
-                datasets.push(data.results[metadata][i]);
+              for (let i = 0; i < data.results[selectedMetadata].length; i += 1) {
+                datasets.push(data.results[selectedMetadata][i]);
               }
               setData(datasets);
               CreateColumns(Object.keys(datasets[0]), setColumns);
