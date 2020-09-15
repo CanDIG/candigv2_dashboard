@@ -1,34 +1,7 @@
 import styled from 'styled-components';
+import { InputGroup } from 'reactstrap';
 
-const Styles = styled.div`
-  padding: 1rem;
-  overflow: auto;
-
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
-
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-
+const Styles = styled(InputGroup)`
   .pageCountBox {
     margin-left: .3rem;
     // padding: 10px 10px 10px 10px;
@@ -43,19 +16,26 @@ const Styles = styled.div`
     padding: 10px 10px 10px 10px;
   }
 
-  .pageCountOuter {
-    background-color: #e9ecef;
+  .pageCountOuter, .goToPage {
+    background-color: #CBF2FA;
   }
 
-  .goToPage {
-    background-color: #e9ecef;
+  button.btn.btn-secondary.disabled {
+    background-color: #355D78
   }
 
-  .tablePageInput {
+  button.btn.btn-secondary {
+    background-color: #0b65a3
+  }
+
+  .tablePageInput.form-control {
     min-width: 0px;
     width: 10%;
-    flex: none
+    flex: none;
+    background-color: #EEEEEE
   }
+
+
 
   .input-group .input-group-prepend .btn {
     

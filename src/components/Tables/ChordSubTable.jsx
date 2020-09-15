@@ -7,7 +7,7 @@ import {
 
 // reactstrap components
 import { Card, Row } from 'reactstrap';
-import Styles from '../../assets/css/StyledComponents/MetadataTableStyled';
+import Styles from '../../assets/css/StyledComponents/TableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
 import PaginationBar from './Pagination';
@@ -72,7 +72,7 @@ function ChordSubTable({ columns, data }) {
     } if (cell.isPlaceholder) {
       return ({ background: '#ff000042' });
     }
-    return ({ background: 'white' });
+    return ({});
   }
 
   function handleAggregation(cell, row) {
@@ -102,9 +102,11 @@ function ChordSubTable({ columns, data }) {
     <>
       {data.length > 0
         ? (
+          <>
           <Row>
+          <Styles>
+
             <Card>
-              <Styles>
                 <table {...getTableProps()}>
                   <thead>
                     {headerGroups.map((headerGroup) => (
@@ -149,6 +151,12 @@ function ChordSubTable({ columns, data }) {
                     })}
                   </tbody>
                 </table>
+
+            </Card>
+            </Styles>
+
+          </Row>
+          <Row>
                 <PaginationBar
                   canPreviousPage={canPreviousPage}
                   canNextPage={canNextPage}
@@ -161,9 +169,8 @@ function ChordSubTable({ columns, data }) {
                   pageSize={pageSize}
                   pageIndex={pageIndex}
                 />
-              </Styles>
-            </Card>
           </Row>
+        </>
         )
         : <></>}
     </>

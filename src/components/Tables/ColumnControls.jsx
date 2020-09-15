@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 
 import {
   Card, Row, Button, Container, InputGroup, InputGroupAddon,
-  InputGroupText, Collapse,
+  InputGroupText, Collapse, Col,
 } from 'reactstrap';
+import Style from 'assets/css/StyledComponents/ColumnControlStyled'
+
 
 import { GlobalFilter } from '../Filters/filters';
 
@@ -38,12 +40,14 @@ function DataControl({
   const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
   return (
     <>
+    <Style>
       <Row>
+        <Col>
         <InputGroup>
           <InputGroupAddon className="dataControl" addonType="prepend">
             <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
-            <Button className="toggleColumn" color="primary" onClick={toggleIsCollapsed}> Column Toggles </Button>
-            <InputGroupText className="globalSearchText">Search</InputGroupText>
+            <Button className="toggleColumn"  onClick={toggleIsCollapsed}> Column Toggles </Button>
+            <InputGroupText className="globalSearchText">Search:</InputGroupText>
           </InputGroupAddon>
           <GlobalFilter
             className="globalSearchBar"
@@ -52,8 +56,10 @@ function DataControl({
             setGlobalFilter={setGlobalFilter}
           />
         </InputGroup>
+        </Col>
       </Row>
       <Row>
+      <Col>
         <Collapse isOpen={isCollapsed}>
           <Card>
             <Container>
@@ -71,7 +77,9 @@ function DataControl({
             </Container>
           </Card>
         </Collapse>
+        </Col>
       </Row>
+      </Style>
     </>
   );
 }

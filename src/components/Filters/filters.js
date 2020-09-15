@@ -17,6 +17,7 @@ export function GlobalFilter({
 
   return (
     <Input
+      className="globalFilter"
       value={value || ''}
       onChange={(e) => {
         setValue(e.target.value);
