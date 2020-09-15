@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Form, FormGroup, Label, Input,
+  Button, Form, FormGroup, Label, Input, Row, Col, UncontrolledAlert,
 } from 'reactstrap';
 
 import BASE_URL from '../constants/constants';
@@ -48,24 +48,46 @@ function VariantsSearch({ datasetId }) {
       <div className="content">
         <NotificationAlert ref={notifyEl} />
 
-        <Form inline onSubmit={formHandler}>
-          <FormGroup>
-            <Label for="start">Start</Label>
-            <Input required type="number" id="start" />
-          </FormGroup>
+        <Row>
+          <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+            <span
+              data-notify="icon"
+              className="nc-icon nc-bell-55"
+            />
 
-          <FormGroup>
-            <Label for="end">End</Label>
-            <Input required type="number" id="end" />
-          </FormGroup>
+            <b>
+              <p> Reminders: </p>
+              <p> You will need to supply values for all three fields. </p>
+              <p>
+                If variants exist for your search request, you may click on any row of the variants
+                table to search for a list of individuals associated with them.
+              </p>
+            </b>
+          </UncontrolledAlert>
+        </Row>
 
-          <FormGroup>
-            <Label for="referenceName">Reference Name</Label>
-            <Input required type="text" id="referenceName" />
-          </FormGroup>
+        <Col sm="12" md={{ size: 9, offset: 2 }} >
 
-          <Button>Search</Button>
-        </Form>
+          <Form inline onSubmit={formHandler}>
+            <FormGroup>
+              <Label for="start">Start</Label>
+              <Input required type="number" id="start" />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="end">End</Label>
+              <Input required type="number" id="end" />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="referenceName">Reference Name</Label>
+              <Input required type="text" id="referenceName" />
+            </FormGroup>
+
+            <Button>Search</Button>
+          </Form>
+
+        </Col>
 
         {displayVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
       </div>
