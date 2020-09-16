@@ -110,11 +110,12 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
         setGlobalFilter={setGlobalFilter}
         state={state}
         allColumns={allColumns}
-      
+
       />
       <Row>
-        <Card>
-          <Styles>
+
+        <Styles>
+          <Card>
             <table {...getTableProps()}>
               <thead>
                 {headerGroups.map((headerGroup) => (
@@ -171,9 +172,9 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
               pageSize={pageSize}
               pageIndex={pageIndex}
             />
+          </Card>
+        </Styles>
 
-          </Styles>
-        </Card>
       </Row>
     </>
   );

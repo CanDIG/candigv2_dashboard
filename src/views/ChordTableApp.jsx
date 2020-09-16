@@ -118,13 +118,9 @@ function TableApp() {
         CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
       }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      // This catch will always error out at least once due to async timing.
+      // Need a better way to handle the logic
+
     }
   }, [diseaseTableData]);
 
@@ -163,13 +159,9 @@ function TableApp() {
         CreateColumns(Object.keys(featuresTableData[0]), setFeaturesTableColumns);
       }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      // This catch will always error out at least once due to async timing.
+      // Need a better way to handle the logic
+
     }
   }, [featuresTableData]);
 

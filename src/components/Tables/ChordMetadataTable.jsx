@@ -75,7 +75,7 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
     } if (cell.isPlaceholder) {
       return ({ background: '#ff000042' });
     }
-    return ({  });
+    return ({ });
   }
 
   function handleAggregation(cell, row) {
@@ -112,13 +112,13 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
 
       />
       <Row>
-      <Styles>
+        <Styles>
 
-        <Card className="mainTableCard">
+          <Card className="mainTableCard">
             <table className="ChordMainTable" {...getTableProps()}>
               <thead>
                 {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()} >
+                  <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
                       <th scope="row" {...column.getHeaderProps()}>
                         <div>
@@ -160,22 +160,21 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
               </tbody>
             </table>
 
-            </Card>
-            </Styles>
+          </Card>
+        </Styles>
 
-
-            <PaginationBar
-              canPreviousPage={canPreviousPage}
-              canNextPage={canNextPage}
-              pageOptions={pageOptions}
-              pageCount={pageCount}
-              gotoPage={gotoPage}
-              nextPage={nextPage}
-              previousPage={previousPage}
-              setPageSize={setPageSize}
-              pageSize={pageSize}
-              pageIndex={pageIndex}
-            />
+        <PaginationBar
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+        />
 
       </Row>
     </>
