@@ -11,6 +11,7 @@ import { CHORD_METADATA_URL } from '../constants/constants';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify } from '../utils/alert';
 
+
 function CreateColumns(columnNames, setState) {
   const columnList = [];
 
@@ -47,6 +48,7 @@ function TableApp() {
 
   const notifyEl = useRef(null);
 
+
   React.useEffect(() => {
     // fetch data
     try {
@@ -78,11 +80,8 @@ function TableApp() {
           }),
       );
     } catch (err) {
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      // Need better reporting
+      console.log(err);
     }
   }, []);
 
@@ -105,11 +104,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      console.log(err);
     }
   }, [activeID, diseases, phenopackets]);
 
@@ -119,11 +114,8 @@ function TableApp() {
         CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
       }
     } catch (err) {
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      // Need better reporting
+      console.log(err);
     }
   }, [diseaseTableData]);
 
@@ -133,6 +125,8 @@ function TableApp() {
         if (features[activeID]) {
           setFeaturesTableData(features[activeID]);
         } else {
+          console.log(phenopackets[activeID]);
+
           const newFeature = ProcessData(
             activeID,
             phenopackets[activeID].phenotypic_features,
@@ -150,11 +144,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      console.log(err);
     }
   }, [activeID, features, phenopackets]);
 
@@ -164,11 +154,8 @@ function TableApp() {
         CreateColumns(Object.keys(featuresTableData[0]), setFeaturesTableColumns);
       }
     } catch (err) {
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+      // Need better reporting
+      console.log(err);
     }
   }, [featuresTableData]);
 
