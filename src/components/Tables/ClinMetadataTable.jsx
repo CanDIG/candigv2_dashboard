@@ -6,7 +6,7 @@ import {
 } from 'react-table';
 
 // reactstrap components
-import { Card, Row } from 'reactstrap';
+import { Row } from 'reactstrap';
 import Styles from '../../assets/css/StyledComponents/TableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
@@ -115,65 +115,63 @@ function ClinMetadataTable({ columns, data, metadataCallback }) {
       <Row>
 
         <Styles>
-          <Card>
-            <table {...getTableProps()}>
-              <thead>
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>
-                        <div>
-                          {column.canGroupBy ? (
-                          // If the column can be grouped, add a toggle
-                            <span {...column.getGroupByToggleProps()}>
-                              {column.isGrouped ? '🛑 ' : '👊 '}
-                            </span>
-                          ) : null}
-                          <span {...column.getSortByToggleProps()}>
-                            {column.render('Header')}
-                            {/* Add a sort direction indicator */}
-                            {getColumnSortSymbol(column)}
+          <table {...getTableProps()}>
+            <thead>
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>
+                      <div>
+                        {column.canGroupBy ? (
+                        // If the column can be grouped, add a toggle
+                          <span {...column.getGroupByToggleProps()}>
+                            {column.isGrouped ? '🛑 ' : '👊 '}
                           </span>
-                        </div>
-                        {/* Render the columns filter UI */}
-                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                      </th>
+                        ) : null}
+                        <span {...column.getSortByToggleProps()}>
+                          {column.render('Header')}
+                          {/* Add a sort direction indicator */}
+                          {getColumnSortSymbol(column)}
+                        </span>
+                      </div>
+                      {/* Render the columns filter UI */}
+                      <div>{column.canFilter ? column.render('Filter') : null}</div>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                      <td
+                        {...cell.getCellProps()}
+                        style={getCellStyle(cell)}
+                      >
+                        {handleAggregation(cell, row)}
+                      </td>
                     ))}
                   </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {page.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td
-                          {...cell.getCellProps()}
-                          style={getCellStyle(cell)}
-                        >
-                          {handleAggregation(cell, row)}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <PaginationBar
-              canPreviousPage={canPreviousPage}
-              canNextPage={canNextPage}
-              pageOptions={pageOptions}
-              pageCount={pageCount}
-              gotoPage={gotoPage}
-              nextPage={nextPage}
-              previousPage={previousPage}
-              setPageSize={setPageSize}
-              pageSize={pageSize}
-              pageIndex={pageIndex}
-            />
-          </Card>
+                );
+              })}
+            </tbody>
+          </table>
         </Styles>
+        <PaginationBar
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+        />
 
       </Row>
     </>
