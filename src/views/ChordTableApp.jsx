@@ -82,6 +82,12 @@ function TableApp() {
     } catch (err) {
       // Need better reporting
       console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
+      
     }
   }, []);
 
@@ -116,6 +122,11 @@ function TableApp() {
     } catch (err) {
       // Need better reporting
       console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [diseaseTableData]);
 
@@ -156,6 +167,11 @@ function TableApp() {
     } catch (err) {
       // Need better reporting
       console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [featuresTableData]);
 
@@ -174,6 +190,8 @@ function TableApp() {
         <LoadingIndicator />
       ) : (
         <>
+          <NotificationAlert ref={notifyEl} />
+
           <ChordMetadataTable columns={columnsM} data={dataM} setActiveID={setActiveID} />
           <ChordSubTable columns={columnsD} data={dataD} />
           <ChordSubTable columns={columnsF} data={dataF} />

@@ -84,6 +84,7 @@ function TableApp({ datasetId }) {
         <LoadingIndicator />
       ) : (
         <>
+          <NotificationAlert ref={notifyEl} />
           <ClinMetadataTable
             columns={columnsM}
             data={dataM}
