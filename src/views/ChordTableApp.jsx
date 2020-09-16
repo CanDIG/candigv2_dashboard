@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
+import NotificationAlert from 'react-notification-alert';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
 } from '../components/Processing/ChordSchemas';
@@ -10,7 +11,6 @@ import { CHORD_METADATA_URL } from '../constants/constants';
 
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify } from '../utils/alert';
-
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -47,7 +47,6 @@ function TableApp() {
   const { promiseInProgress } = usePromiseTracker();
 
   const notifyEl = useRef(null);
-
 
   React.useEffect(() => {
     // fetch data
@@ -87,7 +86,6 @@ function TableApp() {
         'The resources you requested were not available.',
         'warning',
       );
-      
     }
   }, []);
 

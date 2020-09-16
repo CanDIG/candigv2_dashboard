@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
+import NotificationAlert from 'react-notification-alert';
+
 import BASE_URL from '../constants/constants';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
