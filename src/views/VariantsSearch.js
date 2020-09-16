@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Form, FormGroup, Label, Input, Row, Col, UncontrolledAlert,
+  Button, Form, FormGroup, Label, Input, Row, UncontrolledAlert,
 } from 'reactstrap';
 
 import BASE_URL from '../constants/constants';
@@ -35,6 +35,7 @@ function VariantsSearch({ datasetId }) {
         setRowData(data.results.variants);
       }).catch(() => {
         setRowData([]);
+        setDisplayVariantsTable(false);
         notify(
           notifyEl,
           'No variants were found.',
@@ -66,28 +67,24 @@ function VariantsSearch({ datasetId }) {
           </UncontrolledAlert>
         </Row>
 
-        <Col sm="12" md={{ size: 9, offset: 2 }}>
+        <Form style={{ justifyContent: 'center' }} inline onSubmit={formHandler}>
+          <FormGroup>
+            <Label for="start">Start</Label>
+            <Input required type="number" id="start" />
+          </FormGroup>
 
-          <Form inline onSubmit={formHandler}>
-            <FormGroup>
-              <Label for="start">Start</Label>
-              <Input required type="number" id="start" />
-            </FormGroup>
+          <FormGroup>
+            <Label for="end">End</Label>
+            <Input required type="number" id="end" />
+          </FormGroup>
 
-            <FormGroup>
-              <Label for="end">End</Label>
-              <Input required type="number" id="end" />
-            </FormGroup>
+          <FormGroup>
+            <Label for="referenceName">Reference Name</Label>
+            <Input required type="text" id="referenceName" />
+          </FormGroup>
 
-            <FormGroup>
-              <Label for="referenceName">Reference Name</Label>
-              <Input required type="text" id="referenceName" />
-            </FormGroup>
-
-            <Button>Search</Button>
-          </Form>
-
-        </Col>
+          <Button>Search</Button>
+        </Form>
 
         {displayVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
       </div>

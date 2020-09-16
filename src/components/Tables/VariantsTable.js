@@ -12,6 +12,7 @@ import '../../assets/css/VariantsSearch.css';
 
 function VariantsTable({ rowData, datasetId }) {
   const [individualsRowData, setIndividualsRowData] = useState([]);
+  const [displayIndividualsTable, setDisplayIndividualsTable] = useState(false);
   const notifyEl = useRef(null);
 
   const columnDefs = [
@@ -71,8 +72,10 @@ function VariantsTable({ rowData, datasetId }) {
           .then((chordData) => {
             if (chordData.results === undefined) {
               setIndividualsRowData([]);
+              setDisplayIndividualsTable(false);
               throw new Error('The variant you selected does not have associated individuals.');
             }
+            setDisplayIndividualsTable(true);
             setIndividualsRowData(chordData.results);
           }).catch((err) => {
             notify(
@@ -122,7 +125,7 @@ function VariantsTable({ rowData, datasetId }) {
         />
       </div>
 
-      <IndividualTable individualsRowData={individualsRowData} />
+      {displayIndividualsTable ? <IndividualTable individualsRowData={individualsRowData} /> : null}
     </>
   );
 }
