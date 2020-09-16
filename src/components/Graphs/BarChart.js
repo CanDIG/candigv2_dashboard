@@ -4,6 +4,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../../utils/alert';
 
 // Consts
 import BASE_URL from '../../constants/constants';
@@ -75,10 +76,9 @@ function BarChart({
   };
 
   const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
-
   const { promiseInProgress } = usePromiseTracker();
-
   const prevDatasetId = usePrevious(datasetId);
+  const notifyEl = useRef(null);
 
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
@@ -106,6 +106,9 @@ function BarChart({
       })
         .then((response) => response.json())
         .then((data) => {
+          if (!data.results[table][0]) {
+            throw new Error();
+          }
           const counts = data.results[table][0][field];
           const categories = [];
           const dataList = Object.keys(counts).map((key) => {
@@ -117,11 +120,20 @@ function BarChart({
 
           dispatchChartOptions({ type: 'addSeries', payload: dataList });
           dispatchChartOptions({ type: 'addCategories', payload: categories });
+        }).catch(() => {
+          dispatchChartOptions({ type: 'addSeries', payload: [] });
+          dispatchChartOptions({ type: 'addCategories', payload: [] });
+          notify(
+            notifyEl,
+            'Some resources you requested were not available.',
+            'warning',
+          );
         }));
     }
   });
   return (
     <>
+      <NotificationAlert ref={notifyEl} />
       {promiseInProgress === true ? (
         <LoadingIndicator />
       ) : (

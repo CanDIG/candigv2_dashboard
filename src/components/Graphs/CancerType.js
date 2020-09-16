@@ -4,6 +4,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../../utils/alert';
 
 // Consts
 import BASE_URL from '../../constants/constants';
@@ -70,6 +71,7 @@ function CancerType({ datasetId }) {
   const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
   const { promiseInProgress } = usePromiseTracker();
   const prevDatasetId = usePrevious(datasetId);
+  const notifyEl = useRef(null);
 
   /*
    * Fetch cancer information from the server after the component is added to the DOM
@@ -101,6 +103,9 @@ function CancerType({ datasetId }) {
       })
         .then((response) => response.json())
         .then((data) => {
+          if (!data.results.diagnoses[0]) {
+            throw new Error();
+          }
           const { cancerType } = data.results.diagnoses[0];
 
           const graphData = Object.keys(cancerType).map(
@@ -108,12 +113,20 @@ function CancerType({ datasetId }) {
           );
 
           dispatchChartOptions({ type: 'addSeries', payload: graphData });
+        }).catch(() => {
+          dispatchChartOptions({ type: 'addSeries', payload: [] });
+          notify(
+            notifyEl,
+            'Some resources you requested were not available.',
+            'warning',
+          );
         }));
     }
   });
 
   return (
     <>
+      <NotificationAlert ref={notifyEl} />
       {promiseInProgress === true ? (
         <LoadingIndicator />
       ) : (

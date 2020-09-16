@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Card, CardBody, CardTitle, Row, Col,
 } from 'reactstrap';
-import NotificationAlert from 'react-notification-alert';
 
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import LoadingIndicator, {
@@ -11,7 +10,7 @@ import LoadingIndicator, {
   usePromiseTracker,
 } from '../components/LoadingIndicator/LoadingIndicator';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
-import { notify } from '../utils/alert';
+import { notify, NotificationAlert } from '../utils/alert';
 
 import { CHORD_METADATA_URL } from '../constants/constants';
 

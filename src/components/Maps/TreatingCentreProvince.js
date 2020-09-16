@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
@@ -6,6 +6,7 @@ import mapDataCanada from '@highcharts/map-collection/countries/ca/ca-all.geo.js
 import PropTypes from 'prop-types';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../../utils/alert';
 
 // Consts
 import BASE_URL from '../../constants/constants';
@@ -81,6 +82,7 @@ function reducer(state, action) {
 function TreatingCentreProvince({ datasetId }) {
   const { promiseInProgress } = usePromiseTracker();
   const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
+  const notifyEl = useRef(null);
 
   useEffect(() => {
     // Mimic the didUpdate function
@@ -126,6 +128,9 @@ function TreatingCentreProvince({ datasetId }) {
               'Quebec', 'Saskatchewan', 'Yukon Territory'];
 
             if (data) {
+              if (!data.results.enrollments[0]) {
+                throw new Error();
+              }
               const { treatingCentreProvince } = data.results.enrollments[0];
 
               Object.keys(treatingCentreProvince).forEach((name) => {
@@ -143,6 +148,13 @@ function TreatingCentreProvince({ datasetId }) {
               });
             }
             dispatchChartOptions({ type: 'addSeries', payload: dataCount });
+          }).catch(() => {
+            notify(
+              notifyEl,
+              'Some resources you requested were not available.',
+              'warning',
+            );
+            dispatchChartOptions({ type: 'addSeries', payload: [] });
           }));
       }
     } catch (err) {
@@ -152,6 +164,7 @@ function TreatingCentreProvince({ datasetId }) {
 
   return (
     <>
+      <NotificationAlert ref={notifyEl} />
       {promiseInProgress === true ? (
         <LoadingIndicator />
       ) : (
