@@ -77,17 +77,15 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
 
   return (
     <>
-      <div className="content">
-        <NotificationAlert ref={notifyEl} />
+      <NotificationAlert ref={notifyEl} />
 
-        <div
-          className="ml-auto mr-auto"
-          style={{ background: 'white', marginTop: '15px' }}
-          ref={igvBrowser}
-        />
+      <div
+        className="ml-auto mr-auto"
+        style={{ background: 'white', marginTop: '15px' }}
+        ref={igvBrowser}
+      />
 
-        {displayVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
-      </div>
+      {displayVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
     </>
   );
 }
