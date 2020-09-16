@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+import { notify, NotificationAlert } from '../../utils/alert';
+
 // Consts
 import BASE_URL from '../../constants/constants';
 
@@ -9,6 +12,7 @@ function CustomChart({
   datasetId, table, field, chartType, datasetName,
 }) {
   const [chartOptions, setChartOptions] = useState({});
+  const notifyEl = useRef(null);
 
   function splitString(newString) {
     const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -44,6 +48,9 @@ function CustomChart({
         .then((data) => {
           if (data) {
             let options = {};
+            if (!data.results[table][0]) {
+              throw new Error();
+            }
             const result = data.results[table][0][field];
             if (chartType === 'pie') {
               options = {
@@ -82,12 +89,51 @@ function CustomChart({
 
             setChartOptions(options);
           }
+        }).catch(() => {
+          let options = {};
+          if (chartType === 'pie') {
+            options = {
+              credits: {
+                enabled: false,
+              },
+              chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: chartType,
+              },
+              title: { text: `Distribution of ${splitString(field)}` },
+              subtitle: {
+                text: `${datasetName} ${splitString(table)}`,
+              },
+              series: {
+                data: [],
+              },
+            };
+          } else {
+            options = {
+              chart: { type: chartType },
+              title: { text: `Distribution of ${splitString(field)}` },
+              subtitle: {
+                text: `${datasetName} ${splitString(table)}`,
+              },
+              series: [{ data: [] }],
+              xAxis: { categories: [] },
+            };
+          }
+          setChartOptions(options);
+          notify(
+            notifyEl,
+            'Some resources you requested were not available.',
+            'warning',
+          );
         });
     }
   }, [datasetId, table, field, chartType, datasetName]);
 
   return (
     <div>
+      <NotificationAlert ref={notifyEl} />
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />
     </div>
   );
