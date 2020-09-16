@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useEffect, useRef, useReducer,
+} from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -8,17 +10,51 @@ import { notify, NotificationAlert } from '../../utils/alert';
 // Consts
 import BASE_URL from '../../constants/constants';
 
+function splitString(newString) {
+  const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
+  const capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
+  return capitalized;
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'addPieChart':
+      return {
+        credits: {
+          enabled: false,
+        },
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: action.payload.chartType,
+        },
+        title: { text: `Distribution of ${splitString(action.payload.field)}` },
+        subtitle: {
+          text: `${action.payload.datasetName} ${splitString(action.payload.table)}`,
+        },
+        series: [{ data: action.payload.graphData }],
+      };
+    case 'addRegularChart':
+      return {
+        chart: { type: action.payload.chartType },
+        title: { text: `Distribution of ${splitString(action.payload.field)}` },
+        subtitle: {
+          text: `${action.payload.datasetName} ${splitString(action.payload.table)}`,
+        },
+        series: [{ data: action.payload.graphData }],
+        xAxis: { categories: action.payload.categories },
+      };
+    default:
+      throw new Error();
+  }
+}
+
 function CustomChart({
   datasetId, table, field, chartType, datasetName,
 }) {
-  const [chartOptions, setChartOptions] = useState({});
+  const [chartOptions, dispatchChartOptions] = useReducer(reducer, {});
   const notifyEl = useRef(null);
-
-  function splitString(newString) {
-    const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
-    const capitalized = splitted.charAt(0).toUpperCase() + splitted.substr(1);
-    return capitalized;
-  }
 
   useEffect(() => {
     if (datasetId) {
@@ -47,86 +83,66 @@ function CustomChart({
         .then((response) => response.json())
         .then((data) => {
           if (data) {
-            let options = {};
             if (!data.results[table][0]) {
               throw new Error();
             }
             const result = data.results[table][0][field];
             if (chartType === 'pie') {
-              options = {
-                credits: {
-                  enabled: false,
-                },
-                chart: {
-                  plotBackgroundColor: null,
-                  plotBorderWidth: null,
-                  plotShadow: false,
-                  type: chartType,
-                },
-                title: { text: `Distribution of ${splitString(field)}` },
-                subtitle: {
-                  text: `${datasetName} ${splitString(table)}`,
-                },
-              };
               const graphData = Object.keys(result).map((key) => ({ name: key, y: result[key] }));
-              options.series = [{ data: graphData }];
-            } else {
-              options = {
-                chart: { type: chartType },
-                title: { text: `Distribution of ${splitString(field)}` },
-                subtitle: {
-                  text: `${datasetName} ${splitString(table)}`,
+              dispatchChartOptions({
+                type: 'addPieChart',
+                payload: {
+                  chartType, graphData, field, datasetName, table,
                 },
-                series: [{ data: [] }],
-                xAxis: { categories: [] },
-              };
+              });
+            } else {
+              const graphData = [];
+              const categories = [];
               Object.keys(result).map((key) => {
-                options.series[0].data.push(result[key]);
-                options.xAxis.categories.push(key);
+                graphData.push(result[key]);
+                categories.push(key);
                 return 1;
               });
-            }
 
-            setChartOptions(options);
+              dispatchChartOptions({
+                type: 'addRegularChart',
+                payload: {
+                  graphData,
+                  categories,
+                  chartType,
+                  field,
+                  datasetName,
+                  table,
+                },
+              });
+            }
           }
         }).catch(() => {
-          let options = {};
-          if (chartType === 'pie') {
-            options = {
-              credits: {
-                enabled: false,
-              },
-              chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: chartType,
-              },
-              title: { text: `Distribution of ${splitString(field)}` },
-              subtitle: {
-                text: `${datasetName} ${splitString(table)}`,
-              },
-              series: {
-                data: [],
-              },
-            };
-          } else {
-            options = {
-              chart: { type: chartType },
-              title: { text: `Distribution of ${splitString(field)}` },
-              subtitle: {
-                text: `${datasetName} ${splitString(table)}`,
-              },
-              series: [{ data: [] }],
-              xAxis: { categories: [] },
-            };
-          }
-          setChartOptions(options);
           notify(
             notifyEl,
             'Some resources you requested were not available.',
             'warning',
           );
+          if (chartType === 'pie') {
+            dispatchChartOptions({
+              type: 'addPieChart',
+              payload: {
+                chartType, graphData: [], field, datasetName, table,
+              },
+            });
+          } else {
+            dispatchChartOptions({
+              type: 'addRegularChart',
+              payload: {
+                graphData: [],
+                categories: [],
+                chartType,
+                field,
+                datasetName,
+                table,
+              },
+            });
+          }
         });
     }
   }, [datasetId, table, field, chartType, datasetName]);
