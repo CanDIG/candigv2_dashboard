@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../../utils/alert';
+
 // Consts
 import BASE_URL from '../../constants/constants';
 
@@ -17,35 +21,57 @@ function usePrevious(value) {
   return ref.current;
 }
 
+const initialState = {
+  credits: {
+    enabled: false,
+  },
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'pie',
+  },
+  title: {
+    text: 'Cancer type',
+  },
+  series: [
+    {
+      colorByPoint: true,
+      showInLegend: false,
+      data: [],
+    },
+  ],
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'addSeries':
+      return {
+        ...state,
+        ...{
+          series: [
+            {
+              data: action.payload,
+              colorByPoint: true,
+              showInLegend: false,
+            }],
+        },
+      };
+    default:
+      throw new Error();
+  }
+}
+
 /*
  * Pie graph component for type of cancer data
  * @param {string} datasetId
  */
 
 function CancerType({ datasetId }) {
-  const [chartOptions, setChartOptions] = useState({
-    credits: {
-      enabled: false,
-    },
-    chart: {
-      plotBackgroundColor: null,
-      plotBorderWidth: null,
-      plotShadow: false,
-      type: 'pie',
-    },
-    title: {
-      text: 'Cancer type',
-    },
-    series: [
-      {
-        colorByPoint: true,
-        showInLegend: false,
-        data: [],
-      },
-    ],
-  });
-
+  const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
+  const { promiseInProgress } = usePromiseTracker();
   const prevDatasetId = usePrevious(datasetId);
+  const notifyEl = useRef(null);
 
   /*
    * Fetch cancer information from the server after the component is added to the DOM
@@ -53,7 +79,7 @@ function CancerType({ datasetId }) {
    */
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      fetch(`${BASE_URL}/count`, {
+      trackPromise(fetch(`${BASE_URL}/count`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,27 +103,38 @@ function CancerType({ datasetId }) {
       })
         .then((response) => response.json())
         .then((data) => {
+          if (!data.results.diagnoses[0]) {
+            throw new Error();
+          }
           const { cancerType } = data.results.diagnoses[0];
 
           const graphData = Object.keys(cancerType).map(
             (key) => ({ name: key, y: cancerType[key] }),
           );
 
-          setChartOptions({
-            series: [
-              {
-                data: graphData,
-              },
-            ],
-          });
-        });
+          dispatchChartOptions({ type: 'addSeries', payload: graphData });
+        }).catch(() => {
+          dispatchChartOptions({ type: 'addSeries', payload: [] });
+          notify(
+            notifyEl,
+            'Some resources you requested were not available.',
+            'warning',
+          );
+        }));
     }
   });
 
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-    </div>
+    <>
+      <NotificationAlert ref={notifyEl} />
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <div>
+          <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+        </div>
+      )}
+    </>
   );
 }
 

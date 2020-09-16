@@ -9,7 +9,7 @@ import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 
 /*
  * Patient Overview view component
- * @param {arrat} patientsList
+ * @param {array} patientsList
  * @param {string} datasetName
  */
 function PatientsOverview({ patientsList, datasetName }) {
