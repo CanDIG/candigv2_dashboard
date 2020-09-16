@@ -66,7 +66,7 @@ function VariantsSearch({ datasetId }) {
           </UncontrolledAlert>
         </Row>
 
-        <Col sm="12" md={{ size: 9, offset: 2 }} >
+        <Col sm="12" md={{ size: 9, offset: 2 }}>
 
           <Form inline onSubmit={formHandler}>
             <FormGroup>
