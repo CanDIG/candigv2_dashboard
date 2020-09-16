@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
@@ -9,8 +9,9 @@ import ChordSubTable from '../components/Tables/ChordSubTable';
 import { CHORD_METADATA_URL } from '../constants/constants';
 
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
+import { notify } from '../utils/alert';
 
-function CreateColumns(columnNames, cb) {
+function CreateColumns(columnNames, setState) {
   const columnList = [];
 
   Object.values(columnNames).forEach((name) => {
@@ -23,31 +24,11 @@ function CreateColumns(columnNames, cb) {
     };
     columnList.push(column);
   });
-  cb(columnList);
+  setState(columnList);
 }
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
-}
-
-function getMetadataData(setData, setPhenopackets) {
-  return fetch(`${CHORD_METADATA_URL}/api/individuals`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      return {};
-    })
-    .then((data) => {
-      const [dataset, phenopackets] = ProcessMetadata(data.results);
-      setData(dataset);
-      setPhenopackets(phenopackets);
-    });
 }
 
 function TableApp() {
@@ -63,6 +44,8 @@ function TableApp() {
   const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
 
   const { promiseInProgress } = usePromiseTracker();
+
+  const notifyEl = useRef(null);
 
   React.useEffect(() => {
     // fetch data
@@ -85,26 +68,23 @@ function TableApp() {
             setData(dataset);
             setPhenopackets(phenopacket);
             CreateColumns(Object.keys(dataset[0]), setColumns);
+          })
+          .catch(() => {
+            notify(
+              notifyEl,
+              'The resources you requested were not available.',
+              'warning',
+            );
           }),
       );
     } catch (err) {
-      // Need better reporting
-      console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, []);
-
-  React.useEffect(() => {
-    // Separate Effect since state change is async and columns depends on data
-    // Not entirely sure if necessary
-    try {
-      if (data[0]) {
-        CreateColumns(Object.keys(data[0]), setColumns);
-      }
-    } catch (err) {
-      // Need better reporting
-      console.log(err);
-    }
-  }, [data]);
 
   React.useEffect(() => {
     try {
@@ -125,7 +105,11 @@ function TableApp() {
         }
       }
     } catch (err) {
-      console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [activeID, diseases, phenopackets]);
 
@@ -135,8 +119,11 @@ function TableApp() {
         CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
       }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [diseaseTableData]);
 
@@ -146,8 +133,6 @@ function TableApp() {
         if (features[activeID]) {
           setFeaturesTableData(features[activeID]);
         } else {
-          console.log(phenopackets[activeID]);
-
           const newFeature = ProcessData(
             activeID,
             phenopackets[activeID].phenotypic_features,
@@ -165,7 +150,11 @@ function TableApp() {
         }
       }
     } catch (err) {
-      console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [activeID, features, phenopackets]);
 
@@ -175,8 +164,11 @@ function TableApp() {
         CreateColumns(Object.keys(featuresTableData[0]), setFeaturesTableColumns);
       }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [featuresTableData]);
 
