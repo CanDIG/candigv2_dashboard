@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../../utils/alert';
+
 // Consts
 import BASE_URL from '../../constants/constants';
 
@@ -17,6 +21,27 @@ function usePrevious(value) {
   return ref.current;
 }
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'addSeries':
+      return {
+        ...state,
+        ...{
+          series: [
+            {
+              data: action.payload,
+              colorByPoint: true,
+              showInLegend: false,
+            }],
+        },
+      };
+    case 'addCategories':
+      return { ...state, ...{ xAxis: { categories: action.payload } } };
+    default:
+      throw new Error();
+  }
+}
+
 /*
  * Component for bar chart graphs
  * @param {string} datasetId
@@ -27,7 +52,7 @@ function usePrevious(value) {
 function BarChart({
   datasetId, table, field, title,
 }) {
-  const [chartOptions, setChartOptions] = useState({
+  const initialState = {
     credits: {
       enabled: false,
     },
@@ -48,13 +73,16 @@ function BarChart({
         data: [],
       },
     ],
-  });
+  };
 
+  const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
+  const { promiseInProgress } = usePromiseTracker();
   const prevDatasetId = usePrevious(datasetId);
+  const notifyEl = useRef(null);
 
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      fetch(`${BASE_URL}/count`, {
+      trackPromise(fetch(`${BASE_URL}/count`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -78,6 +106,9 @@ function BarChart({
       })
         .then((response) => response.json())
         .then((data) => {
+          if (!data.results[table][0]) {
+            throw new Error();
+          }
           const counts = data.results[table][0][field];
           const categories = [];
           const dataList = Object.keys(counts).map((key) => {
@@ -87,23 +118,30 @@ function BarChart({
             return counts[key];
           });
 
-          setChartOptions({
-            xAxis: {
-              categories,
-            },
-            series: [
-              {
-                data: dataList,
-              },
-            ],
-          });
-        });
+          dispatchChartOptions({ type: 'addSeries', payload: dataList });
+          dispatchChartOptions({ type: 'addCategories', payload: categories });
+        }).catch(() => {
+          dispatchChartOptions({ type: 'addSeries', payload: [] });
+          dispatchChartOptions({ type: 'addCategories', payload: [] });
+          notify(
+            notifyEl,
+            'Some resources you requested were not available.',
+            'warning',
+          );
+        }));
     }
   });
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-    </div>
+    <>
+      <NotificationAlert ref={notifyEl} />
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <div>
+          <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+        </div>
+      )}
+    </>
   );
 }
 

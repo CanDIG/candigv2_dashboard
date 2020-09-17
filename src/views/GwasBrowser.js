@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
 import GwasInstance from '../components/IGV/GwasInstance';
 import { notify, NotificationAlert } from '../utils/alert';
@@ -6,7 +7,7 @@ import { notify, NotificationAlert } from '../utils/alert';
 // Consts
 import { DRS } from '../constants/constants';
 
-function GwasBrowser() {
+function GwasBrowser({ datasetId }) {
   /** *
    * A functional component that renders a view with a IGV.js browser.
    */
@@ -88,10 +89,18 @@ function GwasBrowser() {
           { disabledElementList.concat(gwasDropdown) }
         </Input>
 
-        <GwasInstance selectedGwasName={selectedGwasName} selectedGwasUrl={selectedGwasUrl} />
+        <GwasInstance
+          selectedGwasName={selectedGwasName}
+          selectedGwasUrl={selectedGwasUrl}
+          datasetId={datasetId}
+        />
       </div>
     </>
   );
 }
+
+GwasBrowser.propTypes = {
+  datasetId: PropTypes.string.isRequired,
+};
 
 export default GwasBrowser;

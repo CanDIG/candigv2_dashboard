@@ -6,7 +6,10 @@ import {
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
-import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
+import LoadingIndicator, {
+  trackPromise,
+  usePromiseTracker,
+} from '../components/LoadingIndicator/LoadingIndicator';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
 
@@ -145,6 +148,8 @@ function IndividualsOverview() {
             'The resources you requested were not available.',
             'warning',
           );
+          setIndividualCount('Not available');
+          setDiseasesSum('Not available');
         }),
     );
   }, [didFetch]);
@@ -152,57 +157,65 @@ function IndividualsOverview() {
   return (
     <>
       <div className="content">
-        {promiseInProgress === true ? (
-          <LoadingIndicator />
-        ) : (
-          <>
-            <NotificationAlert ref={notifyEl} />
-            <Row>
-              <Col lg="6" md="6" sm="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col md="4" xs="5">
-                        <div className="icon-big text-center icon-warning">
-                          <i className="nc-icon nc-single-02 text-primary" />
-                        </div>
-                      </Col>
-                      <Col md="8" xs="7">
-                        <div className="numbers">
-                          <p className="card-category">Individuals</p>
+        <>
+          <NotificationAlert ref={notifyEl} />
+          <Row>
+            <Col lg="6" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-single-02 text-primary" />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Individuals</p>
+                        {promiseInProgress === true ? (
+                          <LoadingIndicator />
+                        ) : (
                           <CardTitle tag="p">{individualCounter}</CardTitle>
-                          <p />
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" md="6" sm="6">
-                <Card className="card-stats">
-                  <CardBody>
-                    <Row>
-                      <Col md="4" xs="5">
-                        <div className="icon-big text-center icon-warning">
-                          <i className="nc-icon nc-favourite-28 text-danger" />
-                        </div>
-                      </Col>
-                      <Col md="8" xs="7">
-                        <div className="numbers">
-                          <p className="card-category">Diseases</p>
+                        )}
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="6" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-favourite-28 text-danger" />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Diseases</p>
+                        {promiseInProgress === true ? (
+                          <LoadingIndicator />
+                        ) : (
                           <CardTitle tag="p">{diseasesSum}</CardTitle>
-                          <p />
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg="6" md="12" sm="12">
-                <Card>
-                  <CardBody>
+                        )}
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg="6" md="12" sm="12">
+              <Card>
+                <CardBody>
+                  {promiseInProgress === true ? (
+                    <LoadingIndicator />
+                  ) : (
                     <CustomOfflineChart
                       datasetName=""
                       dataObject={genderObject}
@@ -210,12 +223,16 @@ function IndividualsOverview() {
                       barTitle="Gender"
                       height="400px; auto"
                     />
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" md="12" sm="12">
-                <Card>
-                  <CardBody>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="6" md="12" sm="12">
+              <Card>
+                <CardBody>
+                  {promiseInProgress === true ? (
+                    <LoadingIndicator />
+                  ) : (
                     <CustomOfflineChart
                       datasetName=""
                       dataObject={diseasesObject}
@@ -223,14 +240,18 @@ function IndividualsOverview() {
                       barTitle="Diseases"
                       height="400px; auto"
                     />
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg="6" md="12" sm="12">
-                <Card>
-                  <CardBody>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg="6" md="12" sm="12">
+              <Card>
+                <CardBody>
+                  {promiseInProgress === true ? (
+                    <LoadingIndicator />
+                  ) : (
                     <CustomOfflineChart
                       datasetName=""
                       dataObject={ethnicityObject}
@@ -238,24 +259,32 @@ function IndividualsOverview() {
                       barTitle="Ethnicity"
                       height="400px; auto"
                     />
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" md="6" sm="6">
-                <Card>
-                  <CardBody>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="6" md="6" sm="6">
+              <Card>
+                <CardBody>
+                  {promiseInProgress === true ? (
+                    <LoadingIndicator />
+                  ) : (
                     <BoxPlotChart
                       chartTitle="Weight"
                       plotObject={boxPlotObject}
                     />
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg="6" md="12" sm="12">
-                <Card>
-                  <CardBody>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg="6" md="12" sm="12">
+              <Card>
+                <CardBody>
+                  {promiseInProgress === true ? (
+                    <LoadingIndicator />
+                  ) : (
                     <CustomOfflineChart
                       datasetName=""
                       dataObject={doBObject}
@@ -263,12 +292,16 @@ function IndividualsOverview() {
                       barTitle="Date of Birth"
                       height="400px; auto"
                     />
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" md="12" sm="12">
-                <Card>
-                  <CardBody>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="6" md="12" sm="12">
+              <Card>
+                <CardBody>
+                  {promiseInProgress === true ? (
+                    <LoadingIndicator />
+                  ) : (
                     <CustomOfflineChart
                       datasetName=""
                       dataObject={educationObject}
@@ -276,12 +309,12 @@ function IndividualsOverview() {
                       barTitle="Education"
                       height="400px; auto"
                     />
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </>
-        )}
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </>
       </div>
     </>
   );
