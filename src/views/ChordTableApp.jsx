@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
-import NotificationAlert from 'react-notification-alert';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
 } from '../components/Processing/ChordSchemas';
@@ -10,7 +9,7 @@ import ChordSubTable from '../components/Tables/ChordSubTable';
 import { CHORD_METADATA_URL } from '../constants/constants';
 
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
-import { notify } from '../utils/alert';
+import { notify, NotificationAlert } from '../utils/alert';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
