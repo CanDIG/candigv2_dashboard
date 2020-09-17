@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Form, FormGroup, Label, Input,
+  Button, Form, FormGroup, Label, Input, Row, UncontrolledAlert,
 } from 'reactstrap';
 
 import BASE_URL from '../constants/constants';
@@ -13,6 +13,7 @@ import '../assets/css/VariantsSearch.css';
 
 function VariantsSearch({ datasetId }) {
   const [rowData, setRowData] = useState([]);
+  const [displayVariantsTable, setDisplayVariantsTable] = useState(false);
   const notifyEl = useRef(null);
 
   const formHandler = (e) => {
@@ -30,9 +31,11 @@ function VariantsSearch({ datasetId }) {
     })
       .then((response) => response.json())
       .then((data) => {
+        setDisplayVariantsTable(true);
         setRowData(data.results.variants);
       }).catch(() => {
         setRowData([]);
+        setDisplayVariantsTable(false);
         notify(
           notifyEl,
           'No variants were found.',
@@ -46,7 +49,25 @@ function VariantsSearch({ datasetId }) {
       <div className="content">
         <NotificationAlert ref={notifyEl} />
 
-        <Form inline onSubmit={formHandler}>
+        <Row>
+          <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+            <span
+              data-notify="icon"
+              className="nc-icon nc-bell-55"
+            />
+
+            <b>
+              <p> Reminders: </p>
+              <p> You will need to supply values for all three fields. </p>
+              <p>
+                If variants exist for your search request, you may click on any row of the variants
+                table to search for a list of individuals associated with them.
+              </p>
+            </b>
+          </UncontrolledAlert>
+        </Row>
+
+        <Form inline onSubmit={formHandler} style={{ justifyContent: 'center' }}>
           <FormGroup>
             <Label for="start">Start</Label>
             <Input required type="number" id="start" />
@@ -65,7 +86,7 @@ function VariantsSearch({ datasetId }) {
           <Button>Search</Button>
         </Form>
 
-        <VariantsTable rowData={rowData} datasetId={datasetId} />
+        {displayVariantsTable ? <VariantsTable rowData={rowData} datasetId={datasetId} /> : null }
       </div>
     </>
   );
