@@ -154,7 +154,8 @@ class Header extends React.Component {
               {this.props.datasetVisible === true ? 
                 (<DatasetsDropdown updateState={this.props.updateState}/>) :
                 <></> }
-              <Dropdown
+              {/* Leaving this commented out for now */}
+              {/* <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
                 toggle={(e) => this.dropdownToggle(e)}
@@ -170,15 +171,15 @@ class Header extends React.Component {
                   <DropdownItem tag="a">Another Action</DropdownItem>
                   <DropdownItem tag="a">Something else here</DropdownItem>
                 </DropdownMenu>
-              </Dropdown>
-              <NavItem>
+              </Dropdown> */}
+              {/* <NavItem>
                 <Link to="#pablo" className="nav-link btn-rotate">
                   <i className="nc-icon nc-settings-gear-65" />
                   <p>
                     <span className="d-lg-none d-md-block">Account</span>
                   </p>
                 </Link>
-              </NavItem>
+              </NavItem> */}
             </Nav>
           </Collapse>
         </Container>

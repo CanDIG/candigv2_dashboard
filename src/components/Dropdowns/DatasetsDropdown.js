@@ -88,7 +88,7 @@ function DatasetsDropdown({ updateState }) {
       <DropdownToggle caret nav style={{ color: 'white', fontSize: 12 }}>
         {selectedDataset}
       </DropdownToggle>
-      <DropdownMenu>{datasetList}</DropdownMenu>
+      <DropdownMenu right>{datasetList}</DropdownMenu>
     </Dropdown>
   );
 }
