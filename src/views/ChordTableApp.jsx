@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
 } from '../components/Processing/ChordSchemas';
@@ -7,7 +8,10 @@ import ChordMetadataTable from '../components/Tables/ChordMetadataTable';
 import ChordSubTable from '../components/Tables/ChordSubTable';
 import { CHORD_METADATA_URL } from '../constants/constants';
 
-function CreateColumns(columnNames, cb) {
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../utils/alert';
+
+function CreateColumns(columnNames, setState) {
   const columnList = [];
 
   Object.values(columnNames).forEach((name) => {
@@ -20,31 +24,11 @@ function CreateColumns(columnNames, cb) {
     };
     columnList.push(column);
   });
-  cb(columnList);
+  setState(columnList);
 }
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
-}
-
-function getMetadataData(setData, setPhenopackets) {
-  return fetch(`${CHORD_METADATA_URL}/api/individuals`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      return {};
-    })
-    .then((data) => {
-      const [dataset, phenopackets] = ProcessMetadata(data.results);
-      setData(dataset);
-      setPhenopackets(phenopackets);
-    });
 }
 
 function TableApp() {
@@ -59,28 +43,50 @@ function TableApp() {
   const [featuresTableData, setFeaturesTableData] = useState([]);
   const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
 
+  const { promiseInProgress } = usePromiseTracker();
+
+  const notifyEl = useRef(null);
+
   React.useEffect(() => {
     // fetch data
     try {
-      getMetadataData(setData, setPhenopackets);
+      trackPromise(
+        fetch(`${CHORD_METADATA_URL}/api/individuals`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            return {};
+          })
+          .then((dataResponse) => {
+            const [dataset, phenopacket] = ProcessMetadata(dataResponse.results);
+            setData(dataset);
+            setPhenopackets(phenopacket);
+            CreateColumns(Object.keys(dataset[0]), setColumns);
+          })
+          .catch(() => {
+            notify(
+              notifyEl,
+              'The resources you requested were not available.',
+              'warning',
+            );
+          }),
+      );
     } catch (err) {
       // Need better reporting
       console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, []);
-
-  React.useEffect(() => {
-    // Separate Effect since state change is async and columns depends on data
-    // Not entirely sure if necessary
-    try {
-      if (data[0]) {
-        CreateColumns(Object.keys(data[0]), setColumns);
-      }
-    } catch (err) {
-      // Need better reporting
-      console.log(err);
-    }
-  }, [data]);
 
   React.useEffect(() => {
     try {
@@ -111,8 +117,9 @@ function TableApp() {
         CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
       }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
+      // This catch will always error out at least once due to async timing.
+      // Need a better way to handle the logic
+
     }
   }, [diseaseTableData]);
 
@@ -151,8 +158,9 @@ function TableApp() {
         CreateColumns(Object.keys(featuresTableData[0]), setFeaturesTableColumns);
       }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
+      // This catch will always error out at least once due to async timing.
+      // Need a better way to handle the logic
+
     }
   }, [featuresTableData]);
 
@@ -167,9 +175,17 @@ function TableApp() {
 
   return (
     <div className="content">
-      <ChordMetadataTable columns={columnsM} data={dataM} setActiveID={setActiveID} />
-      <ChordSubTable columns={columnsD} data={dataD} />
-      <ChordSubTable columns={columnsF} data={dataF} />
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          <NotificationAlert ref={notifyEl} />
+
+          <ChordMetadataTable columns={columnsM} data={dataM} setActiveID={setActiveID} />
+          <ChordSubTable columns={columnsD} data={dataD} />
+          <ChordSubTable columns={columnsF} data={dataF} />
+        </>
+      )}
     </div>
   );
 }
