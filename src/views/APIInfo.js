@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
@@ -16,7 +17,7 @@ import BASE_URL from '../constants/constants';
 /*
  * API Info component
  */
-function APIInfo() {
+function APIInfo({ updateState }) {
   const [apiDef, setApiDef] = useState(`${BASE_URL}/static/api.yaml`);
   const apiDefinitionObj = {
     'CanDIG-Server V1 API': `${BASE_URL}/static/api.yaml`,
@@ -28,6 +29,13 @@ function APIInfo() {
       {x}
     </option>
   ));
+
+  useEffect(() => {
+    updateState({ datasetVisible: false });
+    return () => {
+      updateState({ datasetVisible: true });
+    };
+  });
 
   return (
     <>
@@ -57,5 +65,9 @@ function APIInfo() {
     </>
   );
 }
+
+APIInfo.propTypes = {
+  updateState: PropTypes.func.isRequired,
+};
 
 export default APIInfo;
