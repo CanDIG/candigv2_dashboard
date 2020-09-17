@@ -156,7 +156,7 @@ function IndividualsOverview({ updateState }) {
     return () => {
       updateState({ datasetVisible: true });
     };
-  }, [didFetch]);
+  }, [didFetch, updateState]);
 
   return (
     <>
