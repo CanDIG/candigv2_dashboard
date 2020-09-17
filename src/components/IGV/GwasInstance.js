@@ -50,6 +50,7 @@ function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
               method: 'post',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
+                // GWAS is 1-based, while candig-server uses 0-based indexing, thus - 1
                 start: String(Number(popoverData[1].value) - 1),
                 end: String(Number(popoverData[1].value) + popoverData[2].value.length - 1),
                 referenceName: popoverData[0].value,

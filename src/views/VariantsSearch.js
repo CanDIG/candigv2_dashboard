@@ -67,7 +67,7 @@ function VariantsSearch({ datasetId }) {
           </UncontrolledAlert>
         </Row>
 
-        <Form style={{ justifyContent: 'center' }} inline onSubmit={formHandler}>
+        <Form inline onSubmit={formHandler} style={{ justifyContent: 'center' }}>
           <FormGroup>
             <Label for="start">Start</Label>
             <Input required type="number" id="start" />
