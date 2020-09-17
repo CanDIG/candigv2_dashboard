@@ -99,7 +99,7 @@ function PatientsOverview({ datasetName, datasetId }) {
           }),
       );
     }
-  }, [datasetId]);
+  }, [datasetId, setProvinceOfResidenceObj]);
 
   return (
     <>
