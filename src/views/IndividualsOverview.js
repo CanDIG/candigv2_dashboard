@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Card, CardBody, CardTitle, Row, Col,
 } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import LoadingIndicator, {
@@ -94,7 +95,7 @@ function getCounterUnderExtraProperties(data, property) {
   return education;
 }
 
-function IndividualsOverview() {
+function IndividualsOverview({ updateState }) {
   const [individualCounter, setIndividualCount] = useState(0);
   const [ethnicityObject, setEthnicityObject] = useState({ '': 0 });
   const [genderObject, setGenderObject] = useState({ '': 0 });
@@ -126,6 +127,7 @@ function IndividualsOverview() {
   };
 
   useEffect(() => {
+    updateState({ datasetVisible: false });
     trackPromise(
       fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`)
         .then((response) => response.json())
@@ -151,6 +153,9 @@ function IndividualsOverview() {
           setDiseasesSum('Not available');
         }),
     );
+    return () => {
+      updateState({ datasetVisible: true });
+    };
   }, [didFetch]);
 
   return (
@@ -318,5 +323,9 @@ function IndividualsOverview() {
     </>
   );
 }
+
+IndividualsOverview.propTypes = {
+  updateState: PropTypes.func.isRequired,
+};
 
 export default IndividualsOverview;

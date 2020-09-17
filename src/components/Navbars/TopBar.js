@@ -151,7 +151,9 @@ class Header extends React.Component {
             className="justify-content-end"
           >
             <Nav navbar>
-              <DatasetsDropdown updateState={this.props.updateState}/>
+              {this.props.datasetVisible === true ? 
+                (<DatasetsDropdown updateState={this.props.updateState}/>) :
+                <></> }
               <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
