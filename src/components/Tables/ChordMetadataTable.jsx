@@ -6,7 +6,7 @@ import {
 } from 'react-table';
 
 // reactstrap components
-import { Card, Row } from 'reactstrap';
+import { Row } from 'reactstrap';
 import Styles from '../../assets/css/StyledComponents/TableStyled';
 import { DefaultColumnFilter, FuzzyTextFilterFn } from '../Filters/filters';
 
@@ -75,7 +75,7 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
     } if (cell.isPlaceholder) {
       return ({ background: '#ff000042' });
     }
-    return ({  });
+    return ({ });
   }
 
   function handleAggregation(cell, row) {
@@ -112,70 +112,67 @@ function ChordMetadataTable({ columns, data, setActiveID }) {
 
       />
       <Row>
-      <Styles>
+        <Styles>
 
-        <Card className="mainTableCard">
-            <table className="ChordMainTable" {...getTableProps()}>
-              <thead>
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()} >
-                    {headerGroup.headers.map((column) => (
-                      <th scope="row" {...column.getHeaderProps()}>
-                        <div>
-                          {column.canGroupBy ? (
-                          // If the column can be grouped, add a toggle
-                            <span {...column.getGroupByToggleProps()}>
-                              {column.isGrouped ? '🛑 ' : '👊 '}
-                            </span>
-                          ) : null}
-                          <span {...column.getSortByToggleProps()}>
-                            {column.render('Header')}
-                            {/* Add a sort direction indicator */}
-                            {getColumnSortSymbol(column)}
+          <table className="ChordMainTable" {...getTableProps()}>
+            <thead>
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th scope="row" {...column.getHeaderProps()}>
+                      <div>
+                        {column.canGroupBy ? (
+                        // If the column can be grouped, add a toggle
+                          <span {...column.getGroupByToggleProps()}>
+                            {column.isGrouped ? '🛑 ' : '👊 '}
                           </span>
-                        </div>
-                        {/* Render the columns filter UI */}
-                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                      </th>
+                        ) : null}
+                        <span {...column.getSortByToggleProps()}>
+                          {column.render('Header')}
+                          {/* Add a sort direction indicator */}
+                          {getColumnSortSymbol(column)}
+                        </span>
+                      </div>
+                      {/* Render the columns filter UI */}
+                      <div>{column.canFilter ? column.render('Filter') : null}</div>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} onClick={() => { setActiveID(row.values.ID); }}>
+                    {row.cells.map((cell) => (
+                      <td
+                        {...cell.getCellProps()}
+                        style={getCellStyle(cell)}
+                      >
+                        {handleAggregation(cell, row)}
+                      </td>
                     ))}
                   </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {page.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()} onClick={() => { setActiveID(row.values.ID); }}>
-                      {row.cells.map((cell) => (
-                        <td
-                          {...cell.getCellProps()}
-                          style={getCellStyle(cell)}
-                        >
-                          {handleAggregation(cell, row)}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                );
+              })}
+            </tbody>
+          </table>
 
-            </Card>
-            </Styles>
+        </Styles>
 
-
-            <PaginationBar
-              canPreviousPage={canPreviousPage}
-              canNextPage={canNextPage}
-              pageOptions={pageOptions}
-              pageCount={pageCount}
-              gotoPage={gotoPage}
-              nextPage={nextPage}
-              previousPage={previousPage}
-              setPageSize={setPageSize}
-              pageSize={pageSize}
-              pageIndex={pageIndex}
-            />
+        <PaginationBar
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+        />
 
       </Row>
     </>

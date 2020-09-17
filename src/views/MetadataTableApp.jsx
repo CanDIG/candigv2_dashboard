@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
+
 import BASE_URL from '../constants/constants';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
+import { notify, NotificationAlert } from '../utils/alert';
 
-function CreateColumns(columnNames, cb) {
+function CreateColumns(columnNames, setState) {
   const columnList = [];
 
   Object.values(columnNames).forEach((name) => {
@@ -16,33 +20,7 @@ function CreateColumns(columnNames, cb) {
     };
     columnList.push(column);
   });
-  cb(columnList);
-}
-
-function getMetadataData(datasetId, metadata, cb) {
-  const datasets = [];
-  if (datasetId) {
-    return fetch(`${BASE_URL}/${metadata}/search`, {
-      method: 'POST',
-      body: JSON.stringify({ datasetId }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return {};
-      })
-      .then((data) => {
-        for (let i = 0; i < data.results[metadata].length; i += 1) {
-          datasets.push(data.results[metadata][i]);
-        }
-        cb(datasets);
-      });
-  }
-  return [];
+  setState(columnList);
 }
 
 function TableApp({ datasetId }) {
@@ -50,33 +28,71 @@ function TableApp({ datasetId }) {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
 
+  const { promiseInProgress } = usePromiseTracker();
+
+  const notifyEl = useRef(null);
+
   React.useEffect(() => {
     // fetch data
     try {
-      getMetadataData(datasetId, selectedMetadata, setData);
+      const datasets = [];
+      if (datasetId) {
+        trackPromise(
+          fetch(`${BASE_URL}/${selectedMetadata}/search`, {
+            method: 'POST',
+            body: JSON.stringify({ datasetId }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              return {};
+            })
+            .then((dataResponse) => {
+              for (let i = 0; i < dataResponse.results[selectedMetadata].length; i += 1) {
+                datasets.push(dataResponse.results[selectedMetadata][i]);
+              }
+              setData(datasets);
+              CreateColumns(Object.keys(datasets[0]), setColumns);
+            })
+            .catch(() => {
+              notify(
+                notifyEl,
+                'The resources you requested were not available.',
+                'warning',
+              );
+            }),
+        );
+      }
     } catch (err) {
-      // Need better reporting
-      console.log(err);
+      notify(
+        notifyEl,
+        'The resources you requested were not available.',
+        'warning',
+      );
     }
   }, [selectedMetadata, datasetId]);
-
-  React.useEffect(() => {
-    // Separate Effect since state change is async and columns depends on data
-    // Not entirely sure if necessary
-    try {
-      CreateColumns(Object.keys(data[0]), setColumns);
-    } catch (err) {
-      // Need better reporting
-      console.log(err);
-    }
-  }, [data]);
 
   const dataM = React.useMemo(() => data, [data]);
   const columnsM = React.useMemo(() => columns, [columns]);
 
   return (
     <div className="content">
-      <ClinMetadataTable columns={columnsM} data={dataM} metadataCallback={setSelectedMetadata} />
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          <NotificationAlert ref={notifyEl} />
+          <ClinMetadataTable
+            columns={columnsM}
+            data={dataM}
+            metadataCallback={setSelectedMetadata}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -5,11 +5,13 @@ import PropTypes from 'prop-types';
 
 import {
   Card, Row, Button, Container, InputGroup, InputGroupAddon,
-  InputGroupText, Collapse,
+  InputGroupText, Collapse, Col
 } from 'reactstrap';
 
 import  ClinMetadataDropdown  from '../Dropdown/ClinMetadataDropdown';
 import { GlobalFilter } from '../Filters/filters';
+import Style from 'assets/css/StyledComponents/ColumnControlStyled'
+
 
 const IndeterminateButton = forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -39,7 +41,9 @@ function DataControl({
   const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
   return (
     <>
+    <Style>
       <Row>
+        <Col>
         <InputGroup>
           <InputGroupAddon className="dataControl" addonType="prepend">
             <ClinMetadataDropdown className="dataDropdown" metadataCallback={metadataCallback} />
@@ -54,8 +58,12 @@ function DataControl({
             setGlobalFilter={setGlobalFilter}
           />
         </InputGroup>
+        </Col>
+
       </Row>
       <Row>
+      <Col>
+
         <Collapse isOpen={isCollapsed}>
           <Card>
             <Container>
@@ -73,7 +81,9 @@ function DataControl({
             </Container>
           </Card>
         </Collapse>
+        </Col>
       </Row>
+      </Style>
     </>
   );
 }
