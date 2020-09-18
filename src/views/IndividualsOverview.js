@@ -12,26 +12,9 @@ import LoadingIndicator, {
 } from '../components/LoadingIndicator/LoadingIndicator';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
+import { groupBy } from '../utils/utils';
 
 import { CHORD_METADATA_URL } from '../constants/constants';
-
-/*
- * Return the aggregation value of a key from an array of objects.
- * @param {objectArray}... List of objects
- * @param {property} Property to be grouped by
- */
-function groupBy(objectArray, property) {
-  return objectArray.reduce((acc, obj) => {
-    const key = obj[property].charAt(0).toUpperCase()
-      + obj[property].slice(1).toLowerCase().replace('_', ' ');
-    if (!acc[key]) {
-      acc[key] = 0;
-    }
-    acc[key] += 1;
-    delete acc.undefined;
-    return acc;
-  }, {});
-}
 
 /*
  * Return a specific extra property grouped by gender

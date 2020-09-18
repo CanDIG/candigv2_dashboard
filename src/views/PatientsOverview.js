@@ -10,6 +10,7 @@ import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
 } from '../components/LoadingIndicator/LoadingIndicator';
+import { groupBy } from '../utils/utils';
 import { notify, NotificationAlert } from '../utils/alert';
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 
@@ -42,25 +43,6 @@ function PatientsOverview({ datasetName, datasetId }) {
 
   const { promiseInProgress } = usePromiseTracker();
   const notifyEl = useRef(null);
-
-  /*
-   * Return the aggregation value of a key from an array of objects.
-   * @param {array} objectArray: An array of objects.
-   * @param {object} property: The key to aggregate on.
-   * @return an object with different values of the
-   *  queried property being the key, and frequency being the value.
-   */
-  function groupBy(objectArray, property) {
-    return objectArray.reduce((acc, obj) => {
-      const key = obj[property];
-      if (!acc[key]) {
-        acc[key] = 0;
-      }
-      acc[key] += 1;
-      delete acc.undefined;
-      return acc;
-    }, {});
-  }
 
   useEffect(() => {
     if (datasetId) {
