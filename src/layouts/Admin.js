@@ -51,30 +51,12 @@ class Dashboard extends React.Component {
       ps = new PerfectScrollbar(this.mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
     }
-    this.fetchData(this.state.datasetId);
   }
 
   updateState (values){
     this.setState(values);
   };
-
-  fetchData(datasetId) {
-  
-    if (datasetId) {
-      fetch(BASE_URL + "/patients/search", {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          datasetId: datasetId,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          this.setState({ patientsList: data.results.patients });
-        });
-    }
-  }
-
+ 
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
@@ -85,10 +67,7 @@ class Dashboard extends React.Component {
     if (prevProps.history.action === "PUSH") {
       this.mainPanel.current.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
-    }
-    if (prevState.datasetId !== this.state.datasetId) {
-      this.fetchData(this.state.datasetId);
-    }
+    }    
   }
   render() {
     return (

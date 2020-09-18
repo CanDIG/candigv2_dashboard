@@ -1,50 +1,92 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 // reactstrap components
 import {
   Card, CardBody, CardTitle, Row, Col,
 } from 'reactstrap';
+import useStateWithCallback from 'use-state-with-callback';
 
+import LoadingIndicator, {
+  trackPromise,
+  usePromiseTracker,
+} from '../components/LoadingIndicator/LoadingIndicator';
+import { groupBy } from '../utils/utils';
+import { notify, NotificationAlert } from '../utils/alert';
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
+
+import BASE_URL from '../constants/constants';
 
 /*
  * Patient Overview view component
- * @param {array} patientsList
  * @param {string} datasetName
+ * @param {string} datasetId
  */
-function PatientsOverview({ patientsList, datasetName }) {
-  /*
-   * Return the aggregation value of a key from an array of objects.
-   * @param {array} objectArray: An array of objects.
-   * @param {object} property: The key to aggregate on.
-   * @return an object with different values of the
-   *  queried property being the key, and frequency being the value.
-   */
-  function groupBy(objectArray, property) {
-    return objectArray.reduce((acc, obj) => {
-      const key = obj[property];
-      if (!acc[key]) {
-        acc[key] = 0;
-      }
-      acc[key] += 1;
-      delete acc.undefined;
-      return acc;
-    }, {});
-  }
+function PatientsOverview({ datasetName, datasetId }) {
+  const [patientsCount, setPatientsCount] = useState();
+  const [provincesCount, setProvincesCount] = useState('');
+  const [genderObj, setGenderObj] = useState({});
+  const [ethnicityObj, setEthnicityObj] = useState({});
+  const [raceObj, setRaceObj] = useState({});
+  const [causeOfDeathObj, setCauseOfDeathObj] = useState({});
+  const [
+    provinceOfResidenceObj,
+    setProvinceOfResidenceObj,
+  ] = useStateWithCallback({}, () => {
+    if (Object.keys(provinceOfResidenceObj).length > 0) {
+      setProvincesCount(Object.keys(provinceOfResidenceObj).length);
+    }
+  });
+  const [
+    occupationalOrEnvironmentalExposureObj,
+    setOccupationalOrEnvironmentalExposureObj,
+  ] = useState({});
 
-  const genderObj = groupBy(patientsList, 'gender');
-  const ethnicityObj = groupBy(patientsList, 'ethnicity');
-  const raceObj = groupBy(patientsList, 'race');
-  const causeOfDeathObj = groupBy(patientsList, 'causeOfDeath');
-  const provinceOfResidenceObj = groupBy(patientsList, 'provinceOfResidence');
-  const occupationalOrEnvironmentalExposureObj = groupBy(
-    patientsList,
-    'occupationalOrEnvironmentalExposure',
-  );
+  const { promiseInProgress } = usePromiseTracker();
+  const notifyEl = useRef(null);
+
+  useEffect(() => {
+    if (datasetId) {
+      trackPromise(
+        fetch(`${BASE_URL}/patients/search`, {
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+          body: JSON.stringify({
+            datasetId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const patientsList = data.results.patients;
+            if (!patientsList) {
+              throw new Error();
+            }
+            setPatientsCount(patientsList.length);
+            setGenderObj(groupBy(patientsList, 'gender'));
+            setEthnicityObj(groupBy(patientsList, 'ethnicity'));
+            setRaceObj(groupBy(patientsList, 'race'));
+            setCauseOfDeathObj(groupBy(patientsList, 'causeOfDeath'));
+            setProvinceOfResidenceObj(
+              groupBy(patientsList, 'provinceOfResidence'),
+            );
+            setOccupationalOrEnvironmentalExposureObj(
+              groupBy(patientsList, 'occupationalOrEnvironmentalExposure'),
+            );
+          })
+          .catch(() => {
+            notify(
+              notifyEl,
+              'The resources you requested were not available.',
+              'warning',
+            );
+          }),
+      );
+    }
+  }, [datasetId, setProvinceOfResidenceObj]);
 
   return (
     <>
       <div className="content">
+        <NotificationAlert ref={notifyEl} />
         <Row>
           <Col lg="6" md="6" sm="6">
             <Card className="card-stats">
@@ -58,9 +100,11 @@ function PatientsOverview({ patientsList, datasetName }) {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Provinces</p>
-                      <CardTitle tag="p">
-                        {Object.keys(provinceOfResidenceObj).length}
-                      </CardTitle>
+                      {promiseInProgress === true ? (
+                        <LoadingIndicator />
+                      ) : (
+                        <CardTitle tag="p">{provincesCount}</CardTitle>
+                      )}
                       <p />
                     </div>
                   </Col>
@@ -80,7 +124,11 @@ function PatientsOverview({ patientsList, datasetName }) {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Patients</p>
-                      <CardTitle tag="p">{patientsList.length}</CardTitle>
+                      {promiseInProgress === true ? (
+                        <LoadingIndicator />
+                      ) : (
+                        <CardTitle tag="p">{patientsCount}</CardTitle>
+                      )}
                       <p />
                     </div>
                   </Col>
@@ -93,26 +141,34 @@ function PatientsOverview({ patientsList, datasetName }) {
           <Col lg="3" md="6" sm="12">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName={datasetName}
-                  dataObject={genderObj}
-                  chartType="bar"
-                  barTitle="Gender"
-                  height="200px; auto"
-                />
+                {promiseInProgress === true ? (
+                  <LoadingIndicator />
+                ) : (
+                  <CustomOfflineChart
+                    datasetName={datasetName}
+                    dataObject={genderObj}
+                    chartType="bar"
+                    barTitle="Gender"
+                    height="200px; auto"
+                  />
+                )}
               </CardBody>
             </Card>
           </Col>
           <Col lg="3" md="6" sm="12">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName={datasetName}
-                  dataObject={ethnicityObj}
-                  chartType="bar"
-                  barTitle="Ethnicity"
-                  height="200px; auto"
-                />
+                {promiseInProgress === true ? (
+                  <LoadingIndicator />
+                ) : (
+                  <CustomOfflineChart
+                    datasetName={datasetName}
+                    dataObject={ethnicityObj}
+                    chartType="bar"
+                    barTitle="Ethnicity"
+                    height="200px; auto"
+                  />
+                )}
               </CardBody>
             </Card>
           </Col>
@@ -120,26 +176,34 @@ function PatientsOverview({ patientsList, datasetName }) {
           <Col lg="3" md="6" sm="12">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName={datasetName}
-                  dataObject={raceObj}
-                  chartType="bar"
-                  barTitle="Race"
-                  height="200px; auto"
-                />
+                {promiseInProgress === true ? (
+                  <LoadingIndicator />
+                ) : (
+                  <CustomOfflineChart
+                    datasetName={datasetName}
+                    dataObject={raceObj}
+                    chartType="bar"
+                    barTitle="Race"
+                    height="200px; auto"
+                  />
+                )}
               </CardBody>
             </Card>
           </Col>
           <Col lg="3" md="6" sm="12">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName={datasetName}
-                  dataObject={causeOfDeathObj}
-                  chartType="bar"
-                  barTitle="Cause Of Death"
-                  height="200px; auto"
-                />
+                {promiseInProgress === true ? (
+                  <LoadingIndicator />
+                ) : (
+                  <CustomOfflineChart
+                    datasetName={datasetName}
+                    dataObject={causeOfDeathObj}
+                    chartType="bar"
+                    barTitle="Cause Of Death"
+                    height="200px; auto"
+                  />
+                )}
               </CardBody>
             </Card>
           </Col>
@@ -148,26 +212,34 @@ function PatientsOverview({ patientsList, datasetName }) {
           <Col lg="6" md="12" sm="12">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName={datasetName}
-                  dataObject={provinceOfResidenceObj}
-                  chartType="pie"
-                  barTitle="Province Of Residence"
-                  height="400px; auto"
-                />
+                {promiseInProgress === true ? (
+                  <LoadingIndicator />
+                ) : (
+                  <CustomOfflineChart
+                    datasetName={datasetName}
+                    dataObject={provinceOfResidenceObj}
+                    chartType="pie"
+                    barTitle="Province Of Residence"
+                    height="400px; auto"
+                  />
+                )}
               </CardBody>
             </Card>
           </Col>
           <Col lg="6" md="12" sm="12">
             <Card>
               <CardBody>
-                <CustomOfflineChart
-                  datasetName={datasetName}
-                  dataObject={occupationalOrEnvironmentalExposureObj}
-                  chartType="pie"
-                  barTitle="Occupational Or Environmental Exposure"
-                  height="400px; auto"
-                />
+                {promiseInProgress === true ? (
+                  <LoadingIndicator />
+                ) : (
+                  <CustomOfflineChart
+                    datasetName={datasetName}
+                    dataObject={occupationalOrEnvironmentalExposureObj}
+                    chartType="pie"
+                    barTitle="Occupational Or Environmental Exposure"
+                    height="400px; auto"
+                  />
+                )}
               </CardBody>
             </Card>
           </Col>
@@ -178,8 +250,8 @@ function PatientsOverview({ patientsList, datasetName }) {
 }
 
 PatientsOverview.propTypes = {
-  patientsList: PropTypes.arrayOf(PropTypes.object).isRequired,
   datasetName: PropTypes.string.isRequired,
+  datasetId: PropTypes.string.isRequired,
 };
 
 export default PatientsOverview;
