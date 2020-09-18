@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-
 import { AgGridReact } from 'ag-grid-react';
 import BASE_URL, { CHORD_METADATA_URL } from '../../constants/constants';
 import IndividualTable from './IndividualTable';
 import { notify, NotificationAlert } from '../../utils/alert';
+import VariantsTableButton from './VariantsTableButton';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -21,6 +21,7 @@ function VariantsTable({ rowData, datasetId }) {
     { headerName: 'End', field: 'end' },
     { headerName: 'Reference Bases', field: 'referenceBases' },
     { headerName: 'Alternate Bases', field: 'alternateBases' },
+    { headerName: 'Retrieve Individuals', cellRenderer: 'VariantsTableButton' },
   ];
   let gridOptions = {};
 
@@ -111,6 +112,9 @@ function VariantsTable({ rowData, datasetId }) {
     enableRangeSelection: true,
     paginationAutoPageSize: true,
     pagination: true,
+    frameworkComponents: {
+      VariantsTableButton,
+    },
   };
 
   return (
@@ -124,6 +128,8 @@ function VariantsTable({ rowData, datasetId }) {
           context={{ datasetId }}
         />
       </div>
+
+      <br />
 
       {displayIndividualsTable ? <IndividualTable individualsRowData={individualsRowData} /> : null}
     </>
