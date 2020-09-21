@@ -13,7 +13,7 @@ import LoadingIndicator, {
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
 import { groupBy } from '../utils/utils';
-import {fetchIndividuals} from '../api/api'
+import { fetchIndividuals } from '../api/api';
 
 /*
  * Return a specific extra property grouped by gender

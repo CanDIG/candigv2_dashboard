@@ -70,7 +70,7 @@ function CancerType({ datasetId }) {
   const { promiseInProgress } = usePromiseTracker();
   const prevDatasetId = usePrevious(datasetId);
   const notifyEl = useRef(null);
-  
+
   /*
   * Process json returned from API
   * @param {object} data
