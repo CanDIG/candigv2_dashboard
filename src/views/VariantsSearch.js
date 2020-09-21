@@ -4,8 +4,8 @@ import {
   Button, Form, FormGroup, Label, Input, Row, UncontrolledAlert,
 } from 'reactstrap';
 
-import BASE_URL from '../constants/constants';
 import VariantsTable from '../components/Tables/VariantsTable';
+import { searchVariant } from '../api/api';
 
 import { notify, NotificationAlert } from '../utils/alert';
 
@@ -19,17 +19,8 @@ function VariantsSearch({ datasetId }) {
   const formHandler = (e) => {
     e.preventDefault(); // Prevent form submission
 
-    fetch(`${BASE_URL}/variants/search`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        start: e.target.start.value,
-        end: e.target.end.value,
-        referenceName: e.target.referenceName.value,
-        datasetId,
-      }),
-    })
-      .then((response) => response.json())
+    // searchVariant(datasetId, e.target.start.value, e.target.end.value,)
+    searchVariant(datasetId, e.target.start.value, e.target.end.value, e.target.referenceName.value)
       .then((data) => {
         setDisplayVariantsTable(true);
         setRowData(data.results.variants);

@@ -13,8 +13,7 @@ import LoadingIndicator, {
 import { groupBy } from '../utils/utils';
 import { notify, NotificationAlert } from '../utils/alert';
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
-
-import BASE_URL from '../constants/constants';
+import {fetchPatients} from '../api/api'
 
 /*
  * Patient Overview view component
@@ -47,15 +46,7 @@ function PatientsOverview({ datasetName, datasetId }) {
   useEffect(() => {
     if (datasetId) {
       trackPromise(
-        fetch(`${BASE_URL}/patients/search`, {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-          body: JSON.stringify({
-            datasetId,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
+        fetchPatients(datasetId).then((data) => {
             const patientsList = data.results.patients;
             if (!patientsList) {
               throw new Error();

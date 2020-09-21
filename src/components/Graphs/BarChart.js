@@ -5,9 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../../utils/alert';
-
-// Consts
-import BASE_URL from '../../constants/constants';
+import { getCounts } from '../../api/api';
 
 // Hook
 // Used to keep the previous value of a state or prop
@@ -45,9 +43,9 @@ function reducer(state, action) {
 /*
  * Component for bar chart graphs
  * @param {string} datasetId
- * * @param {string} table
- * * @param {string} field
- * * @param {string} title
+ * @param {string} table
+ * @param {string} field
+ * @param {string} title
  */
 function BarChart({
   datasetId, table, field, title,
@@ -80,49 +78,43 @@ function BarChart({
   const prevDatasetId = usePrevious(datasetId);
   const notifyEl = useRef(null);
 
+  /*
+  * Process json returned from API
+  * @param {object} data
+  */
+  function processCounts(data) {
+    const categories = [];
+    const dataList = Object.keys(data).map((key) => {
+      categories.push(
+        key.charAt(0).toUpperCase() + key.slice(1),
+      );
+      return data[key];
+    });
+
+    return [categories, dataList];
+  }
+
+  /*
+  * Create the graph object by dispatching lists to reducer
+  * @param {list} dataList
+  * @param {list} categories
+  */
+  function createChart(dataList, categories) {
+    dispatchChartOptions({ type: 'addSeries', payload: dataList });
+    dispatchChartOptions({ type: 'addCategories', payload: categories });
+  }
+
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      trackPromise(fetch(`${BASE_URL}/count`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dataset_id: datasetId,
-          logic: {
-            id: 'A',
-          },
-          components: [
-            {
-              id: 'A',
-              patients: {},
-            },
-          ],
-          results: [
-            {
-              table,
-              fields: [field],
-            },
-          ],
-        }),
-      })
-        .then((response) => response.json())
+      trackPromise(getCounts(datasetId, table, field)
         .then((data) => {
           if (!data.results[table][0]) {
             throw new Error();
           }
-          const counts = data.results[table][0][field];
-          const categories = [];
-          const dataList = Object.keys(counts).map((key) => {
-            categories.push(
-              key.charAt(0).toUpperCase() + key.slice(1),
-            );
-            return counts[key];
-          });
-
-          dispatchChartOptions({ type: 'addSeries', payload: dataList });
-          dispatchChartOptions({ type: 'addCategories', payload: categories });
+          const [categories, dataList] = processCounts(data.results[table][0][field]);
+          createChart(dataList, categories);
         }).catch(() => {
-          dispatchChartOptions({ type: 'addSeries', payload: [] });
-          dispatchChartOptions({ type: 'addCategories', payload: [] });
+          createChart([], []);
           notify(
             notifyEl,
             'Some resources you requested were not available.',
