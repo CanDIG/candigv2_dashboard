@@ -35,7 +35,7 @@ function APIInfo({ updateState }) {
     return () => {
       updateState({ datasetVisible: true });
     };
-  });
+  }, [updateState]);
 
   return (
     <>
