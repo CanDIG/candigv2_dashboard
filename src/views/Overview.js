@@ -13,6 +13,8 @@ import BarChart from './../components/Graphs/BarChart.js';
 import CancerType from './../components/Graphs/CancerType.js';
 import TreatingCentreProvince from './../components/Maps/TreatingCentreProvince';
 
+import {getCounts} from '../api/api'
+
 const initialState = {
   datasetName: '',
   datasetId: '',
@@ -45,30 +47,8 @@ class Dashboard extends React.Component {
     }
   }
 
-  getCounters(dataset_id, table, fields) {
-    fetch(`${BASEURL}/count`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        dataset_id,
-        logic: {
-          id: 'A',
-        },
-        components: [
-          {
-            id: 'A',
-            enrollments: {},
-          },
-        ],
-        results: [
-          {
-            table,
-            fields,
-          },
-        ],
-      }),
-    })
-      .then((response) => response.json())
+  getCounters(datasetId, table, fields) {
+    getCounts(datasetId, table, fields)
       .then((data) => {
         if (table === 'enrollments') {
           const datasetId = this.getDatadetIdFromEnrollments(data);

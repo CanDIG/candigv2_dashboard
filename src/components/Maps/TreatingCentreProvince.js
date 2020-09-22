@@ -7,9 +7,7 @@ import PropTypes from 'prop-types';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../../utils/alert';
-
-// Consts
-import BASE_URL from '../../constants/constants';
+import { getCounts } from '../../api/api';
 
 // Initialize HighchartsMap
 HighchartsMap(Highcharts);
@@ -49,6 +47,17 @@ const initialState = {
   ],
 };
 
+// Highcharts Map requires a specific set of codes for provinces
+// and territories, as represented by hcProvCodes below.
+const hcProvCodes = [
+  'ca-ab', 'ca-bc', 'ca-mb', 'ca-nb', 'ca-nl', 'ca-nt', 'ca-ns',
+  'ca-nu', 'ca-on', 'ca-pe', 'ca-qc', 'ca-sk', 'ca-yt'];
+const provShortCodes = ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
+const provFullNames = [
+  'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
+  'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island',
+  'Quebec', 'Saskatchewan', 'Yukon Territory'];
+
 function reducer(state, action) {
   switch (action.type) {
     case 'addSeries':
@@ -84,78 +93,52 @@ function TreatingCentreProvince({ datasetId }) {
   const [chartOptions, dispatchChartOptions] = useReducer(reducer, initialState);
   const notifyEl = useRef(null);
 
+  function processJson(data) {
+    const dataCount = [];
+    Object.keys(data).forEach((name) => {
+      if (provShortCodes.includes(name)) {
+        const tempDataCount = [];
+        tempDataCount.push(hcProvCodes[provShortCodes.indexOf(name)]);
+        tempDataCount.push(data[name]);
+        dataCount.push(tempDataCount);
+      } else if (provFullNames.includes(name)) {
+        const tempDataCount = [];
+        tempDataCount.push(hcProvCodes[provFullNames.indexOf(name)]);
+        tempDataCount.push(data[name]);
+        dataCount.push(tempDataCount);
+      }
+    });
+
+    return dataCount;
+  }
+
   useEffect(() => {
     // Mimic the didUpdate function
     try {
       if (datasetId) {
-        trackPromise(fetch(`${BASE_URL}/count`, {
-          method: 'post',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            dataset_id: datasetId,
-            logic: {
-              id: 'A',
-            },
-            components: [
-              {
-                id: 'A',
-                enrollments: {},
-              },
-            ],
-            results: [
-              {
-                table: 'enrollments',
-                fields: [
-                  'treatingCentreProvince',
-                ],
-              },
-            ],
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const dataCount = [];
+        trackPromise(
+          getCounts(datasetId, 'enrollments', 'treatingCentreProvince')
+            .then((data) => {
+              let dataCount;
 
-            // Highcharts Map requires a specific set of codes for provinces
-            // and territories, as represented by hcProvCodes below.
-            const hcProvCodes = [
-              'ca-ab', 'ca-bc', 'ca-mb', 'ca-nb', 'ca-nl', 'ca-nt', 'ca-ns',
-              'ca-nu', 'ca-on', 'ca-pe', 'ca-qc', 'ca-sk', 'ca-yt'];
-            const provShortCodes = ['AB', 'BC', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
-            const provFullNames = [
-              'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
-              'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island',
-              'Quebec', 'Saskatchewan', 'Yukon Territory'];
-
-            if (data) {
-              if (!data.results.enrollments[0]) {
-                throw new Error();
-              }
-              const { treatingCentreProvince } = data.results.enrollments[0];
-
-              Object.keys(treatingCentreProvince).forEach((name) => {
-                if (provShortCodes.includes(name)) {
-                  const tempDataCount = [];
-                  tempDataCount.push(hcProvCodes[provShortCodes.indexOf(name)]);
-                  tempDataCount.push(treatingCentreProvince[name]);
-                  dataCount.push(tempDataCount);
-                } else if (provFullNames.includes(name)) {
-                  const tempDataCount = [];
-                  tempDataCount.push(hcProvCodes[provFullNames.indexOf(name)]);
-                  tempDataCount.push(treatingCentreProvince[name]);
-                  dataCount.push(tempDataCount);
+              if (data) {
+                if (!data.results.enrollments[0]) {
+                  throw new Error();
                 }
-              });
-            }
-            dispatchChartOptions({ type: 'addSeries', payload: dataCount });
-          }).catch(() => {
-            notify(
-              notifyEl,
-              'Some resources you requested were not available.',
-              'warning',
-            );
-            dispatchChartOptions({ type: 'addSeries', payload: [] });
-          }));
+                const { treatingCentreProvince } = data.results.enrollments[0];
+
+                dataCount = processJson(treatingCentreProvince);
+              }
+              dispatchChartOptions({ type: 'addSeries', payload: dataCount });
+            }).catch(() => {
+              notify(
+                notifyEl,
+                'Some resources you requested were not available.',
+                'warning',
+              );
+              dispatchChartOptions({ type: 'addSeries', payload: [] });
+            }),
+        );
       }
     } catch (err) {
       console.log(err);

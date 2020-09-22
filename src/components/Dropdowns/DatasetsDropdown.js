@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import BASE_URL from '../../constants/constants';
+import { fetchDatasets } from '../../api/api';
 
 /*
  * Dropdown component listing all the available Datasets
@@ -32,24 +32,38 @@ function DatasetsDropdown({ updateState }) {
   }
 
   /*
+   * Set a dataset as a selected one on the dropdown one the list is fetched from the API
+   * @param {list} datasetsList
+   */
+  function setFirstDataset(datasetsList) {
+    const firstDataset = datasetsList[Object.keys(datasetsList)[0]];
+    setSelectedDataset(firstDataset.name);
+    updateParentState(firstDataset.name, firstDataset.id);
+  }
+
+  /*
+   * Process the dataset json object from the API
+   * @param {list} datasets
+   */
+  function processDatasetJson(datasetJson) {
+    const datasetsList = {};
+    datasetJson.forEach((dataset) => {
+      datasetsList[dataset.id] = dataset;
+    });
+    return datasetsList;
+  }
+
+  /*
    * Fetch dataset information from the server after the Dropdown component is added to the DOM
    * and update both parent and local state
    */
   useEffect(() => {
     if (!selectedDataset) {
-      fetch(`${BASE_URL}/datasets/search`, {
-        method: 'post',
-      })
-        .then((response) => response.json())
+      fetchDatasets()
         .then((data) => {
-          const datasetsList = {};
-          for (let i = 0; i < data.results.datasets.length; i += 1) {
-            datasetsList[data.results.datasets[i].id] = data.results.datasets[i];
-          }
+          const datasetsList = processDatasetJson(data.results.datasets);
           setDatasets(datasetsList);
-          const firstDataset = datasetsList[Object.keys(datasetsList)[0]];
-          setSelectedDataset(firstDataset.name);
-          updateParentState(firstDataset.name, firstDataset.id);
+          setFirstDataset(datasetsList);
         });
     }
   });

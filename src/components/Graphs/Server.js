@@ -2,10 +2,9 @@ import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-// Consts
-import BASE_URL from '../../constants/constants';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
+import { fetchServers } from '../../api/api';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -62,23 +61,32 @@ function Server({ datasetId }) {
   const { promiseInProgress } = usePromiseTracker();
 
   /*
+  * Process json returned from API
+  * @param {object} data
+  */
+  function processData(data) {
+    const dataList = [];
+    const categoriesList = Object.keys(data).filter((key) => {
+      if (key === 'Valid response') {
+        return false;
+      }
+      return true;
+    }).map((key) => {
+      dataList.push(data[key]);
+      return key;
+    });
+
+    return [dataList, categoriesList];
+  }
+
+  /*
    * Fetch server status information from the server after the component is added to the DOM
    * and create the bar graph by changing the chartOptions state
    */
   useEffect(() => {
-    trackPromise(fetch(`${BASE_URL}/datasets/search`, { method: 'POST' })
-      .then((response) => response.json())
+    trackPromise(fetchServers()
       .then((data) => {
-        const dataList = [];
-        const categoriesList = Object.keys(data.status).filter((key) => {
-          if (key === 'Valid response') {
-            return false;
-          }
-          return true;
-        }).map((key) => {
-          dataList.push(data.status[key]);
-          return key;
-        });
+        const [dataList, categoriesList] = processData(data.status);
 
         dispatchChartOptions({ type: 'addSeries', payload: dataList });
         dispatchChartOptions({ type: 'addCategories', payload: categoriesList });

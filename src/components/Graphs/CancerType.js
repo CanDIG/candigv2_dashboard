@@ -5,9 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../../utils/alert';
-
-// Consts
-import BASE_URL from '../../constants/constants';
+import { getCounts } from '../../api/api';
 
 // Hook
 // Used to keep the previous value of a state or prop
@@ -74,53 +72,41 @@ function CancerType({ datasetId }) {
   const notifyEl = useRef(null);
 
   /*
+  * Process json returned from API
+  * @param {object} data
+  */
+  function processJson(data) {
+    if (!data) {
+      throw new Error();
+    }
+    const { cancerType } = data;
+
+    return Object.keys(cancerType).map(
+      (key) => ({ name: key, y: cancerType[key] }),
+    );
+  }
+
+  /*
    * Fetch cancer information from the server after the component is added to the DOM
    * and create the bar graph by changing the chartOptions state
    */
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      trackPromise(fetch(`${BASE_URL}/count`, {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dataset_id: datasetId,
-          logic: {
-            id: 'A',
-          },
-          components: [
-            {
-              id: 'A',
-              diagnoses: {},
-            },
-          ],
-          results: [
-            {
-              table: 'diagnoses',
-              fields: ['cancerType'],
-            },
-          ],
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.results.diagnoses[0]) {
-            throw new Error();
-          }
-          const { cancerType } = data.results.diagnoses[0];
+      trackPromise(
+        getCounts(datasetId, 'diagnoses', 'cancerType')
+          .then((data) => {
+            const graphData = processJson(data.results.diagnoses[0]);
 
-          const graphData = Object.keys(cancerType).map(
-            (key) => ({ name: key, y: cancerType[key] }),
-          );
-
-          dispatchChartOptions({ type: 'addSeries', payload: graphData });
-        }).catch(() => {
-          dispatchChartOptions({ type: 'addSeries', payload: [] });
-          notify(
-            notifyEl,
-            'Some resources you requested were not available.',
-            'warning',
-          );
-        }));
+            dispatchChartOptions({ type: 'addSeries', payload: graphData });
+          }).catch(() => {
+            dispatchChartOptions({ type: 'addSeries', payload: [] });
+            notify(
+              notifyEl,
+              'Some resources you requested were not available.',
+              'warning',
+            );
+          }),
+      );
     }
   });
 

@@ -13,8 +13,7 @@ import LoadingIndicator, {
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
 import { groupBy } from '../utils/utils';
-
-import { CHORD_METADATA_URL } from '../constants/constants';
+import { fetchIndividuals } from '../api/api';
 
 /*
  * Return a specific extra property grouped by gender
@@ -112,8 +111,7 @@ function IndividualsOverview({ updateState }) {
   useEffect(() => {
     updateState({ datasetVisible: false });
     trackPromise(
-      fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`)
-        .then((response) => response.json())
+      fetchIndividuals()
         .then((data) => {
           countIndividuals(data);
           countEthnicity(data);

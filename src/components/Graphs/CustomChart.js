@@ -6,9 +6,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import { notify, NotificationAlert } from '../../utils/alert';
-
-// Consts
-import BASE_URL from '../../constants/constants';
+import { getCounts } from '../../api/api';
 
 function splitString(newString) {
   const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -37,6 +35,9 @@ function reducer(state, action) {
       };
     case 'addRegularChart':
       return {
+        credits: {
+          enabled: false,
+        },
         chart: { type: action.payload.chartType },
         title: { text: `Distribution of ${splitString(action.payload.field)}` },
         subtitle: {
@@ -56,31 +57,24 @@ function CustomChart({
   const [chartOptions, dispatchChartOptions] = useReducer(reducer, {});
   const notifyEl = useRef(null);
 
+  function processDataForPieChart(data) {
+    return Object.keys(data).map((key) => ({ name: key, y: data[key] }));
+  }
+
+  function processDataForRegularChart(data) {
+    const graphData = [];
+    const categories = [];
+    Object.keys(data).map((key) => {
+      graphData.push(data[key]);
+      categories.push(key);
+      return 1;
+    });
+    return [graphData, categories];
+  }
+
   useEffect(() => {
     if (datasetId) {
-      fetch(`${BASE_URL}/count`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dataset_id: datasetId,
-          logic: {
-            id: 'A',
-          },
-          components: [
-            {
-              id: 'A',
-              patients: {},
-            },
-          ],
-          results: [
-            {
-              table,
-              fields: [field],
-            },
-          ],
-        }),
-      })
-        .then((response) => response.json())
+      getCounts(datasetId, table, field)
         .then((data) => {
           if (data) {
             if (!data.results[table][0]) {
@@ -88,7 +82,7 @@ function CustomChart({
             }
             const result = data.results[table][0][field];
             if (chartType === 'pie') {
-              const graphData = Object.keys(result).map((key) => ({ name: key, y: result[key] }));
+              const graphData = processDataForPieChart(result);
               dispatchChartOptions({
                 type: 'addPieChart',
                 payload: {
@@ -96,13 +90,7 @@ function CustomChart({
                 },
               });
             } else {
-              const graphData = [];
-              const categories = [];
-              Object.keys(result).map((key) => {
-                graphData.push(result[key]);
-                categories.push(key);
-                return 1;
-              });
+              const [graphData, categories] = processDataForRegularChart(result);
 
               dispatchChartOptions({
                 type: 'addRegularChart',
