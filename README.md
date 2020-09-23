@@ -18,3 +18,7 @@ npm start
 ```
 
 ## Usage
+
+### Overview page
+![image](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/overview_page.png)
+
