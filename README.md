@@ -3,6 +3,7 @@
 ### Table of Contents
 **[Installation](#installation)**<br>
 **[Usage](#usage)**<br>
+**[Contributing to this project](#contributing-to-this-project)**<br>
 
 
 ## Installation
@@ -39,4 +40,18 @@ Bellow there is a list of some (but not limited to) avaiable pages for data visu
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/individuals_overview.png) | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/gwas_browser.png)      |
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/clinical_metadata.png) |
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/chord_metadata.png)       |   ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/services_status.png)                                                                                                              |
+
+## Contributing to this project
+
+If you encounter a bug, or have a problem of using the service, please contact us by opening an issue at [issues page](https://github.com/CanDIG/candigv2_dashboard/issues)
+
+### GitHub workflow
+
+We mainly employ three different types of branches: feature branches, develop branch, and stable branch.
+
+Feature branches are used to resolve a limited set of issues, and typically follows the naming convention of username/fix_one_particular_issue. When initiating a Pull Request, you should request it to be merged back into the develop branch. The commits in individual feature branches are usually squashed, and code review usually happens at this step.
+
+Develop branch is used to host code that has passed all the tests, but may not yet be production-ready, As a developer, you are welcome to play with this branch to test some of the new functionalities.
+
+If you would like to contribute code, please fork the package to your own git repository, then initiate a Pull Request to be merged into develop.
 
