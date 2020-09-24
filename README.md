@@ -19,41 +19,21 @@ npm start
 
 ## Usage
 
+
+
 ### Dataset selection
 
 First thing first, select the desirable dataset on the top-right corner. This will load all the information for the charts. Here is a sample:
 
 ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/datasets_dropdown.png)
 
-### Overview page
+### Available pages
 
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/overview_page.png)
+Bellow there is a list of some (but not limited to) avaiable pages for data visualization. Click on the picture to expand it.
 
-
-### Patients Overview page
-
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/patients_overview.png)
-
-### Individuals Overview page
-
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/individuals_overview.png)
-
-
-### GWAS Browser page
-
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/gwas_browser.png)
-
-
-### Variants Search page
-
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/variants_search.png)
-
-### Clinical Metadata page
-
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/clinical_metadata.png)
-
-
-### Chord Metadata page
-
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/chord_metadata.png)
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/patients_overview.png) |
+|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/individuals_overview.png) | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/gwas_browser.png)      |
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/clinical_metadata.png) |
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/chord_metadata.png)       |                                                                                                               |
 
