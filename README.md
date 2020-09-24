@@ -35,5 +35,5 @@ Bellow there is a list of some (but not limited to) avaiable pages for data visu
 |------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/individuals_overview.png) | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/gwas_browser.png)      |
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/clinical_metadata.png) |
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/chord_metadata.png)       |                                                                                                               |
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/chord_metadata.png)       |   ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/services_status.png)                                                                                                              |
 
