@@ -1,5 +1,10 @@
 # CanDIGv2 Dashboard
 
+### Table of Contents
+**[Installation](#installation)**<br>
+**[Usage](#usage)**<br>
+
+
 ## Installation
 
 Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org/en/) version v10.13.0 installed
@@ -18,8 +23,6 @@ npm start
 ```
 
 ## Usage
-
-
 
 ### Dataset selection
 
