@@ -11,7 +11,7 @@
 
 ## Installation
 
-Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org/en/) version v10.13.0 installed
+Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org/en/) version v10.13.0 or above installed on your environment.
 
 Clone this repository and start the installation using the following commands:
 ```bash
