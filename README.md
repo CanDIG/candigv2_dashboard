@@ -1,9 +1,12 @@
 # CanDIGv2 Dashboard
 
 ### Table of Contents
-**[Installation](#installation)**<br>
-**[Usage](#usage)**<br>
-**[Contributing to this project](#contributing-to-this-project)**<br>
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Dataset selection](#dataset-selection)
+  - [Available pages](#available-pages)
+- [Contributing to this project](#contributing-to-this-project)
+- [GitHub workflow](#github-workflow)
 
 
 ## Installation
