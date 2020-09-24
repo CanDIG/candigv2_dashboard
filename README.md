@@ -48,12 +48,12 @@ First thing first, select the desirable dataset on the top-right corner. This wi
 
 ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/variants_search.png)
 
-### Clinical Metadata data
+### Clinical Metadata page
 
 ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/clinical_metadata.png)
 
 
-### Chord Metadata data
+### Chord Metadata page
 
 ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/chord_metadata.png)
 
