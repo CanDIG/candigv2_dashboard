@@ -36,7 +36,7 @@ First thing first, select the desirable dataset on the top-right corner. This wi
 
 ### Available pages
 
-Bellow there is a list of some (but not limited to) avaiable pages for data visualization. Click on the picture to expand it.
+Below there is a list of some (but not limited to) available pages for data visualization. Click on the picture to expand it.
 
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/patients_overview.png) |
 |------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
