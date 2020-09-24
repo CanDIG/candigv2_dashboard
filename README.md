@@ -19,6 +19,17 @@ npm start
 
 ## Usage
 
-### Overview page
-![image](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/overview_page.png)
+### Dataset selection
 
+First thing first, select the desirable dataset on the top-right corner. This will load all the information for the charts. Here is a sample:
+
+![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/datasets_dropdown.png)
+
+### Overview page
+
+![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/overview_page.png)
+
+
+### Patients Overview page
+
+![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/felipe_add_readme/docs/patients_overview.png)
