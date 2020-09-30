@@ -36,8 +36,11 @@ function DataControl({
   toggleHideAllColumns, preGlobalFilteredRows,
   setGlobalFilter, state, allColumns,
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
+  const [isCollapsedColumns, setIsCollapsedColumns] = useState(false);
+  const toggleIsCollapsedColumns = () => setIsCollapsedColumns(!isCollapsedColumns);
+  const [isCollapsedFilters, setIsCollapsedFilters] = useState(false);
+  const toggleIsCollapsedFilters = () => setIsCollapsedFilters(!isCollapsedFilters);
+
   return (
     <>
     <Style>
@@ -46,7 +49,9 @@ function DataControl({
         <InputGroup>
           <InputGroupAddon className="dataControl" addonType="prepend">
             <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
-            <Button className="toggleColumn"  onClick={toggleIsCollapsed}> Column Toggles </Button>
+            <Button className="toggleColumn"  onClick={toggleIsCollapsedColumns}> Column Toggles </Button>
+            <Button className="toggleFilters"  onClick={toggleIsCollapsedFilters}> Filter Toggles </Button>
+
             <InputGroupText className="globalSearchText">Search:</InputGroupText>
           </InputGroupAddon>
           <GlobalFilter
@@ -60,7 +65,7 @@ function DataControl({
       </Row>
       <Row>
       <Col>
-        <Collapse isOpen={isCollapsed}>
+        <Collapse isOpen={isCollapsedColumns}>
           <Card>
             <Container>
               {allColumns.map((column) => (
@@ -82,6 +87,10 @@ function DataControl({
       </Style>
     </>
   );
+}
+
+function toggleRowControls() {
+
 }
 
 DataControl.propTypes = {

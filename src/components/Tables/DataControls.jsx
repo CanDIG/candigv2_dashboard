@@ -4,8 +4,9 @@ import React, {
 import PropTypes from 'prop-types';
 
 import {
-  Card, Row, Button, Container, InputGroup, InputGroupAddon,
-  InputGroupText, Collapse, Col
+  Card, Row, Button, ButtonDropdown, DropdownToggle,
+  Container, InputGroup, InputGroupAddon, DropdownMenu,
+  InputGroupText, Collapse, Col, DropdownItem
 } from 'reactstrap';
 
 import  ClinMetadataDropdown  from '../Dropdown/ClinMetadataDropdown';
@@ -36,20 +37,55 @@ IndeterminateButton.defaultProps = {
 function DataControl({
   metadataCallback, toggleHideAllColumns,
   preGlobalFilteredRows, setGlobalFilter, state, allColumns,
+  toggleRowFilter, toggleRowAggregation,
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
+
+  const [dropdownAdvOpen, setAdvOpen] = useState(false);
+  const toggleDropdownAdv = () => setAdvOpen(!dropdownAdvOpen);
+  const [dropdownColOpen, setColOpen] = useState(false);
+  const toggleDropdownCol = () => setColOpen(!dropdownColOpen);
+
   return (
     <>
-    <Style>
+        <Style>
       <Row>
         <Col>
         <InputGroup>
           <InputGroupAddon className="dataControl" addonType="prepend">
             <ClinMetadataDropdown className="dataDropdown" metadataCallback={metadataCallback} />
+
             <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
-            <Button className="toggleColumn" color="primary" onClick={toggleIsCollapsed}> Column Toggles </Button>
-            <InputGroupText className="globalSearchText">Search</InputGroupText>
+            <ButtonDropdown className="toggleColumn"  isOpen={dropdownColOpen} toggle={toggleDropdownCol}>
+              <DropdownToggle caret>
+                  Hide Columns
+                </DropdownToggle>
+                <DropdownMenu>
+                  {allColumns.map((column) => (
+                  <DropdownItem
+                    onClick={() => column.toggleHidden()}
+                    key={column.id}
+                    active={column.isVisible}
+                  >
+                    {' '}
+                    {column.id}
+                    {' '}
+                  </DropdownItem>
+                ))}
+                </DropdownMenu>
+            
+            </ButtonDropdown>
+
+            <ButtonDropdown className="toggleAdvanced" isOpen={dropdownAdvOpen} toggle={toggleDropdownAdv}>
+              <DropdownToggle caret>
+                Advanced
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={toggleRowFilter}>Row Filters</DropdownItem>
+                <DropdownItem onClick={toggleRowAggregation}>Row Aggregation</DropdownItem>
+              </DropdownMenu>
+            </ButtonDropdown>
+
+            <InputGroupText className="globalSearchText">Search:</InputGroupText>
           </InputGroupAddon>
           <GlobalFilter
             className="globalSearchBar"
@@ -59,30 +95,14 @@ function DataControl({
           />
         </InputGroup>
         </Col>
-
       </Row>
       <Row>
-      <Col>
-
-        <Collapse isOpen={isCollapsed}>
-          <Card>
-            <Container>
-              {allColumns.map((column) => (
-                <Button
-                  onClick={() => column.toggleHidden()}
-                  key={column.id}
-                  active={column.isVisible}
-                >
-                  {' '}
-                  {column.id}
-                  {' '}
-                </Button>
-              ))}
-            </Container>
-          </Card>
-        </Collapse>
+        </Row>
+        <Row>
+        <Col>
         </Col>
-      </Row>
+        </Row>
+   
       </Style>
     </>
   );
@@ -91,17 +111,17 @@ function DataControl({
 DataControl.propTypes = {
   metadataCallback: PropTypes.func,
   toggleHideAllColumns: PropTypes.func,
-  preGlobalFilteredRows: PropTypes.func,
+  preGlobalFilteredRows: PropTypes.arrayOf(PropTypes.object),
   setGlobalFilter: PropTypes.func,
-  state: PropTypes.arrayOf(PropTypes.object),
+  state: PropTypes.object,
   allColumns: PropTypes.arrayOf(PropTypes.object),
 };
 DataControl.defaultProps = {
   metadataCallback: () => {},
   toggleHideAllColumns: () => {},
-  preGlobalFilteredRows: () => {},
+  preGlobalFilteredRows: [],
   setGlobalFilter: () => {},
-  state: [],
+  state: {},
   allColumns: [],
 };
 

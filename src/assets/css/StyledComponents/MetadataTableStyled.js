@@ -27,7 +27,11 @@ const Styles = styled.div`
         border-right: 0;
       }
     }
+
+
   }
+
+
 
   .pageCountBox {
     margin-left: .3rem;

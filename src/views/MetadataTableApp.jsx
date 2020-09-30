@@ -6,21 +6,37 @@ import BASE_URL from '../constants/constants';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
+import {tableSchema} from '../constants/tableSchemaFilters';
 
-function CreateColumns(columnNames, setState) {
+
+function ProcessName(name) {
+  const capitalized = (name.charAt(0).toLocaleUpperCase() + name.slice(1))
+  const regex = /[A-Z]{1}[a-z]*/g;
+  const groups = [...capitalized.matchAll(regex)]
+  return groups.join(' ')
+
+}
+
+
+function CreateColumns(columnNames, setColumnState, columnSchema) {
   const columnList = [];
 
   Object.values(columnNames).forEach((name) => {
-    const column = {
-      Header: (name.charAt(0).toLocaleUpperCase() + name.slice(1)),
-      accessor: name,
-      filter: 'fuzzyText',
-      aggregate: 'count',
-      Aggregated: ({ value }) => `${value} `,
-    };
-    columnList.push(column);
+    if (columnSchema[name]['active']) { 
+      const column = {
+        Header: ProcessName(name),
+        accessor: name,
+        Filter: columnSchema[name]['Filter'],
+        hidden: columnSchema[name]['hidden'],
+        aggregate: 'count',
+        Aggregated: ({ value }) => `${value} `,
+      };
+      columnList.push(column);
+
+    }
+
   });
-  setState(columnList);
+  setColumnState(columnList);
 }
 
 function TableApp({ datasetId }) {
@@ -56,7 +72,7 @@ function TableApp({ datasetId }) {
                 datasets.push(dataResponse.results[selectedMetadata][i]);
               }
               setData(datasets);
-              CreateColumns(Object.keys(datasets[0]), setColumns);
+              CreateColumns(Object.keys(datasets[0]), setColumns, tableSchema[selectedMetadata]);
             })
             .catch(() => {
               notify(
