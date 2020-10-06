@@ -13,7 +13,9 @@
     "history": "4.10.1",
     "igv": "^2.6.6",
     "match-sorter": "^4.2.0",
+    "node-fetch": "^2.6.1",
     "node-sass": "4.14.1",
+    "npm": "^6.14.8",
     "perfect-scrollbar": "1.5.0",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
@@ -25,6 +27,7 @@
     "react-scripts": "^3.4.3",
     "react-table": "^7.3.2",
     "reactstrap": "8.4.1",
+    "regenerator-runtime": "^0.13.7",
     "styled-components": "^5.1.1",
     "swagger-ui-react": "^3.28.0",
     "use-state-with-callback": "^2.0.3"
@@ -57,6 +60,8 @@
     "typescript": "3.9.5"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
     "depcheck": "^1.2.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
@@ -66,7 +71,8 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
-    "jest": "^26.4.2"
+    "jest": "^26.4.2",
+    "react-test-renderer": "^16.13.1"
   },
   "env": {
     "development": {

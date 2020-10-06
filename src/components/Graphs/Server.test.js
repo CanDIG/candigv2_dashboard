@@ -1,11 +1,16 @@
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { beforeEach, afterEach } from "@jest/globals";
-import { act } from "react-dom/test-utils";
+// import { act } from "react-dom/test-utils";
+import TestRenderer from 'react-test-renderer';
+const {act} = TestRenderer;
+import renderer from "react-test-renderer";
+
+import "regenerator-runtime/runtime.js";
 
 import Server from "./Server";
 
 let container = null;
+
 beforeEach(() => {
   container = document.createElement("div");
   document.body.appendChild(container);
@@ -17,24 +22,35 @@ afterEach(() => {
   container = null;
 });
 
-it("renders server chart", async () => {
+test("renders server data", async () => {
   const fakeServerData = {
+    response: { ok: true },
     status: {
-      "Known peers": 2,
-      "Queried peers": 2,
-      "Successful communications": 2,
+      "Known peers": 99999,
+      "Queried peers": 99998,
+      "Successful communications": 99997,
       "Valid response": true,
     },
   };
-  jest
-    .spyOn(global, "fetch")
-    .mockImplementation(() =>
-      Promise.resolve({ json: () => Promise.resolve(fakeUser) })
-    );
 
-  await act(async () => {
-    render(<Server datasetId="blah" />, container);
+  const mockJsonPromise = Promise.resolve(fakeServerData);
+  const mockFetchPromise = Promise.resolve({
+    json: () => mockJsonPromise,
+    ok: true,
   });
 
-  global.fetch.mockRestore();
+  global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
+
+  await act(async () => {
+    // render(<Server datasetId="blah" />, container);
+    const component = renderer.create(
+      <Server datasetId="blah" />,
+    );
+  });
+  
+  // console.log("container", container.innerHTML);
+
+  // global.fetch.mockRestore();
+  global.fetch.mockClear();
+  delete global.fetch;
 });
