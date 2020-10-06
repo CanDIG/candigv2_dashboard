@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   useTable, useSortBy, usePagination, useFilters,
@@ -15,43 +15,41 @@ import DataControl from './DataControls';
 
 FuzzyTextFilterFn.autoRemove = (val) => !val;
 
-function TableHeader({headerGroups, getColumnSortSymbol}) {
-
-
+function TableHeader({ headerGroups, getColumnSortSymbol }) {
   return (
     <thead>
-    {headerGroups.map((headerGroup) => (
-      <tr {...headerGroup.getHeaderGroupProps()}>
-        {headerGroup.headers.map((column) => (
-          <th scope="row" {...column.getHeaderProps()}>
-            <div>
-              {column.canGroupBy ? (
-              // If the column can be grouped, add a toggle
-                <span {...column.getGroupByToggleProps()}>
-                  {column.isGrouped ? '➖' : '➕ '}
+      {headerGroups.map((headerGroup) => (
+        <tr {...headerGroup.getHeaderGroupProps()}>
+          {headerGroup.headers.map((column) => (
+            <th scope="row" {...column.getHeaderProps()}>
+              <div>
+                {column.canGroupBy ? (
+                // If the column can be grouped, add a toggle
+                  <span {...column.getGroupByToggleProps()}>
+                    {column.isGrouped ? '➖' : '➕ '}
+                  </span>
+                ) : null}
+                <span {...column.getSortByToggleProps()}>
+                  {column.render('Header')}
+                  {/* Add a sort direction indicator */}
+                  {getColumnSortSymbol(column)}
                 </span>
-              ) : null}
-              <span {...column.getSortByToggleProps()}>
-                {column.render('Header')}
-                {/* Add a sort direction indicator */}
-                {getColumnSortSymbol(column)}
-              </span>
-            </div>
-            {/* Render the columns filter UI */}
-            <div>{column.canFilter ? column.render('Filter') : null}</div>
-          </th>
+              </div>
+              {/* Render the columns filter UI */}
+              <div>{column.canFilter ? column.render('Filter') : null}</div>
+            </th>
 
-        ))}
-      </tr>
+          ))}
+        </tr>
 
-    ))}
-  </thead>
-  )
-
+      ))}
+    </thead>
+  );
 }
 
-
-function ClinMetadataTable({ columns, data, metadataCallback, columnSchema }) {
+function ClinMetadataTable({
+  columns, data, metadataCallback, isActiveMetadataDropdown, setActiveID, isMainTable,
+}) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -78,8 +76,6 @@ function ClinMetadataTable({ columns, data, metadataCallback, columnSchema }) {
     [],
   );
 
-  console.log(columns)
-
   const {
     getTableProps, getTableBodyProps, headerGroups, prepareRow,
     allColumns, toggleHideAllColumns, state, page,
@@ -90,29 +86,28 @@ function ClinMetadataTable({ columns, data, metadataCallback, columnSchema }) {
   } = useTable({
     columns,
     data,
-    initialState: { 
+    initialState: {
       pageIndex: 0,
-      hiddenColumns: columns.filter(column => column.hidden).map(column => column.accessor) 
+      hiddenColumns: columns.filter((column) => column.hidden).map((column) => column.accessor),
     },
     filterTypes,
     defaultColumn,
-    
+
   },
   useFilters, useGlobalFilter, useGroupBy,
   useSortBy, useExpanded, usePagination);
 
-  const [rowFilterVisible, setRowFilterVisible] = useState(true)
+  const [rowFilterVisible, setRowFilterVisible] = useState(true);
 
   function toggleRowFilterVisible() {
-    setRowFilterVisible(!rowFilterVisible)
+    setRowFilterVisible(!rowFilterVisible);
   }
 
-  const [rowAggregationVisible, setRowAggregationVisible] = useState(true)
+  const [rowAggregationVisible, setRowAggregationVisible] = useState(true);
 
   function toggleRowAggregationVisible() {
-    setRowAggregationVisible(!rowAggregationVisible)
+    setRowAggregationVisible(!rowAggregationVisible);
   }
-
 
   function getColumnSortSymbol(column) {
     if (column.isSorted) {
@@ -158,60 +153,76 @@ function ClinMetadataTable({ columns, data, metadataCallback, columnSchema }) {
     return cell.render('Cell');
   }
 
+  const TopBar = () => {
+    if (isMainTable) {
+      return (
+        <DataControl
+          metadataCallback={metadataCallback}
+          toggleHideAllColumns={toggleHideAllColumns}
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          setGlobalFilter={setGlobalFilter}
+          state={state}
+          allColumns={allColumns}
+          toggleRowFilter={toggleRowFilterVisible}
+          toggleRowAggregation={toggleRowAggregationVisible}
+          isActiveMetadaDropdown={isActiveMetadataDropdown}
+        />
+      );
+    }
+    return (<></>);
+  };
 
   return (
     <>
-      <DataControl
-        metadataCallback={metadataCallback}
-        toggleHideAllColumns={toggleHideAllColumns}
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        setGlobalFilter={setGlobalFilter}
-        state={state}
-        allColumns={allColumns}
-        toggleRowFilter={toggleRowFilterVisible}
-        toggleRowAggregation={toggleRowAggregationVisible}
-      />
-      <Row>
+      {data.length > 0
+        ? (
+          <>
+            <TopBar />
+            <Row>
 
-        <Styles rowFilter={rowFilterVisible} rowAggregation={rowAggregationVisible}>
-          <table {...getTableProps()} >
-            <TableHeader 
-              headerGroups={headerGroups} 
-              getColumnSortSymbol={getColumnSortSymbol} 
-             />
-            <tbody {...getTableBodyProps()}>
-              {page.map((row) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        style={getCellStyle(cell)}
-                      >
-                        {handleAggregation(cell, row)}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </Styles>
-        <PaginationBar
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
-          pageOptions={pageOptions}
-          pageCount={pageCount}
-          gotoPage={gotoPage}
-          nextPage={nextPage}
-          previousPage={previousPage}
-          setPageSize={setPageSize}
-          pageSize={pageSize}
-          pageIndex={pageIndex}
-        />
+              <Styles rowFilter={rowFilterVisible} rowAggregation={rowAggregationVisible}>
+                <table {...getTableProps()}>
+                  <TableHeader
+                    headerGroups={headerGroups}
+                    getColumnSortSymbol={getColumnSortSymbol}
+                  />
+                  <tbody {...getTableBodyProps()}>
+                    {page.map((row) => {
+                      prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()} onClick={() => { setActiveID(row.values.ID); }}>
+                          {row.cells.map((cell) => (
+                            <td
+                              {...cell.getCellProps()}
+                              style={getCellStyle(cell)}
+                            >
+                              {handleAggregation(cell, row)}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Styles>
+            </Row>
 
-      </Row>
+            <PaginationBar
+              canPreviousPage={canPreviousPage}
+              canNextPage={canNextPage}
+              pageOptions={pageOptions}
+              pageCount={pageCount}
+              gotoPage={gotoPage}
+              nextPage={nextPage}
+              previousPage={previousPage}
+              setPageSize={setPageSize}
+              pageSize={pageSize}
+              pageIndex={pageIndex}
+            />
+          </>
+        )
+        : <></>}
+
     </>
   );
 }
@@ -220,13 +231,14 @@ ClinMetadataTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object),
   data: PropTypes.arrayOf(PropTypes.object),
   metadataCallback: PropTypes.func,
-  columnSchema: PropTypes.object
+  activeMetadata: PropTypes.bool, 
+  setActiveID: PropTypes.string, 
+  isMainTable: PropTypes.bool
 };
 ClinMetadataTable.defaultProps = {
   columns: [],
   data: [],
   metadataCallback: () => {},
-  columnSchema: {}
 };
 
 export default ClinMetadataTable;

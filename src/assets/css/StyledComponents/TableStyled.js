@@ -20,9 +20,9 @@ const Styles = styled.div`
     padding: 3px 2px;
     // word-wrap: break-word;
     // text-overflow: ellipsis;
-    overflow: auto;
-    white-space: nowrap;
-    max-width: 150px;
+    // overflow: auto;
+    // white-space: nowrap;
+    max-width: 250px;
     min-width: 100px;
     // max-height: 100px;
 
@@ -45,9 +45,12 @@ const Styles = styled.div`
     text-align: center;
     border-left: 1px solid #444444;
     // word-wrap: break-word;
-    max-width: 100px;
+    max-width: 200px;
     max-height: 50px;
     // overflow: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+
 
   }
   table thead th:first-child {

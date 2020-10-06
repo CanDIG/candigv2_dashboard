@@ -9,22 +9,19 @@ import { notify, NotificationAlert } from '../utils/alert';
 import {tableSchema} from '../constants/tableSchemaFilters';
 
 
-function ProcessName(name) {
-  const capitalized = (name.charAt(0).toLocaleUpperCase() + name.slice(1))
-  const regex = /[A-Z]{1}[a-z]*/g;
-  const groups = [...capitalized.matchAll(regex)]
-  return groups.join(' ')
-
-}
-
-
 function CreateColumns(columnNames, setColumnState, columnSchema) {
   const columnList = [];
+
+  const displayName = (id) => {
+    const capitalized = (id.charAt(0).toLocaleUpperCase() + id.slice(1));
+    return [...capitalized.matchAll(/[A-Z]{1}[a-z]*/g)].join(' ');
+  }
+
 
   Object.values(columnNames).forEach((name) => {
     if (columnSchema[name]['active']) { 
       const column = {
-        Header: ProcessName(name),
+        Header: displayName(name),
         accessor: name,
         Filter: columnSchema[name]['Filter'],
         hidden: columnSchema[name]['hidden'],
@@ -106,6 +103,10 @@ function TableApp({ datasetId }) {
             columns={columnsM}
             data={dataM}
             metadataCallback={setSelectedMetadata}
+            isActiveMetadaDropdown={true}
+            setActiveID={() => {}}
+            isMainTable={true}
+
           />
         </>
       )}
