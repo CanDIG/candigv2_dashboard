@@ -103,7 +103,7 @@ function TableApp({ datasetId }) {
             columns={columnsM}
             data={dataM}
             metadataCallback={setSelectedMetadata}
-            isActiveMetadaDropdown={true}
+            isActiveMetadataDropdown={true}
             setActiveID={() => {}}
             isMainTable={true}
 

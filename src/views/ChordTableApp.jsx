@@ -184,7 +184,7 @@ function TableApp() {
             columns={columnsM}
             data={dataM}
             metadataCallback={() => {}}
-            isActiveMetadaDropdown={false}
+            isActiveMetadataDropdown={false}
             setActiveID={setActiveID}
             isMainTable
           />
@@ -192,7 +192,7 @@ function TableApp() {
             columns={columnsD}
             data={dataD}
             metadataCallback={() => {}}
-            isActiveMetadaDropdown={false}
+            isActiveMetadataDropdown={false}
             setActiveID={() => {}}
             isMainTable={false}
           />
@@ -200,7 +200,7 @@ function TableApp() {
             columns={columnsF}
             data={dataF}
             metadataCallback={() => {}}
-            isActiveMetadaDropdown={false}
+            isActiveMetadataDropdown={false}
             setActiveID={() => {}}
             isMainTable={false}
           />
