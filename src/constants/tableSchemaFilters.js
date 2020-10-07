@@ -306,6 +306,7 @@ export const tableSchema = {
     'therapeuticModality': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
     'recordingDate': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
     'radiotherapyDose': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
+    'treatmentPlanId': {'Filter':DefaultColumnFilter, 'active': false, 'hidden': false},
   },
   immunotherapies: {
     'id': {'Filter':DefaultColumnFilter, 'active': false, 'hidden': false},
@@ -317,6 +318,7 @@ export const tableSchema = {
     'immunotherapyTarget': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
     'immunotherapyDetail': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
     'courseNumber': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
+    'treatmentPlanId': {'Filter':DefaultColumnFilter, 'active': false, 'hidden': false},
   },
   surgeries: {
     'id': {'Filter':DefaultColumnFilter, 'active': false, 'hidden': false},
