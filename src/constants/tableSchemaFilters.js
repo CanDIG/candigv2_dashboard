@@ -275,6 +275,7 @@ export const tableSchema = {
     'recordingDate': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
     'courseNumber': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
     'systematicTherapyAgentName': {'Filter':DefaultColumnFilter, 'active': true, 'hidden': false},
+    'treatmentPlanId': {'Filter':DefaultColumnFilter, 'active': false, 'hidden': false}
   },
   radiotherapies: {
     'id': {'Filter':DefaultColumnFilter, 'active': false, 'hidden': false},
