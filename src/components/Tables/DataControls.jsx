@@ -36,7 +36,7 @@ IndeterminateButton.defaultProps = {
 function DataControl({
   metadataCallback, toggleHideAllColumns,
   preGlobalFilteredRows, setGlobalFilter, state, allColumns,
-  toggleRowFilter, toggleRowAggregation, activeMetadata
+  toggleRowFilter, toggleRowAggregation, isActiveMetadataDropdown
 }) {
   const [dropdownAdvOpen, setAdvOpen] = useState(false);
   const toggleDropdownAdv = () => setAdvOpen(!dropdownAdvOpen);
@@ -55,7 +55,7 @@ function DataControl({
           <Col>
             <InputGroup>
               <InputGroupAddon className="dataControl" addonType="prepend">
-                <ClinMetadataDropdown className="dataDropdown" metadataCallback={metadataCallback} activeMetadata={activeMetadata} />
+                <ClinMetadataDropdown className="dataDropdown" metadataCallback={metadataCallback} isActive={isActiveMetadataDropdown} />
 
                 <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
                 <ButtonDropdown className="toggleColumn" isOpen={dropdownColOpen} toggle={toggleDropdownCol}>

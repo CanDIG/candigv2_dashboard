@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 // Consts
 import { CLIN_METADATA } from '../../constants/constants';
 
-function ClinMetadataDropdown({ metadataCallback, activeMetadata }) {
+function ClinMetadataDropdown({ metadataCallback, isActive }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState('patients');
 
@@ -16,6 +16,8 @@ function ClinMetadataDropdown({ metadataCallback, activeMetadata }) {
     setSelected(entry);
     metadataCallback(entry);
   };
+
+  console.log(isActive)
 
   const metadataList = [];
   CLIN_METADATA.forEach((entry) => {
@@ -30,7 +32,7 @@ function ClinMetadataDropdown({ metadataCallback, activeMetadata }) {
       </DropdownItem>,
     );
   });
-  if (activeMetadata) {
+  if (isActive) {
     return (
       <ButtonDropdown direction="down" isOpen={isOpen} toggle={toggleOpen}>
         <DropdownToggle caret>

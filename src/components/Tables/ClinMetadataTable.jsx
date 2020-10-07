@@ -165,7 +165,7 @@ function ClinMetadataTable({
           allColumns={allColumns}
           toggleRowFilter={toggleRowFilterVisible}
           toggleRowAggregation={toggleRowAggregationVisible}
-          isActiveMetadaDropdown={isActiveMetadataDropdown}
+          isActiveMetadataDropdown={isActiveMetadataDropdown}
         />
       );
     }
