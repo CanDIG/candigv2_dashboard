@@ -64,7 +64,11 @@ export function DefaultColumnFilter({
 }
 
 DefaultColumnFilter.propTypes = {
-  column: PropTypes.object,
+  column: PropTypes.shape({
+    filterValue: PropTypes.string,
+    preFilteredRows: PropTypes.arrayOf(PropTypes.object),
+    setFilter: PropTypes.func,
+  }),
 };
 
 DefaultColumnFilter.defaultProps = {
@@ -76,32 +80,47 @@ export function FuzzyTextFilterFn(rows, id, filterValue) {
 }
 
 export function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
+  column: {
+    filterValue, setFilter, preFilteredRows, id,
+  },
 }) {
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {
-    const options = new Set()
-    preFilteredRows.forEach(row => {
-      options.add(row.values[id])
-    })
-    return [...options.values()]
-  }, [id, preFilteredRows])
+    const option = new Set();
+    preFilteredRows.forEach((row) => {
+      option.add(row.values[id]);
+    });
+    return [...option.values()];
+  }, [id, preFilteredRows]);
 
   // Render a multi-select box
   return (
     <select
       value={filterValue}
-      onChange={e => {
-        setFilter(e.target.value || undefined)
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
       }}
     >
       <option value="">All</option>
       {options.map((option, i) => (
-        <option key={i} value={option}>
+        <option value={option}>
           {option}
         </option>
       ))}
     </select>
-  )
+  );
 }
+
+SelectColumnFilter.propTypes = {
+  column: PropTypes.shape({
+    filterValue: PropTypes.string,
+    preFilteredRows: PropTypes.arrayOf(PropTypes.object),
+    setFilter: PropTypes.func,
+    id: PropTypes.string,
+  }),
+};
+
+SelectColumnFilter.defaultProps = {
+  column: {},
+};

@@ -12,14 +12,12 @@ function ClinMetadataDropdown({ metadataCallback, isActive }) {
   const [selected, setSelected] = useState('Type');
   const toggleOpen = () => setIsOpen(!isOpen);
 
-  React.useEffect(() => {
-    document.title = `Test Selected: ${selected}`;
-  }, [selected]);
-
   const handleClick = (entry) => {
     metadataCallback(entry);
     setSelected(entry);
   };
+
+  //TODO: Fix selected update to reflect chosen dataset
 
   const metadataList = [];
   CLIN_METADATA.forEach((entry) => {
