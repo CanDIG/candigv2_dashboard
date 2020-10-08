@@ -103,7 +103,7 @@ export function SelectColumnFilter({
       }}
     >
       <option value="">All</option>
-      {options.map((option, i) => (
+      {options.map((option) => (
         <option value={option}>
           {option}
         </option>
