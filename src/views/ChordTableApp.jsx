@@ -1,11 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
+import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
 } from '../components/Processing/ChordSchemas';
 
-import ChordMetadataTable from '../components/Tables/ChordMetadataTable';
-import ChordSubTable from '../components/Tables/ChordSubTable';
 import { CHORD_METADATA_URL } from '../constants/constants';
 
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
@@ -79,7 +78,6 @@ function TableApp() {
       );
     } catch (err) {
       // Need better reporting
-      console.log(err);
       notify(
         notifyEl,
         'The resources you requested were not available.',
@@ -181,9 +179,30 @@ function TableApp() {
         <>
           <NotificationAlert ref={notifyEl} />
 
-          <ChordMetadataTable columns={columnsM} data={dataM} setActiveID={setActiveID} />
-          <ChordSubTable columns={columnsD} data={dataD} />
-          <ChordSubTable columns={columnsF} data={dataF} />
+          <ClinMetadataTable
+            columns={columnsM}
+            data={dataM}
+            metadataCallback={() => {}}
+            isActiveMetadataDropdown={false}
+            setActiveID={setActiveID}
+            isMainTable
+          />
+          <ClinMetadataTable
+            columns={columnsD}
+            data={dataD}
+            metadataCallback={() => {}}
+            isActiveMetadataDropdown={false}
+            setActiveID={() => {}}
+            isMainTable={false}
+          />
+          <ClinMetadataTable
+            columns={columnsF}
+            data={dataF}
+            metadataCallback={() => {}}
+            isActiveMetadataDropdown={false}
+            setActiveID={() => {}}
+            isMainTable={false}
+          />
         </>
       )}
     </div>

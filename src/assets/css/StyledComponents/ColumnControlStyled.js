@@ -12,6 +12,18 @@ const Style = styled(InputGroup)`
     background-color: #0b65a3;
   }
 
+  button.dropdown-item {
+    background: #FFFFFF
+  }
+
+  button.dropdown-item.active {
+    background: #EEEEEE
+  }
+
+  .dropdown-menu {
+    max-height: 400px;
+    overflow: auto;
+  }
 
   button:hover {
     background-color: #17a018

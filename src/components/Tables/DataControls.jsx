@@ -4,14 +4,14 @@ import React, {
 import PropTypes from 'prop-types';
 
 import {
-  Card, Row, Button, Container, InputGroup, InputGroupAddon,
-  InputGroupText, Collapse, Col
+  Row, Button, ButtonDropdown, DropdownToggle,
+  InputGroup, InputGroupAddon, DropdownMenu,
+  InputGroupText, Col, DropdownItem,
 } from 'reactstrap';
 
-import  ClinMetadataDropdown  from '../Dropdown/ClinMetadataDropdown';
+import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
+import ClinMetadataDropdown from '../Dropdowns/ClinMetadataDropdown';
 import { GlobalFilter } from '../Filters/filters';
-import Style from 'assets/css/StyledComponents/ColumnControlStyled'
-
 
 const IndeterminateButton = forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -36,53 +36,74 @@ IndeterminateButton.defaultProps = {
 function DataControl({
   metadataCallback, toggleHideAllColumns,
   preGlobalFilteredRows, setGlobalFilter, state, allColumns,
+  toggleRowFilter, toggleRowAggregation, isActiveMetadataDropdown,
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const toggleIsCollapsed = () => setIsCollapsed(!isCollapsed);
+  const [dropdownAdvOpen, setAdvOpen] = useState(false);
+  const toggleDropdownAdv = () => setAdvOpen(!dropdownAdvOpen);
+  const [dropdownColOpen, setColOpen] = useState(false);
+  const toggleDropdownCol = () => setColOpen(!dropdownColOpen);
+
+  const displayName = (id) => {
+    const capitalized = (id.charAt(0).toLocaleUpperCase() + id.slice(1));
+    return [...capitalized.matchAll(/[A-Z]{1}[a-z]*/g)].join(' ');
+  };
+
   return (
     <>
-    <Style>
-      <Row>
-        <Col>
-        <InputGroup>
-          <InputGroupAddon className="dataControl" addonType="prepend">
-            <ClinMetadataDropdown className="dataDropdown" metadataCallback={metadataCallback} />
-            <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
-            <Button className="toggleColumn" color="primary" onClick={toggleIsCollapsed}> Column Toggles </Button>
-            <InputGroupText className="globalSearchText">Search</InputGroupText>
-          </InputGroupAddon>
-          <GlobalFilter
-            className="globalSearchBar"
-            preGlobalFilteredRows={preGlobalFilteredRows}
-            globalFilter={state.globalFilter || ''}
-            setGlobalFilter={setGlobalFilter}
-          />
-        </InputGroup>
-        </Col>
+      <Style>
+        <Row>
+          <Col>
+            <InputGroup>
+              <InputGroupAddon className="dataControl" addonType="prepend">
+                <ClinMetadataDropdown className="dataDropdown" metadataCallback={metadataCallback} isActive={isActiveMetadataDropdown} />
 
-      </Row>
-      <Row>
-      <Col>
+                <IndeterminateButton className="toggleAll" onClick={() => toggleHideAllColumns()}> Toggle all </IndeterminateButton>
+                <ButtonDropdown className="toggleColumn" isOpen={dropdownColOpen} toggle={toggleDropdownCol}>
+                  <DropdownToggle caret>
+                    Hide Columns
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    {allColumns.map((column) => (
+                      <DropdownItem
+                        onClick={() => column.toggleHidden()}
+                        key={column.id}
+                        active={column.isVisible}
+                      >
+                        {' '}
+                        {displayName(column.id)}
+                        {' '}
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
 
-        <Collapse isOpen={isCollapsed}>
-          <Card>
-            <Container>
-              {allColumns.map((column) => (
-                <Button
-                  onClick={() => column.toggleHidden()}
-                  key={column.id}
-                  active={column.isVisible}
-                >
-                  {' '}
-                  {column.id}
-                  {' '}
-                </Button>
-              ))}
-            </Container>
-          </Card>
-        </Collapse>
-        </Col>
-      </Row>
+                </ButtonDropdown>
+
+                <ButtonDropdown className="toggleAdvanced" isOpen={dropdownAdvOpen} toggle={toggleDropdownAdv}>
+                  <DropdownToggle caret>
+                    Advanced
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={toggleRowFilter}>Row Filters</DropdownItem>
+                    <DropdownItem onClick={toggleRowAggregation}>Row Aggregation</DropdownItem>
+                  </DropdownMenu>
+                </ButtonDropdown>
+
+                <InputGroupText className="globalSearchText">Search:</InputGroupText>
+              </InputGroupAddon>
+              <GlobalFilter
+                className="globalSearchBar"
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={state.globalFilter || ''}
+                setGlobalFilter={setGlobalFilter}
+              />
+            </InputGroup>
+          </Col>
+        </Row>
+        <Row />
+        <Row>
+          <Col />
+        </Row>
+
       </Style>
     </>
   );
@@ -91,18 +112,27 @@ function DataControl({
 DataControl.propTypes = {
   metadataCallback: PropTypes.func,
   toggleHideAllColumns: PropTypes.func,
-  preGlobalFilteredRows: PropTypes.func,
+  preGlobalFilteredRows: PropTypes.arrayOf(PropTypes.object),
   setGlobalFilter: PropTypes.func,
-  state: PropTypes.arrayOf(PropTypes.object),
+  state: PropTypes.shape({
+    globalFilter: PropTypes.func,
+  }),
   allColumns: PropTypes.arrayOf(PropTypes.object),
+  toggleRowFilter: PropTypes.func,
+  toggleRowAggregation: PropTypes.func,
+  isActiveMetadataDropdown: PropTypes.bool,
+
 };
 DataControl.defaultProps = {
   metadataCallback: () => {},
   toggleHideAllColumns: () => {},
-  preGlobalFilteredRows: () => {},
+  preGlobalFilteredRows: [],
   setGlobalFilter: () => {},
-  state: [],
+  state: {},
   allColumns: [],
+  toggleRowFilter: () => {},
+  toggleRowAggregation: () => {},
+  isActiveMetadataDropdown: false,
 };
 
 export default DataControl;
