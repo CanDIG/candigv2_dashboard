@@ -6,8 +6,7 @@ import BASE_URL from '../constants/constants';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import {tableSchema} from '../constants/tableSchemaFilters';
-
+import { tableSchema } from '../constants/tableSchemaFilters';
 
 function CreateColumns(columnNames, setColumnState, columnSchema) {
   const columnList = [];
@@ -15,23 +14,20 @@ function CreateColumns(columnNames, setColumnState, columnSchema) {
   const displayName = (id) => {
     const capitalized = (id.charAt(0).toLocaleUpperCase() + id.slice(1));
     return [...capitalized.matchAll(/[A-Z]{1}[a-z]*/g)].join(' ');
-  }
-
+  };
 
   Object.values(columnNames).forEach((name) => {
-    if (columnSchema[name]['active']) { 
+    if (columnSchema[name].active) {
       const column = {
         Header: displayName(name),
         accessor: name,
-        Filter: columnSchema[name]['Filter'],
-        hidden: columnSchema[name]['hidden'],
+        Filter: columnSchema[name].Filter,
+        hidden: columnSchema[name].hidden,
         aggregate: 'count',
         Aggregated: ({ value }) => `${value} `,
       };
       columnList.push(column);
-
     }
-
   });
   setColumnState(columnList);
 }
@@ -103,9 +99,9 @@ function TableApp({ datasetId }) {
             columns={columnsM}
             data={dataM}
             metadataCallback={setSelectedMetadata}
-            isActiveMetadataDropdown={true}
+            isActiveMetadataDropdown
             setActiveID={() => {}}
-            isMainTable={true}
+            isMainTable
 
           />
         </>

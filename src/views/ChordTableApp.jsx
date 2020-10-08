@@ -78,7 +78,6 @@ function TableApp() {
       );
     } catch (err) {
       // Need better reporting
-      console.log(err);
       notify(
         notifyEl,
         'The resources you requested were not available.',

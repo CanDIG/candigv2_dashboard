@@ -9,15 +9,17 @@ import { CLIN_METADATA } from '../../constants/constants';
 
 function ClinMetadataDropdown({ metadataCallback, isActive }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState('patients');
-
+  const [selected, setSelected] = useState('Type');
   const toggleOpen = () => setIsOpen(!isOpen);
-  const handleClick = (entry) => {
-    setSelected(entry);
-    metadataCallback(entry);
-  };
 
-  console.log(isActive)
+  React.useEffect(() => {
+    document.title = `Test Selected: ${selected}`;
+  }, [selected]);
+
+  const handleClick = (entry) => {
+    metadataCallback(entry);
+    setSelected(entry);
+  };
 
   const metadataList = [];
   CLIN_METADATA.forEach((entry) => {
@@ -45,16 +47,17 @@ function ClinMetadataDropdown({ metadataCallback, isActive }) {
     );
   }
 
-  return (<></>)
-
+  return (<></>);
 }
 
 ClinMetadataDropdown.propTypes = {
   metadataCallback: PropTypes.func,
+  isActive: PropTypes.bool,
 };
 
 ClinMetadataDropdown.defaultProps = {
   metadataCallback: () => {},
+  isActive: false,
 };
 
 export default ClinMetadataDropdown;

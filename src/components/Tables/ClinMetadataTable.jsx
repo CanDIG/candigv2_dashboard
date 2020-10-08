@@ -47,6 +47,16 @@ function TableHeader({ headerGroups, getColumnSortSymbol }) {
   );
 }
 
+TableHeader.propTypes = {
+  headerGroups: PropTypes.arrayOf(PropTypes.object),
+  getColumnSortSymbol: PropTypes.func,
+};
+
+TableHeader.defaultProps = {
+  headerGroups: [],
+  getColumnSortSymbol: () => {},
+};
+
 function ClinMetadataTable({
   columns, data, metadataCallback, isActiveMetadataDropdown, setActiveID, isMainTable,
 }) {
@@ -174,10 +184,11 @@ function ClinMetadataTable({
 
   return (
     <>
+      <TopBar />
+
       {data.length > 0
         ? (
           <>
-            <TopBar />
             <Row>
 
               <Styles rowFilter={rowFilterVisible} rowAggregation={rowAggregationVisible}>
@@ -231,14 +242,18 @@ ClinMetadataTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object),
   data: PropTypes.arrayOf(PropTypes.object),
   metadataCallback: PropTypes.func,
-  activeMetadata: PropTypes.bool, 
-  setActiveID: PropTypes.string, 
-  isMainTable: PropTypes.bool
+  isActiveMetadataDropdown: PropTypes.bool,
+  setActiveID: PropTypes.func,
+  isMainTable: PropTypes.bool,
 };
 ClinMetadataTable.defaultProps = {
   columns: [],
   data: [],
   metadataCallback: () => {},
+  isActiveMetadataDropdown: false,
+  isMainTable: true,
+  setActiveID: () => {},
+
 };
 
 export default ClinMetadataTable;

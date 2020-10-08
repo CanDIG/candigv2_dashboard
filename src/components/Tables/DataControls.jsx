@@ -36,7 +36,7 @@ IndeterminateButton.defaultProps = {
 function DataControl({
   metadataCallback, toggleHideAllColumns,
   preGlobalFilteredRows, setGlobalFilter, state, allColumns,
-  toggleRowFilter, toggleRowAggregation, isActiveMetadataDropdown
+  toggleRowFilter, toggleRowAggregation, isActiveMetadataDropdown,
 }) {
   const [dropdownAdvOpen, setAdvOpen] = useState(false);
   const toggleDropdownAdv = () => setAdvOpen(!dropdownAdvOpen);
@@ -46,7 +46,7 @@ function DataControl({
   const displayName = (id) => {
     const capitalized = (id.charAt(0).toLocaleUpperCase() + id.slice(1));
     return [...capitalized.matchAll(/[A-Z]{1}[a-z]*/g)].join(' ');
-  }
+  };
 
   return (
     <>
@@ -115,11 +115,13 @@ DataControl.propTypes = {
   preGlobalFilteredRows: PropTypes.arrayOf(PropTypes.object),
   setGlobalFilter: PropTypes.func,
   state: PropTypes.shape({
-    
+    globalFilter: PropTypes.func,
   }),
   allColumns: PropTypes.arrayOf(PropTypes.object),
   toggleRowFilter: PropTypes.func,
   toggleRowAggregation: PropTypes.func,
+  isActiveMetadataDropdown: PropTypes.bool,
+
 };
 DataControl.defaultProps = {
   metadataCallback: () => {},
@@ -130,6 +132,7 @@ DataControl.defaultProps = {
   allColumns: [],
   toggleRowFilter: () => {},
   toggleRowAggregation: () => {},
+  isActiveMetadataDropdown: false,
 };
 
 export default DataControl;
