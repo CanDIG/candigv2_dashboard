@@ -10,7 +10,9 @@ import {
     Input,
   } from 'reactstrap';
 import Style from '../assets/css/StyledComponents/ColumnControlStyled';
-import {searchSymptom} from 'api/api';
+import {searchSymptom, fetchIndividuals} from 'api/api';
+import { notify, NotificationAlert } from '../utils/alert';
+
 import { CHORD_METADATA_URL } from '../constants/constants';
 import RESPONSE from 'constants/phenoResp';
 import ClinMetadataTable from 'components/Tables/ClinMetadataTable';
@@ -90,6 +92,9 @@ function TableApp({ }) {
   const [diseaseTableColumns, setDiseaseTableColumns] = useState([]);
   const [featuresTableData, setFeaturesTableData] = useState([]);
   const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
+
+  const notifyEl = useRef(null);
+
 
   useEffect(() => {
     try {
