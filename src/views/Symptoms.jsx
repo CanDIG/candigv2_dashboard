@@ -10,7 +10,7 @@ import {
     Input,
   } from 'reactstrap';
 import Style from '../assets/css/StyledComponents/ColumnControlStyled';
-import searchSymptom from 'api/api';
+import {searchSymptom} from 'api/api';
 import { CHORD_METADATA_URL } from '../constants/constants';
 import RESPONSE from 'constants/phenoResp';
 import ClinMetadataTable from 'components/Tables/ClinMetadataTable';
