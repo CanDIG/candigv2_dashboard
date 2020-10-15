@@ -44,12 +44,12 @@ export function ProcessData(ID, dataList, dataSchema) {
 }
 
 export function ProcessSymptoms(phenopackets) {
-  const symptoms = [];
-  await Promise.all(phenopackets.map(async (phenopacket) => {
+  const symptoms = new Set();
+  Object.values(phenopackets).map((phenopacket) => {
     phenopacket.phenotypic_features.map((feature) => {
-      symptoms.push(feature.label)
+      symptoms.add(feature.label)
     })
-  }))
+  })
 
   return symptoms
 }
