@@ -124,6 +124,21 @@ function searchVariant(datasetId, start, end, referenceName) {
   });
 }
 
+
+function searchSymptom(symptom) {
+  return fetch(`${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return {};
+  });
+}
+
 export {
   fetchPatients,
   fetchIndividuals,
@@ -131,4 +146,5 @@ export {
   getCounts,
   fetchServers,
   searchVariant,
+  searchSymptom,
 };

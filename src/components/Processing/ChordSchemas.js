@@ -1,34 +1,37 @@
 // Assume data is present at this state
 
-// Need to turn each metadata object into objects easily mapped to tables
-// Flatten and assign higher order ID to smaller objects
+
+// Called when using /api/individuals
 
 export function ProcessMetadata(metadata) {
   const mainTable = [];
   const phenopacketsList = {};
   Object.values(metadata).forEach((entry) => {
-    const mainTableEntry = {
-      ID: entry.id,
-      DOB: entry.date_of_birth,
-      Sex: entry.sex,
-      KSex: entry.karyotypic_sex,
-      ethnicity: entry.ethnicity,
-      height: entry.extra_properties.height,
-      weight: entry.extra_properties.weight,
-      education: entry.extra_properties.education,
-      taxID: entry.taxonomy.id,
-      taxLabel: entry.taxonomy.label,
-      created: entry.created,
-      updated: entry.updated,
-
-    };
-    mainTable.push(mainTableEntry);
+    // console.log(entry)
+    mainTable.push(subjectSchema(entry));
     const ID = entry.id;
     const Pheno = entry.phenopackets[0];
     phenopacketsList[ID] = Pheno;
   });
 
   return [mainTable, phenopacketsList];
+}
+
+// Called when using /api/phenopackets
+
+export function ProcessPhenopackets(response) {
+  console.log(response)
+  const mainTable = [];
+  const phenopacketsList = {};
+  Object.values(response).forEach((entry) => {
+    // console.log(entry)
+    mainTable.push(subjectSchema(entry.subject));
+    const ID = entry.id;
+    phenopacketsList[ID] = entry;
+  });
+
+  return [mainTable, phenopacketsList];
+
 }
 
 export function ProcessData(ID, dataList, dataSchema) {
@@ -56,9 +59,29 @@ export const featureSchema = (data) => {
   const entry = {
     ID: data.type.id,
     label: data.type.label,
-    comorbidities: data.extra_properties.comorbidities_group,
+    datatype: data.extra_properties.datatype,
+    description: data.description,
+    negated: data.negated,
     created: data.created,
     updated: data.updated,
   };
   return entry;
 };
+
+export const subjectSchema = (data) => {
+  const subject = {
+    ID: data.id,
+    DOB: data.date_of_birth,
+    Sex: data.sex,
+    KSex: data.karyotypic_sex,
+    ethnicity: data.ethnicity,
+    height: data.extra_properties.height,
+    weight: data.extra_properties.weight,
+    education: data.extra_properties.education,
+    taxID: data.taxonomy.id,
+    taxLabel: data.taxonomy.label,
+    created: data.created,
+    updated: data.updated,
+  };
+  return subject;
+}

@@ -27,6 +27,7 @@ import TableList from "./views/MetadataTableApp";
 import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
 import VariantsSearch from './views/VariantsSearch';
+import SearchBySymptom from './views/Symptoms';
 
 const routes = [
   {
@@ -97,6 +98,13 @@ const routes = [
     name: "Chord Metadata",
     icon: "nc-icon nc-tile-56",
     component: ChordTable,
+    layout: "/dashboard",
+  },
+  {
+    path: "/Symptoms",
+    name: "Search by Symptom",
+    icon: "nc-icon nc-tile-56",
+    component: SearchBySymptom,
     layout: "/dashboard",
   },
 ];
