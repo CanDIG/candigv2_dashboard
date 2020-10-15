@@ -133,7 +133,7 @@ function searchSymptom(symptom) {
     },
   }).then((response) => {
     if (response.ok) {
-      return response.json().results;
+      return response.json();
     }
     return {};
   });

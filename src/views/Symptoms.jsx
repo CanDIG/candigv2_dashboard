@@ -19,6 +19,11 @@ import {
     featureSchema, ProcessPhenopackets,
   } from '../components/Processing/ChordSchemas';
 
+  import LoadingIndicator, {
+    trackPromise,
+    usePromiseTracker,
+  } from '../components/LoadingIndicator/LoadingIndicator';
+
 function SearchBySymptom({setSymptom}) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggle = () => setDropdownOpen(prevState => !prevState);
@@ -126,10 +131,20 @@ function TableApp({ }) {
     try {
       // getMetadataData(setData, setPhenopackets);
       console.log(selectedSymptom)
-      const [tdatasets, tphenopackets] = ProcessPhenopackets(searchSymptom(selectedSymptom));
-      console.log(tdatasets, tphenopackets);
-      setData(tdatasets);
-      setPhenopackets(tphenopackets);
+
+      // const [tdatasets, tphenopackets] = ProcessPhenopackets(searchSymptom(selectedSymptom));
+
+      trackPromise(
+        searchSymptom()
+          .then((data) => {
+            const [tdatasets, tphenopackets] = ProcessPhenopackets(data)
+            console.log(tdatasets, tphenopackets);
+
+            setData(tdatasets);
+            setPhenopackets(tphenopackets);
+          })
+      )
+
     } catch (err) {
       // Need better reporting
       console.log(err);
