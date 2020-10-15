@@ -43,6 +43,19 @@ export function ProcessData(ID, dataList, dataSchema) {
   return { [ID]: processedData };
 }
 
+export function ProcessSymptoms(phenopackets) {
+  const symptoms = [];
+  await Promise.all(phenopackets.map(async (phenopacket) => {
+    phenopacket.phenotypic_features.map((feature) => {
+      symptoms.push(feature.label)
+    })
+  }))
+
+  return symptoms
+}
+
+
+
 export const diseaseSchema = (data) => {
   const entry = {
     ID: data.id,

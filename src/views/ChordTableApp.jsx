@@ -9,6 +9,7 @@ import { CHORD_METADATA_URL } from '../constants/constants';
 
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
+import {fetchIndividuals} from '../api/api'
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -50,18 +51,7 @@ function TableApp() {
     // fetch data
     try {
       trackPromise(
-        fetch(`${CHORD_METADATA_URL}/api/individuals`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-            return {};
-          })
+        fetchIndividuals()
           .then((dataResponse) => {
             const [dataset, phenopacket] = ProcessMetadata(dataResponse.results);
             setData(dataset);

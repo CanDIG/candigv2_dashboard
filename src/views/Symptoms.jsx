@@ -16,7 +16,7 @@ import RESPONSE from 'constants/phenoResp';
 import ClinMetadataTable from 'components/Tables/ClinMetadataTable';
 import {
     ProcessMetadata, ProcessData, diseaseSchema, 
-    featureSchema, ProcessPhenopackets,
+    featureSchema, ProcessPhenopackets, ProcessSymptoms
   } from '../components/Processing/ChordSchemas';
 
   import LoadingIndicator, {
@@ -24,43 +24,7 @@ import {
     usePromiseTracker,
   } from '../components/LoadingIndicator/LoadingIndicator';
 
-function SearchBySymptom({setSymptom}) {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggle = () => setDropdownOpen(prevState => !prevState);
-    const [value, setValue] = useState('');
-    // const onChange = useAsyncDebounce((search) => {
-    //   setGlobalFilter(search || undefined);
-    // }, 200);
-
-    const sendRequest = (symptom) => {
-        console.log("Button Pressed");
-        setSymptom(symptom);
-    }
-
-    return (
-        <>
-        <Style>
-        <Col>
-            <InputGroup>
-            <Input 
-                placeholder="Search Param" 
-                value={value || ''}
-                onChange={(e) => {
-                    setValue(e.target.value);
-                  }}
-
-            />
-            </InputGroup>
-            <InputGroupAddon addonType="append">
-                <Button onClick={() => sendRequest(value)}>I'm a button</Button></InputGroupAddon>
-
-        </Col>
-        </Style>
-        
-        </>
-    )
-}
-
+import {SearchBySymptom} from 'components/Queries/KatsuSymptoms'
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -115,6 +79,7 @@ const MOCKED = (query) => {
 
 function TableApp({ }) {
   const [selectedSymptom, setSelectedSymptom] = useState('');
+  const [symptoms, setSymptoms] = useState([]);
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
@@ -126,14 +91,33 @@ function TableApp({ }) {
   const [featuresTableData, setFeaturesTableData] = useState([]);
   const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
 
+  useEffect(() => {
+    try {
+      trackPromise(
+        fetchIndividuals()
+          .then((dataResponse) => {
+            const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
+            const symptomS = ProcessSymptoms(phenopacketS)
+            console.log(symptomS)
+            setSymptoms(symptomS)
+          })
+          .catch(() => {
+            notify(
+              notifyEl,
+              'The resources you requested were not available.',
+              'warning',
+            );
+          }),
+      );
+
+    } catch (err) {
+      console.log(err)
+    }
+  }, [symptoms]);
+
   React.useEffect(() => {
     // fetch data
     try {
-      // getMetadataData(setData, setPhenopackets);
-      console.log(selectedSymptom)
-
-      // const [tdatasets, tphenopackets] = ProcessPhenopackets(searchSymptom(selectedSymptom));
-
       trackPromise(
         searchSymptom()
           .then((data) => {
@@ -168,7 +152,6 @@ function TableApp({ }) {
         if (diseases[activeID]) {
           setDiseaseTableData(diseases[activeID]);
         } else {
-          // const newDisease = ProcessDiseases(activeID, phenopackets[activeID].diseases)
           const newDisease = ProcessData(activeID, phenopackets[activeID].diseases, diseaseSchema);
           if (!isEmpty(diseases)) {
             setDiseases((prevState) => ({
