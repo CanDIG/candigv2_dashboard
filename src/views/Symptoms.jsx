@@ -126,7 +126,7 @@ function TableApp({ }) {
     try {
       // getMetadataData(setData, setPhenopackets);
       console.log(selectedSymptom)
-      const [tdatasets, tphenopackets] = ProcessPhenopackets(MOCKED(selectedSymptom));
+      const [tdatasets, tphenopackets] = ProcessPhenopackets(searchSymptom(selectedSymptom));
       console.log(tdatasets, tphenopackets);
       setData(tdatasets);
       setPhenopackets(tphenopackets);
