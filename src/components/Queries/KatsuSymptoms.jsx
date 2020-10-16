@@ -18,6 +18,7 @@ import {
     ProcessMetadata, ProcessData, diseaseSchema, 
     featureSchema, ProcessPhenopackets, ProcessSymptoms
   } from '../Processing/ChordSchemas';
+  import { notify, NotificationAlert } from '../../utils/alert';
 
 import LoadingIndicator, {
     trackPromise,
@@ -36,6 +37,7 @@ function SearchBySymptom({setSymptom}) {
     const [suggestions, setSuggestions] = useState([])
     const [fetchedSuggestions, setFetchedSuggesions] = useState([])
 
+    const notifyEl = useRef(null);
 
     useEffect(() => {
       try {
