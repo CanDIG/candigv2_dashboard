@@ -27,6 +27,7 @@ import {
   } from '../components/LoadingIndicator/LoadingIndicator';
 
 import {SearchBySymptom} from 'components/Queries/KatsuSymptoms'
+import INDIVIDUALS from 'constants/LOCAL_individuals2'
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -96,29 +97,7 @@ function TableApp({ }) {
   const notifyEl = useRef(null);
 
 
-  useEffect(() => {
-    try {
-      trackPromise(
-        fetchIndividuals()
-          .then((dataResponse) => {
-            const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
-            const symptomS = ProcessSymptoms(phenopacketS)
-            console.log(symptomS)
-            setSymptoms(symptomS)
-          })
-          .catch(() => {
-            notify(
-              notifyEl,
-              'The resources you requested were not available.',
-              'warning',
-            );
-          }),
-      );
 
-    } catch (err) {
-      console.log(err)
-    }
-  }, [symptoms]);
 
   React.useEffect(() => {
     // fetch data

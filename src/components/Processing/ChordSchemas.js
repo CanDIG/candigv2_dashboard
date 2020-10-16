@@ -1,5 +1,7 @@
 // Assume data is present at this state
 
+import { object } from "prop-types";
+
 
 // Called when using /api/individuals
 
@@ -43,15 +45,27 @@ export function ProcessData(ID, dataList, dataSchema) {
   return { [ID]: processedData };
 }
 
-export function ProcessSymptoms(phenopackets) {
+export async function ProcessSymptoms(phenopackets) {
   const symptoms = new Set();
-  Object.values(phenopackets).map((phenopacket) => {
-    phenopacket.phenotypic_features.map((feature) => {
-      symptoms.add(feature.label)
-    })
+  Promise.all(Object.values(phenopackets).map(async (phenopacket) => {
+    await Promise.all(phenopacket.phenotypic_features.map(async (feature) => {
+      symptoms.add(feature.type.label)
+    }))
+  }))
+
+  const symptomList = Array.from(symptoms).map((symptom) => {
+      return {"name": symptom}
   })
 
-  return symptoms
+
+  // Object.values(phenopackets).forEach((data) => {
+  //   Object.values(data.phenotypic_features).forEach((feature) => {
+  //     symptoms.add(feature.type.label)
+  //   })
+  // })
+
+  return symptomList
+  
 }
 
 
