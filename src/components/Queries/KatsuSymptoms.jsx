@@ -39,29 +39,25 @@ function SearchBySymptom({setSymptom}) {
 
     useEffect(() => {
       try {
-        // trackPromise(
-        //   fetchIndividuals()
-        //     .then((dataResponse) => {
-        //       const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
-        //       const symptomS = ProcessSymptoms(phenopacketS)
-        //       console.log(symptomS)
-        //       setSymptoms(symptomS)
-        //     })
-        //     .catch(() => {
-        //       notify(
-        //         notifyEl,
-        //         'The resources you requested were not available.',
-        //         'warning',
-        //       );
-        //     }),
-        // );
+        trackPromise(
+          fetchIndividuals()
+            .then((dataResponse) => {
+              const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
+              ProcessSymptoms(phenopacketS).then((symptoms) => {
+                console.log(symptoms)
+                setFetchedSuggesions(symptoms)
+              })
+            })
+            .catch(() => {
+              notify(
+                notifyEl,
+                'The resources you requested were not available.',
+                'warning',
+              );
+            }),
+        );
   
-        const [_, phenopacketS] = ProcessMetadata(INDIVIDUALS.results);
-        ProcessSymptoms(phenopacketS).then((symptoms) => {
-          console.log(symptoms)
-          setFetchedSuggesions(symptoms)
-        })
-          
+
         
         // console.log(symptomS)
         // setSymptoms(symptomS)
