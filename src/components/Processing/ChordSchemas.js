@@ -22,7 +22,7 @@ export function ProcessMetadata(metadata) {
 // Called when using /api/phenopackets
 
 export function ProcessPhenopackets(response) {
-  console.log(response)
+  //console.log(response)
   const mainTable = [];
   const phenopacketsList = {};
   Object.values(response).forEach((entry) => {

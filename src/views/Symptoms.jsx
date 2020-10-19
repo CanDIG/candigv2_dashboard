@@ -27,7 +27,7 @@ import {
   } from '../components/LoadingIndicator/LoadingIndicator';
 
 import {SearchBySymptom} from 'components/Queries/KatsuSymptoms'
-import INDIVIDUALS from 'constants/LOCAL_individuals2'
+//import INDIVIDUALS from 'constants/LOCAL_individuals2'
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -103,10 +103,10 @@ function TableApp({ }) {
     // fetch data
     try {
       trackPromise(
-        searchSymptom()
+        searchSymptom(selectedSymptom)
           .then((data) => {
-            const [tdatasets, tphenopackets] = ProcessPhenopackets(data)
-            console.log(tdatasets, tphenopackets);
+            const [tdatasets, tphenopackets] = ProcessPhenopackets(data.results)
+            //console.log(tdatasets, tphenopackets);
 
             setData(tdatasets);
             setPhenopackets(tphenopackets);

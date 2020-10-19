@@ -25,7 +25,7 @@ import LoadingIndicator, {
     usePromiseTracker,
   } from '../LoadingIndicator/LoadingIndicator';
 import Autosuggest from 'react-autosuggest';
-import INDIVIDUALS from 'constants/LOCAL_individuals2'
+//import INDIVIDUALS from 'constants/LOCAL_individuals2'
 
 
 
