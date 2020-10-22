@@ -23,6 +23,7 @@ import APIInfo from './views/APIInfo';
 import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
+import HtsgetBrowser from './views/HtsgetBrowser';
 import TableList from "./views/MetadataTableApp";
 import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
@@ -69,6 +70,13 @@ const routes = [
     name: 'GWAS Browser',
     icon: 'nc-icon nc-compass-05',
     component: GwasBrowser,
+    layout: '/dashboard',
+  },
+  {
+    path: '/htsget_browser',
+    name: 'Htsget Browser',
+    icon: 'nc-icon nc-compass-05',
+    component: HtsgetBrowser,
     layout: '/dashboard',
   },
   {
