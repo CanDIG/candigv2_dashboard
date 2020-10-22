@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-// TODO: Importing from igv.esm.min.js is not working
 import igv from 'igv/dist/igv.esm';
 import { NotificationAlert } from '../../utils/alert';
 import { HTSGET_URL } from '../../constants/constants';
