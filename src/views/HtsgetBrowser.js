@@ -11,10 +11,8 @@ function HtsgetBrowser({ datasetId }) {
   /** *
    * A functional component that renders a view with a IGV.js browser.
    */
-  const [selectedGwasName, setSelectedGwasName] = useState('');
-  const [selectedGwasUrl, setSelectedGwasUrl] = useState('');
-  const [gwasDropdown, setGwasDropdown] = useState([]);
-  const [gwasDataObj, setGwasDataObj] = useState({});
+  const [selectedBamName, setSelectedBamName] = useState('');
+  const [bamDropdown, setBamDropdown] = useState([]);
   const notifyEl = useRef(null);
 
   const disabledElementList = [
@@ -30,17 +28,18 @@ function HtsgetBrowser({ datasetId }) {
         const tmpDataObj = {};
         // File name is set as key, while its url is set as the value
         data.forEach((element) => {
-          tmpDataObj[element.name] = element.access_methods[0].access_url.url;
+          if (!element.name.endsWith("bai")){
+              tmpDataObj[element.name] = element.access_methods[0].access_url.url;
+          }
         });
 
-        const gwasList = Object.keys(tmpDataObj).map((x) => (
+        const bamList = Object.keys(tmpDataObj).map((x) => (
           <option key={x} value={x}>
             {x}
           </option>
         ));
 
-        setGwasDataObj(tmpDataObj);
-        setGwasDropdown(gwasList);
+        setBamDropdown(bamList);
       })
       .catch(() => {
         notify(
@@ -49,7 +48,7 @@ function HtsgetBrowser({ datasetId }) {
           'warning',
         );
       });
-  }, [selectedGwasName]);
+  }, [selectedBamName]);
 
   return (
     <>
@@ -65,7 +64,7 @@ function HtsgetBrowser({ datasetId }) {
             <b>
               <span>
                 <p> Reminders: </p>
-                <p> Select a sample to get started. </p>
+                <p> Select a sample to get started. Only .bam files are supported for now.</p>
               </span>
             </b>
           </UncontrolledAlert>
@@ -74,17 +73,15 @@ function HtsgetBrowser({ datasetId }) {
         <Input
           defaultValue="disabled"
           onChange={(e) => {
-            setSelectedGwasName(e.currentTarget.value);
-            setSelectedGwasUrl(gwasDataObj[e.currentTarget.value]);
+            setSelectedBamName(e.currentTarget.value);
           }}
           type="select"
         >
-          { disabledElementList.concat(gwasDropdown) }
+          { disabledElementList.concat(bamDropdown) }
         </Input>
 
         <HtsgetInstance
-          selectedGwasName={selectedGwasName}
-          selectedGwasUrl={selectedGwasUrl}
+          selectedBamName={selectedBamName}
           datasetId={datasetId}
         />
       </div>
