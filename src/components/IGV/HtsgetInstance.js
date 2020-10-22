@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 // TODO: Importing from igv.esm.min.js is not working
 import igv from 'igv/dist/igv.esm';
-import {  NotificationAlert } from '../../utils/alert';
+import { NotificationAlert } from '../../utils/alert';
 
 function HtsgetInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
   /** *
@@ -22,7 +22,7 @@ function HtsgetInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
           name: '',
           url: 'http://ga4ghdev01.bcgsc.ca:3333',
           endpoint: '/htsget/v1/reads/',
-          id: ''
+          id: '',
         },
       ],
     };
@@ -34,7 +34,7 @@ function HtsgetInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
       igvOptions.tracks[0].name = selectedGwasName;
       igvOptions.tracks[0].id = selectedGwasName;
 
-      igv.createBrowser(igvBrowser.current, igvOptions)
+      igv.createBrowser(igvBrowser.current, igvOptions);
     }
   }, [selectedGwasName, selectedGwasUrl, datasetId]);
 
