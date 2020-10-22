@@ -100,7 +100,7 @@ function CustomOfflineChart({
 CustomOfflineChart.propTypes = {
   chartType: PropTypes.string.isRequired,
   barTitle: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
+  height: PropTypes.string,
   datasetName: PropTypes.string,
   dataObject: PropTypes.objectOf(PropTypes.number).isRequired,
 };

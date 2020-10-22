@@ -21,7 +21,6 @@ import Overview from './views/Overview';
 import Services from './views/Services';
 import APIInfo from './views/APIInfo';
 import CustomVisualization from './views/CustomVisualization';
-import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
 import ChordTable from "./views/ChordTableApp"
@@ -34,13 +33,6 @@ const routes = [
     name: 'Overview',
     icon: 'nc-icon nc-bank',
     component: Overview,
-    layout: '/dashboard',
-  },
-  {
-    path: '/patients-overview',
-    name: 'Patients Overview',
-    icon: 'nc-icon nc-single-02',
-    component: PatientsOverview,
     layout: '/dashboard',
   },
   {

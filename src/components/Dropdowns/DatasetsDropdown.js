@@ -66,6 +66,7 @@ function DatasetsDropdown({ updateState }) {
           setFirstDataset(datasetsList);
         });
     }
+    return () => {}
   });
 
   /*
