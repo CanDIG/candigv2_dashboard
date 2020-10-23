@@ -23,7 +23,7 @@ import {
 
 function SearchBySymptom({ setSymptom }) {
   const [search, setSearch] = useState('');
-  const [suggestionValue, setSuggestionValue] = useState('');
+  const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
 
@@ -82,13 +82,13 @@ function SearchBySymptom({ setSymptom }) {
   };
 
   const onChange = (event, { newValue }) => {
-    setSuggestionValue(newValue);
+    setValue(newValue);
     setSearch(newValue);
   };
 
   const inputProps = {
     placeholder: 'Symptom...',
-    suggestionValue,
+    value,
     onChange,
   };
 

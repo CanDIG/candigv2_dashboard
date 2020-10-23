@@ -125,6 +125,9 @@ function searchVariant(datasetId, start, end, referenceName) {
 }
 
 function searchSymptom(symptom) {
+  if (!symptom || 0 === symptom.length) {
+    return {}
+  }
   return fetch(`${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}`, {
     method: 'GET',
     headers: {
