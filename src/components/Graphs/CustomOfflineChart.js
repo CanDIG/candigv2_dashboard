@@ -30,6 +30,9 @@ function CustomOfflineChart({
   dataObject,
 }) {
   const [chartOptions, setChartOptions] = useState({
+    credits: {
+      enabled: false,
+    },
     chart: { type: chartType, height },
     title: {
       text: `Distribution of ${splitString(barTitle)}`,
@@ -78,6 +81,9 @@ function CustomOfflineChart({
       });
 
       setChartOptions({
+        credits: {
+          enabled: false,
+        },
         series: [{ data, colorByPoint: true, showInLegend: false }],
         xAxis: { categories },
       });

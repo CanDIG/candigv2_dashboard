@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Card, CardBody, CardTitle, Row, Col,
+} from 'reactstrap';
+import PropTypes from 'prop-types';
 
 import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
-} from "../components/LoadingIndicator/LoadingIndicator";
-import CustomOfflineChart from "../components/Graphs/CustomOfflineChart";
-import { notify, NotificationAlert } from "../utils/alert";
-import { fetchIndividuals } from "../api/api";
-
-function countFromExtraProperty(data, property) {
-  return Object.keys(groupByExtraProperty(data, property)).length;
-}
+} from '../components/LoadingIndicator/LoadingIndicator';
+import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
+import { notify, NotificationAlert } from '../utils/alert';
+import { fetchIndividuals } from '../api/api';
 
 function groupByExtraProperty(data, property) {
   const obj = {};
@@ -26,15 +25,19 @@ function groupByExtraProperty(data, property) {
   return obj;
 }
 
+function countFromExtraProperty(data, property) {
+  return Object.keys(groupByExtraProperty(data, property)).length;
+}
+
 function Overview({ updateState }) {
   const [individualsCounter, setIndividualsCounter] = useState(0);
   const [hospitalCounter, setHospitalCounter] = useState(0);
-  const [hostHospitalObj, setHostHospitalObj] = useState({ "": 0 });
-  const [employmentObj, setEmploymentObj] = useState({ "": 0 });
-  const [asymptomaticObj, setAsymptomaticObj] = useState({ "": 0 });
-  const [covid19TesteObj, setCovid19TesteObj] = useState({ "": 0 });
-  const [hospitalizedObj, setHospitalizedObj] = useState({ "": 0 });
-  const [residenceTypeObj, setResidenceTypeObj] = useState({ "": 0 });  
+  const [hostHospitalObj, setHostHospitalObj] = useState({ '': 0 });
+  const [employmentObj, setEmploymentObj] = useState({ '': 0 });
+  const [asymptomaticObj, setAsymptomaticObj] = useState({ '': 0 });
+  const [covid19TesteObj, setCovid19TesteObj] = useState({ '': 0 });
+  const [hospitalizedObj, setHospitalizedObj] = useState({ '': 0 });
+  const [residenceTypeObj, setResidenceTypeObj] = useState({ '': 0 });
   const [hospitalizationRate, setHospitalizationRate] = useState(0);
   const [positiveTestRate, setPositiveTestRate] = useState(0);
 
@@ -51,38 +54,38 @@ function Overview({ updateState }) {
             const numberOfIndividuals = data.results.length;
             const numberOfHospitalized = groupByExtraProperty(
               data,
-              "hospitalized"
+              'hospitalized',
             );
-            const numberOfResults = groupByExtraProperty(data, "covid19_test");
+            const numberOfResults = groupByExtraProperty(data, 'covid19_test');
 
             setIndividualsCounter(numberOfIndividuals);
             setHospitalizedObj(numberOfHospitalized);
             setCovid19TesteObj(numberOfResults);
             setHospitalizationRate(
               Math.round(
-                (numberOfHospitalized["Yes"] / numberOfIndividuals) * 100
-              )
+                (numberOfHospitalized.Yes / numberOfIndividuals) * 100,
+              ),
             );
             setPositiveTestRate(
               Math.round(
-                (numberOfResults["Positive"] / numberOfIndividuals) * 100
-              )
+                (numberOfResults.Positive / numberOfIndividuals) * 100,
+              ),
             );
-            setHospitalCounter(countFromExtraProperty(data, "host_hospital"));
-            setHostHospitalObj(groupByExtraProperty(data, "host_hospital"));
-            setEmploymentObj(groupByExtraProperty(data, "employment"));
-            setAsymptomaticObj(groupByExtraProperty(data, "asymptomatic"));
-            setResidenceTypeObj(groupByExtraProperty(data, "residence_type"));           
+            setHospitalCounter(countFromExtraProperty(data, 'host_hospital'));
+            setHostHospitalObj(groupByExtraProperty(data, 'host_hospital'));
+            setEmploymentObj(groupByExtraProperty(data, 'employment'));
+            setAsymptomaticObj(groupByExtraProperty(data, 'asymptomatic'));
+            setResidenceTypeObj(groupByExtraProperty(data, 'residence_type'));
 
             setDidFetch(true);
           })
           .catch(() => {
             notify(
               notifyEl,
-              "The resources you requested were not available.",
-              "warning"
+              'The resources you requested were not available.',
+              'warning',
             );
-          })
+          }),
       );
     }
     updateState({ datasetVisible: false });
@@ -159,7 +162,10 @@ function Overview({ updateState }) {
                       {promiseInProgress === true ? (
                         <LoadingIndicator />
                       ) : (
-                        <CardTitle tag="p">{hospitalizationRate}%</CardTitle>
+                        <CardTitle tag="p">
+                          {hospitalizationRate}
+                          %
+                        </CardTitle>
                       )}
                       <p />
                     </div>
@@ -183,7 +189,10 @@ function Overview({ updateState }) {
                       {promiseInProgress === true ? (
                         <LoadingIndicator />
                       ) : (
-                        <CardTitle tag="p">{positiveTestRate}%</CardTitle>
+                        <CardTitle tag="p">
+                          {positiveTestRate}
+                          %
+                        </CardTitle>
                       )}
                       <p />
                     </div>
@@ -388,5 +397,9 @@ function Overview({ updateState }) {
     </>
   );
 }
+
+Overview.propTypes = {
+  updateState: PropTypes.func.isRequired,
+};
 
 export default Overview;
