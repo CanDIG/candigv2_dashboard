@@ -1,33 +1,24 @@
 import React, {
-    useState, forwardRef, useRef, useEffect,
-  } from 'react';
-import PropTypes from 'prop-types';
-  
+  useState, useEffect,
+} from 'react';
+
 import {
-    Row, Button, ButtonDropdown, DropdownToggle,
-    InputGroup, InputGroupAddon, DropdownMenu,
-    InputGroupText, Col, DropdownItem, Dropdown,
-    Input,
-  } from 'reactstrap';
-import Style from '../assets/css/StyledComponents/ColumnControlStyled';
-import {searchSymptom, fetchIndividuals} from 'api/api';
-import { notify, NotificationAlert } from '../utils/alert';
+  Row,
+} from 'reactstrap';
+import { searchSymptom } from '../api/api';
+import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
+import { SearchBySymptom } from '../components/Queries/KatsuSymptoms';
 
-import { CHORD_METADATA_URL } from '../constants/constants';
-import RESPONSE from 'constants/phenoResp';
-import ClinMetadataTable from 'components/Tables/ClinMetadataTable';
 import {
-    ProcessMetadata, ProcessData, diseaseSchema, 
-    featureSchema, ProcessPhenopackets, ProcessSymptoms
-  } from '../components/Processing/ChordSchemas';
+  ProcessData, diseaseSchema,
+  featureSchema, ProcessPhenopackets,
+  ProcessFeatures,
+} from '../components/Processing/ChordSchemas';
 
-  import LoadingIndicator, {
-    trackPromise,
-    usePromiseTracker,
-  } from '../components/LoadingIndicator/LoadingIndicator';
-
-import {SearchBySymptom} from 'components/Queries/KatsuSymptoms'
-//import INDIVIDUALS from 'constants/LOCAL_individuals2'
+import LoadingIndicator, {
+  trackPromise,
+  usePromiseTracker,
+} from '../components/LoadingIndicator/LoadingIndicator';
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -45,81 +36,90 @@ function CreateColumns(columnNames, cb) {
   cb(columnList);
 }
 
+// function isEmpty(obj) {
+//   for (const key in obj) {
+//     if (obj.hasOwnProperty(key)) { return false; }
+//   }
+//   return true;
+// }
+
 function isEmpty(obj) {
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) { return false; }
-  }
-  return true;
+  return Object.keys(obj).length === 0;
 }
 
-function getMetadataData(setData, setPhenopackets) {
-  return fetch(`${CHORD_METADATA_URL}/api/individuals`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((data) => {
-      const [dataset, phenopackets] = ProcessMetadata(data.results);
-      setData(dataset);
-      setPhenopackets(phenopackets);
-    });
-}
+// function getMetadataData(setData, setPhenopackets) {
+//   return fetch(`${CHORD_METADATA_URL}/api/individuals`, {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   })
+//     .then((response) => {
+//       if (response.ok) {
+//         return response.json();
+//       }
+//     })
+//     .then((data) => {
+//       const [dataset, phenopackets] = ProcessMetadata(data.results);
+//       setData(dataset);
+//       setPhenopackets(phenopackets);
+//     });
+// }
 
-const MOCKED = (query) => {
-    console.log(query === 'fatigue')
-    if (query === 'fatigue') {
-        return RESPONSE.results
-    }
+// const MOCKED = (query) => {
+//     console.log(query === 'fatigue')
+//     if (query === 'fatigue') {
+//         return RESPONSE.results
+//     }
 
-    return {}
-}
+//     return {}
+// }
 
-function TableApp({ }) {
+function TableApp() {
   const [selectedSymptom, setSelectedSymptom] = useState('');
-  const [symptoms, setSymptoms] = useState([]);
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
   const [diseases, setDiseases] = useState({});
-  const [features, setFeatures] = useState({});
+  const [symptomsTable, setSymptomsTable] = useState({});
+  const [complicationsTable, setComplicationsTable] = useState({});
+
   const [activeID, setActiveID] = useState('');
   const [diseaseTableData, setDiseaseTableData] = useState([]);
   const [diseaseTableColumns, setDiseaseTableColumns] = useState([]);
-  const [featuresTableData, setFeaturesTableData] = useState([]);
-  const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
+  const [symptomsTableData, setSymptomsTableData] = useState([]);
+  const [symptomsTableColumns, setSymptomsTableColumns] = useState([]);
+  const [complicationsTableData, setComplicationsTableData] = useState([]);
+  const [complicationsTableColumns, setComplicationsTableColumns] = useState([]);
 
-  const notifyEl = useRef(null);
+  const { promiseInProgress } = usePromiseTracker();
 
+  const clearSubTables = () => {
+    setDiseaseTableData([]);
+    setSymptomsTableData([]);
+    setComplicationsTableData([]);
+  };
 
-
-
-  React.useEffect(() => {
+  useEffect(() => {
     // fetch data
     try {
       trackPromise(
         searchSymptom(selectedSymptom)
-          .then((data) => {
-            const [tdatasets, tphenopackets] = ProcessPhenopackets(data.results)
-            //console.log(tdatasets, tphenopackets);
-
+          .then((dataResponse) => {
+            const [tdatasets, tphenopackets] = ProcessPhenopackets(dataResponse.results);
             setData(tdatasets);
             setPhenopackets(tphenopackets);
-          })
-      )
-
+            setActiveID('');
+            clearSubTables();
+          }),
+      );
     } catch (err) {
       // Need better reporting
       console.log(err);
     }
   }, [selectedSymptom]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Separate Effect since state change is async and columns depends on data
     // Not entirely sure if necessary
     try {
@@ -130,7 +130,7 @@ function TableApp({ }) {
     }
   }, [data]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       if (activeID) {
         if (diseases[activeID]) {
@@ -153,48 +153,87 @@ function TableApp({ }) {
     }
   }, [activeID, diseases, phenopackets]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
     } catch (err) {
       // Need better reporting
-      console.log(err);
+      // console.log(err);
     }
   }, [diseaseTableData]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Want to store previously created tables rather than reprocessing them
+    // each time the same sub tables are needed
     try {
       if (activeID) {
-        if (features[activeID]) {
-          setFeaturesTableData(features[activeID]);
+        if (symptomsTable[activeID]) {
+          // The sub tables have already been created once, so set them back
+          setSymptomsTableData(symptomsTable[activeID]);
         } else {
-          console.log(phenopackets[activeID]);
-
-          const newFeature = ProcessData(activeID, phenopackets[activeID].phenotypic_features, featureSchema);
-          if (!isEmpty(features)) {
-            setFeatures((prevState) => ({
+          const newFeature = ProcessFeatures(activeID, phenopackets[activeID].phenotypic_features, featureSchema, 'symptom');
+          if (!isEmpty(symptomsTable)) {
+            // Add onto the existing dictionary of created sub
+            setSymptomsTable((prevState) => ({
               ...prevState, ...newFeature,
             }));
-            setFeaturesTableData(features[activeID]);
+            setSymptomsTableData(symptomsTable[activeID]);
           } else {
-            setFeatures(newFeature);
-            setFeaturesTableData(features[activeID]);
+            setSymptomsTable(newFeature);
+            setSymptomsTableData(symptomsTable[activeID]);
           }
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
-  }, [activeID, features, phenopackets]);
+  }, [activeID, symptomsTable, phenopackets]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Want to store previously created tables rather than reprocessing them
+    // each time the same sub tables are needed
+
     try {
-      CreateColumns(Object.keys(featuresTableData[0]), setFeaturesTableColumns);
+      if (activeID) {
+        if (complicationsTable[activeID]) {
+          // The sub tables have already been created once, so set them back
+          setComplicationsTableData(complicationsTable[activeID]);
+        } else {
+          const newFeature = ProcessFeatures(activeID, phenopackets[activeID].phenotypic_features, featureSchema, 'complication');
+          if (!isEmpty(complicationsTable)) {
+            // Add onto the existing dictionary of created sub
+            setComplicationsTable((prevState) => ({
+              ...prevState, ...newFeature,
+            }));
+            setComplicationsTableData(complicationsTable[activeID]);
+          } else {
+            setComplicationsTable(newFeature);
+            setComplicationsTableData(complicationsTable[activeID]);
+          }
+        }
+      }
+    } catch (err) {
+      // console.log(err);
+    }
+  }, [activeID, complicationsTable, phenopackets]);
+
+  useEffect(() => {
+    try {
+      CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
     } catch (err) {
       // Need better reporting
-      console.log(err);
+      // console.log(err);
     }
-  }, [featuresTableData]);
+  }, [symptomsTableData]);
+
+  useEffect(() => {
+    try {
+      CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
+    } catch (err) {
+      // Need better reporting
+      // console.log(err);
+    }
+  }, [complicationsTableData]);
 
   const dataM = React.useMemo(() => data, [data]);
   const columnsM = React.useMemo(() => columns, [columns]);
@@ -202,54 +241,63 @@ function TableApp({ }) {
   const dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
   const columnsD = React.useMemo(() => diseaseTableColumns, [diseaseTableColumns]);
 
-  const dataF = React.useMemo(() => featuresTableData, [featuresTableData]);
-  const columnsF = React.useMemo(() => featuresTableColumns, [featuresTableColumns]);
+  const dataS = React.useMemo(() => symptomsTableData, [symptomsTableData]);
+  const columnsS = React.useMemo(() => symptomsTableColumns, [symptomsTableColumns]);
+
+  const dataC = React.useMemo(() => complicationsTableData, [complicationsTableData]);
+  const columnsC = React.useMemo(() => complicationsTableColumns, [complicationsTableColumns]);
 
   return (
     <div className="content">
+
       <Row>
         <SearchBySymptom
-            setSymptom={setSelectedSymptom}
-        
+          setSymptom={setSelectedSymptom}
         />
-            
-        
       </Row>
-      <ClinMetadataTable 
-        columns={columnsM} 
-        data={dataM}
-        metadataCallback={() => {}}
-        activeMetadata={false}
-        setActiveID={setActiveID}
-        isMainTable={true} 
-      />
-      <ClinMetadataTable 
-        columns={columnsD} 
+      {promiseInProgress === true ? (
+        <LoadingIndicator />
+      ) : (
+        <ClinMetadataTable
+          columns={columnsM}
+          data={dataM}
+          metadataCallback={() => {}}
+          activeMetadata={false}
+          setActiveID={setActiveID}
+          isMainTable
+        />
+      )}
+      <ClinMetadataTable
+        columns={columnsD}
         data={dataD}
         metadataCallback={() => {}}
         activeMetadata={false}
         setActiveID={() => {}}
-        isMainTable={false} 
+        isMainTable={false}
       />
       <ClinMetadataTable
-        columns={columnsF}
-        data={dataF} 
+        columns={columnsS}
+        data={dataS}
         metadataCallback={() => {}}
         activeMetadata={false}
         setActiveID={() => {}}
-        isMainTable={false} 
+        isMainTable={false}
+      />
+      <ClinMetadataTable
+        columns={columnsC}
+        data={dataC}
+        metadataCallback={() => {}}
+        activeMetadata={false}
+        setActiveID={() => {}}
+        isMainTable={false}
       />
     </div>
   );
 }
 
 TableApp.propTypes = {
-  datasetId: PropTypes.string,
 };
 TableApp.defaultProps = {
-  datasetId: 'patients',
 };
 
 export default TableApp;
-
-

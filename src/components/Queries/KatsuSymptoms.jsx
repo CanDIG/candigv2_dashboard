@@ -1,151 +1,163 @@
 import React, {
-    useState, forwardRef, useRef, useEffect,
-  } from 'react';
+  useState, useRef, useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
-  
-import {
-    Row, Button, ButtonDropdown, DropdownToggle,
-    InputGroup, InputGroupAddon, DropdownMenu,
-    InputGroupText, Col, DropdownItem, Dropdown,
-    Input,
-  } from 'reactstrap';
-import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
-import {searchSymptom, fetchIndividuals} from 'api/api';
-import { CHORD_METADATA_URL } from '../../constants/constants';
-import RESPONSE from 'constants/phenoResp';
-import ClinMetadataTable from 'components/Tables/ClinMetadataTable';
-import {
-    ProcessMetadata, ProcessData, diseaseSchema, 
-    featureSchema, ProcessPhenopackets, ProcessSymptoms
-  } from '../Processing/ChordSchemas';
-  import { notify, NotificationAlert } from '../../utils/alert';
 
-import LoadingIndicator, {
-    trackPromise,
-    usePromiseTracker,
-  } from '../LoadingIndicator/LoadingIndicator';
+import {
+  Row, Button, InputGroup,
+  InputGroupAddon, Col, Input,
+  UncontrolledAlert,
+} from 'reactstrap';
 import Autosuggest from 'react-autosuggest';
-//import INDIVIDUALS from 'constants/LOCAL_individuals2'
+import AutoSuggestStyle from '../../assets/css/StyledComponents/AutoSuggestStyled';
 
+import { fetchIndividuals } from '../../api/api';
+import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
+import {
+  ProcessMetadata, ProcessSymptoms,
+} from '../Processing/ChordSchemas';
+import { notify, NotificationAlert } from '../../utils/alert';
 
+import {
+  trackPromise,
+} from '../LoadingIndicator/LoadingIndicator';
 
-function SearchBySymptom({setSymptom}) {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggle = () => setDropdownOpen(prevState => !prevState);
-    const [value, setValue] = useState('');
-    const [suggestionValue, setSuggestionValue] = useState('')
-    const [suggestions, setSuggestions] = useState([])
-    const [fetchedSuggestions, setFetchedSuggesions] = useState([])
+function SearchBySymptom({ setSymptom }) {
+  const [search, setSearch] = useState('');
+  const [suggestionValue, setSuggestionValue] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
 
-    const notifyEl = useRef(null);
+  const notifyEl = useRef(null);
 
-    useEffect(() => {
-      try {
-        trackPromise(
-          fetchIndividuals()
-            .then((dataResponse) => {
-              const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
-              ProcessSymptoms(phenopacketS).then((symptoms) => {
-                console.log(symptoms)
-                setFetchedSuggesions(symptoms)
-              })
-            })
-            .catch(() => {
-              notify(
-                notifyEl,
-                'The resources you requested were not available.',
-                'warning',
-              );
-            }),
-        );
-  
-
-        
-        // console.log(symptomS)
-        // setSymptoms(symptomS)
-  
-      } catch (err) {
-        console.log(err)
-      }
-    }, []);
-
-    // From https://github.com/moroshko/react-autosuggest#installation
-
-    const getSuggestions = value => {
-      const inputValue = value.trim().toLowerCase();
-      const inputLength = inputValue.length;
-    
-      return inputLength === 0 ? [] : fetchedSuggestions.filter(lang =>
-        lang.name.toLowerCase().slice(0, inputLength) === inputValue
+  useEffect(() => {
+    try {
+      trackPromise(
+        fetchIndividuals()
+          .then((dataResponse) => {
+            /* eslint-disable */
+            const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
+            /* eslint-enable */
+            ProcessSymptoms(phenopacketS).then((symptoms) => {
+              console.log(symptoms);
+              setFetchedSuggesions(symptoms);
+            });
+          })
+          .catch(() => {
+            notify(
+              notifyEl,
+              'The resources you requested were not available.',
+              'warning',
+            );
+          }),
       );
-    };
-    
-    const getSuggestionValue = suggestion => suggestion.name;
-
-    const renderSuggestion = suggestion => (
-      <div>
-        {suggestion.name}
-      </div>
-    );
-
-    const onSuggestionsFetchRequested = ({ value }) => {
-      setSuggestions(getSuggestions(value));
-    };
-  
-    // Autosuggest will call this function every time you need to clear suggestions.
-    const onSuggestionsClearRequested = () => {
-      setSuggestions([]);
-    };
-
-    const sendRequest = (symptom) => {
-        console.log("Button Pressed");
-        setSymptom(symptom);
+    } catch (err) {
+      // console.log(err)
     }
+  }, []);
 
-    const onChange = (event, { newValue }) => {
-      setSuggestionValue(newValue);
-      setValue(newValue)
-    };
+  // From https://github.com/moroshko/react-autosuggest#installation
 
-    const inputProps = {
-      placeholder: 'Type a programming language',
-      value,
-      onChange: onChange
-    };
+  const getSuggestions = (input) => {
+    const inputValue = input.trim().toLowerCase();
+    const inputLength = inputValue.length;
 
-    return (
-        <>
-        <Style>
-        <Col>
-            <InputGroup>
- 
+    return inputLength === 0 ? [] : fetchedSuggestions.filter((lang) => lang.name.toLowerCase().slice(0, inputLength) === inputValue);
+  };
 
-            <Autosuggest
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-              onSuggestionsClearRequested={onSuggestionsClearRequested}
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
-              inputProps={inputProps}
+  const getSuggestionValue = (suggestion) => suggestion.name;
+
+  const renderSuggestion = (suggestion) => (
+    <div>
+      {suggestion.name}
+    </div>
+  );
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
+
+  // Autosuggest will call this function every time you need to clear suggestions.
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const onChange = (event, { newValue }) => {
+    setSuggestionValue(newValue);
+    setSearch(newValue);
+  };
+
+  const inputProps = {
+    placeholder: 'Symptom...',
+    suggestionValue,
+    onChange,
+  };
+
+  const renderInputComponent = (iProps) => (
+    <div>
+      <InputGroup>
+        <Input {...iProps} />
+        <InputGroupAddon addonType="append">
+          <Button onClick={() => setSymptom(search)}>Search</Button>
+
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
+  );
+
+  return (
+    <>
+      <Style>
+        <NotificationAlert ref={notifyEl} />
+        <Row>
+          <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+            <span
+              data-notify="icon"
+              className="nc-icon nc-zoom-split"
             />
-            <InputGroupAddon addonType="append">
-                <Button onClick={() => sendRequest(value)}>Search</Button></InputGroupAddon>
-            </InputGroup>
 
-        </Col>
-        </Style>
-        
-        </>
-    )
+            <b>
+              <span>
+                <p> Search for a symptom to get started. </p>
+                <p>
+                  {' '}
+                  A table of individuals exhibiting the searched symptom will be generated.
+                  Clicking on a row will bring up more tables about the specific individual,
+                  including their symptoms and associated diseases.
+                </p>
+              </span>
+            </b>
+          </UncontrolledAlert>
+        </Row>
+        <Row>
+          <Col>
 
-    // <Input 
-    // placeholder="Symptoms" 
-    // value={value || ''}
-    // onChange={(e) => {
-    //     setValue(e.target.value);
-    //   }}
+            <AutoSuggestStyle>
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                renderInputComponent={renderInputComponent}
+                inputProps={inputProps}
+              />
+            </AutoSuggestStyle>
 
-    // />
+          </Col>
+        </Row>
+      </Style>
+
+    </>
+  );
 }
 
-export {SearchBySymptom}
+SearchBySymptom.propTypes = {
+  setSymptom: PropTypes.func,
+};
+
+SearchBySymptom.defaultProps = {
+  setSymptom: () => {},
+};
+
+export default SearchBySymptom;
