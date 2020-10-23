@@ -24,7 +24,7 @@ import CustomVisualization from './views/CustomVisualization';
 import PatientsOverview from './views/PatientsOverview';
 import GwasBrowser from './views/GwasBrowser';
 import TableList from "./views/MetadataTableApp";
-import ChordTable from "./views/ChordTableApp"
+// import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
 import VariantsSearch from './views/VariantsSearch';
 import SearchBySymptom from './views/Symptoms';
