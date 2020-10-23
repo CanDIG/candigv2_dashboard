@@ -109,20 +109,25 @@ function IndividualsOverview({ updateState }) {
   };
 
   useEffect(() => {
+    let isMounted = true;
     updateState({ datasetVisible: false });
     trackPromise(
       fetchIndividuals()
         .then((data) => {
-          countIndividuals(data);
-          countEthnicity(data);
-          countGender(data);
-          countDateOfBirth(data);
-          const diseases = countDiseases(data);
-          setDiseasesObject(diseases);
-          setDiseasesSum(Object.keys(diseases).length);
-          setEducationObject(getCounterUnderExtraProperties(data, 'education'));
-          setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
-          setDidFetch(true);
+          if (isMounted) {
+            countIndividuals(data);
+            countEthnicity(data);
+            countGender(data);
+            countDateOfBirth(data);
+            const diseases = countDiseases(data);
+            setDiseasesObject(diseases);
+            setDiseasesSum(Object.keys(diseases).length);
+            setEducationObject(
+              getCounterUnderExtraProperties(data, 'education'),
+            );
+            setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
+            setDidFetch(true);
+          }
         })
         .catch(() => {
           notify(
@@ -136,6 +141,7 @@ function IndividualsOverview({ updateState }) {
     );
     return () => {
       updateState({ datasetVisible: true });
+      isMounted = false;
     };
   }, [didFetch, updateState]);
 

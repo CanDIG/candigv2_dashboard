@@ -58,14 +58,19 @@ function DatasetsDropdown({ updateState }) {
    * and update both parent and local state
    */
   useEffect(() => {
+    let isMounted = true;
     if (!selectedDataset) {
-      fetchDatasets()
-        .then((data) => {
+      fetchDatasets().then((data) => {
+        if (isMounted) {
           const datasetsList = processDatasetJson(data.results.datasets);
           setDatasets(datasetsList);
           setFirstDataset(datasetsList);
-        });
+        }
+      });
     }
+    return () => {
+      isMounted = false;
+    };
   });
 
   /*
@@ -78,12 +83,7 @@ function DatasetsDropdown({ updateState }) {
 
   // This loop builds the dropdown items list
   const datasetList = Object.keys(datasets).map((key) => (
-    <DropdownItem
-      default
-      onClick={handleClick}
-      key={key}
-      id={key}
-    >
+    <DropdownItem default onClick={handleClick} key={key} id={key}>
       {datasets[key].name}
     </DropdownItem>
   ));
