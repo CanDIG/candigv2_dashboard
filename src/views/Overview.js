@@ -26,7 +26,7 @@ function groupByExtraProperty(data, property) {
   return obj;
 }
 
-function Overview({ datasetId, updateState }) {
+function Overview({ updateState }) {
   const [individualsCounter, setIndividualsCounter] = useState(0);
   const [hospitalCounter, setHospitalCounter] = useState(0);
   const [hostHospitalObj, setHostHospitalObj] = useState({ "": 0 });
@@ -34,13 +34,7 @@ function Overview({ datasetId, updateState }) {
   const [asymptomaticObj, setAsymptomaticObj] = useState({ "": 0 });
   const [covid19TesteObj, setCovid19TesteObj] = useState({ "": 0 });
   const [hospitalizedObj, setHospitalizedObj] = useState({ "": 0 });
-  const [birthCountryObj, setBirthCountryObj] = useState({ "": 0 });
-  const [residenceTypeObj, setResidenceTypeObj] = useState({ "": 0 });
-  const [enrollmentDateObj, setEnrollmentDateObj] = useState({ "": 0 });
-  const [covid19TestDateObj, setCovid19TestDate] = useState({ "": 0 });
-  const [covid19DiagnosisDateObj, setCovid19DiagnosisDateObj] = useState({
-    "": 0,
-  });
+  const [residenceTypeObj, setResidenceTypeObj] = useState({ "": 0 });  
   const [hospitalizationRate, setHospitalizationRate] = useState(0);
   const [positiveTestRate, setPositiveTestRate] = useState(0);
 
@@ -78,13 +72,7 @@ function Overview({ datasetId, updateState }) {
             setHostHospitalObj(groupByExtraProperty(data, "host_hospital"));
             setEmploymentObj(groupByExtraProperty(data, "employment"));
             setAsymptomaticObj(groupByExtraProperty(data, "asymptomatic"));
-            setBirthCountryObj(groupByExtraProperty(data, "birth_country"));
-            setResidenceTypeObj(groupByExtraProperty(data, "residence_type"));
-            setEnrollmentDateObj(groupByExtraProperty(data, "enrollment_date"));
-            setCovid19TestDate(groupByExtraProperty(data, "covid19_test_date"));
-            setCovid19DiagnosisDateObj(
-              groupByExtraProperty(data, "covid19_diagnosis_date")
-            );
+            setResidenceTypeObj(groupByExtraProperty(data, "residence_type"));           
 
             setDidFetch(true);
           })
@@ -106,6 +94,7 @@ function Overview({ datasetId, updateState }) {
   return (
     <>
       <div className="content">
+        <NotificationAlert ref={notifyEl} />
         <Row>
           <Col lg="3" md="12" sm="12">
             <Card className="card-stats">
