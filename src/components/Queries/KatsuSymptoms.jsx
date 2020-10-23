@@ -108,8 +108,9 @@ function SearchBySymptom({ setSymptom }) {
     <>
       <Style>
         <NotificationAlert ref={notifyEl} />
-        <Row>
-          <Col>
+        
+          <Col xs="4"></Col>
+          <Col xs="4">
 
             <AutoSuggestStyle>
               <Autosuggest
@@ -124,7 +125,8 @@ function SearchBySymptom({ setSymptom }) {
             </AutoSuggestStyle>
 
           </Col>
-        </Row>
+          <Col xs="4"></Col>
+        
       </Style>
 
     </>

@@ -25,7 +25,7 @@ const AutoSuggestStyle = styled.div`
         font-size: 16px;
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
-        z-index: 2;
+        z-index: 10;
       }
       
       .react-autosuggest__suggestions-list {

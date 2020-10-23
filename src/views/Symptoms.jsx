@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 
 import {
-  Row, UncontrolledAlert
+  Row, Col, UncontrolledAlert
 } from 'reactstrap';
 import { searchSymptom } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
@@ -276,6 +276,8 @@ function TableApp() {
           setSymptom={setSelectedSymptom}
         />
       </Row>
+<Row><Col>{' '}</Col></Row>
+<Row><Col>{' '}</Col></Row>
       {promiseInProgress === true ? (
         <LoadingIndicator />
       ) : (
