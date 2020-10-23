@@ -93,13 +93,13 @@ const routes = [
     component: TableList,
     layout: "/dashboard",
   },
-  {
-    path: "/Chord",
-    name: "Chord Metadata",
-    icon: "nc-icon nc-tile-56",
-    component: ChordTable,
-    layout: "/dashboard",
-  },
+  // {
+  //   path: "/Chord",
+  //   name: "Chord Metadata",
+  //   icon: "nc-icon nc-tile-56",
+  //   component: ChordTable,
+  //   layout: "/dashboard",
+  // },
   {
     path: "/Symptoms",
     name: "Search by Symptom",
