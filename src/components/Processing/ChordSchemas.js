@@ -112,8 +112,8 @@ export async function ProcessSymptoms(phenopackets) {
   const symptoms = new Set();
   Promise.all(Object.values(phenopackets).map(async (phenopacket) => {
     await Promise.all(phenopacket.phenotypic_features.map(async (feature) => {
-      if ('symptom' === feature.extra_properties.datatype) {
-          symptoms.add(feature.type.label);
+      if (feature.extra_properties.datatype === 'symptom') {
+        symptoms.add(feature.type.label);
       }
     }));
   }));
