@@ -128,7 +128,7 @@ function searchSymptom(symptom) {
   if (!symptom || 0 === symptom.length) {
     return {}
   }
-  return fetch(`${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}`, {
+  return fetch(`${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

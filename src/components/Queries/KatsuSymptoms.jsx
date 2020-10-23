@@ -35,9 +35,9 @@ function SearchBySymptom({ setSymptom }) {
         fetchIndividuals()
           .then((dataResponse) => {
             /* eslint-disable */
-            const [_, phenopacketS] = ProcessMetadata(dataResponse.results);
+            const [_, phenopackets] = ProcessMetadata(dataResponse.results);
             /* eslint-enable */
-            ProcessSymptoms(phenopacketS).then((symptoms) => {
+            ProcessSymptoms(phenopackets).then((symptoms) => {
               console.log(symptoms);
               setFetchedSuggesions(symptoms);
             });
