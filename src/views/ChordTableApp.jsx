@@ -5,8 +5,6 @@ import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
 } from '../components/Processing/ChordSchemas';
 
-import { CHORD_METADATA_URL } from '../constants/constants';
-
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
 import {fetchIndividuals} from '../api/api'
