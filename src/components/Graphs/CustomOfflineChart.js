@@ -107,6 +107,7 @@ CustomOfflineChart.propTypes = {
 
 CustomOfflineChart.defaultProps = {
   datasetName: '',
+  height: '200px; auto',
 };
 
 export default CustomOfflineChart;

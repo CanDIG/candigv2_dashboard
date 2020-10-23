@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 // reactstrap components
-import {
-  Card, CardBody, CardTitle, Row, Col,
-} from 'reactstrap';
-import PropTypes from 'prop-types';
+import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
+import PropTypes from "prop-types";
 
-import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
+import CustomOfflineChart from "../components/Graphs/CustomOfflineChart";
 import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
-} from '../components/LoadingIndicator/LoadingIndicator';
-import BoxPlotChart from '../components/Graphs/BoxPlotChart';
-import { notify, NotificationAlert } from '../utils/alert';
-import { groupBy } from '../utils/utils';
-import { fetchIndividuals } from '../api/api';
+} from "../components/LoadingIndicator/LoadingIndicator";
+import BoxPlotChart from "../components/Graphs/BoxPlotChart";
+import { notify, NotificationAlert } from "../utils/alert";
+import { groupBy } from "../utils/utils";
+import { fetchIndividuals } from "../api/api";
 
 /*
  * Return a specific extra property grouped by gender
@@ -23,13 +21,14 @@ import { fetchIndividuals } from '../api/api';
 function groupExtraPropertieByGender(data, property) {
   const extraPropertieList = {};
   for (let i = 0; i < data.results.length; i += 1) {
-    const key = data.results[i].sex.charAt(0).toUpperCase()
-      + data.results[i].sex.slice(1).toLowerCase().replace('_', ' ');
+    const key =
+      data.results[i].sex.charAt(0).toUpperCase() +
+      data.results[i].sex.slice(1).toLowerCase().replace("_", " ");
     if (!extraPropertieList[key]) {
       extraPropertieList[key] = [];
     }
     extraPropertieList[key].push(
-      parseFloat(data.results[i].extra_properties[property]),
+      parseFloat(data.results[i].extra_properties[property])
     );
   }
   return extraPropertieList;
@@ -79,13 +78,13 @@ function getCounterUnderExtraProperties(data, property) {
 
 function IndividualsOverview({ updateState }) {
   const [individualCounter, setIndividualCount] = useState(0);
-  const [ethnicityObject, setEthnicityObject] = useState({ '': 0 });
-  const [genderObject, setGenderObject] = useState({ '': 0 });
-  const [doBObject, setDoBObject] = useState({ '': 0 });
-  const [diseasesObject, setDiseasesObject] = useState({ '': 0 });
+  const [ethnicityObject, setEthnicityObject] = useState({ "": 0 });
+  const [genderObject, setGenderObject] = useState({ "": 0 });
+  const [doBObject, setDoBObject] = useState({ "": 0 });
+  const [diseasesObject, setDiseasesObject] = useState({ "": 0 });
   const [diseasesSum, setDiseasesSum] = useState(0);
-  const [educationObject, setEducationObject] = useState({ '': 0 });
-  const [boxPlotObject, setBoxPlotObject] = useState({ '': [] });
+  const [educationObject, setEducationObject] = useState({ "": 0 });
+  const [boxPlotObject, setBoxPlotObject] = useState({ "": [] });
   const [didFetch, setDidFetch] = useState(false);
 
   const { promiseInProgress } = usePromiseTracker();
@@ -97,45 +96,51 @@ function IndividualsOverview({ updateState }) {
   };
 
   const countEthnicity = (data) => {
-    setEthnicityObject(groupBy(data.results, 'ethnicity'));
+    setEthnicityObject(groupBy(data.results, "ethnicity"));
   };
 
   const countGender = (data) => {
-    setGenderObject(groupBy(data.results, 'sex'));
+    setGenderObject(groupBy(data.results, "sex"));
   };
 
   const countDateOfBirth = (data) => {
-    setDoBObject(groupBy(data.results, 'date_of_birth'));
+    setDoBObject(groupBy(data.results, "date_of_birth"));
   };
 
   useEffect(() => {
+    let isMounted = true;
     updateState({ datasetVisible: false });
     trackPromise(
       fetchIndividuals()
         .then((data) => {
-          countIndividuals(data);
-          countEthnicity(data);
-          countGender(data);
-          countDateOfBirth(data);
-          const diseases = countDiseases(data);
-          setDiseasesObject(diseases);
-          setDiseasesSum(Object.keys(diseases).length);
-          setEducationObject(getCounterUnderExtraProperties(data, 'education'));
-          setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
-          setDidFetch(true);
+          if (isMounted) {
+            countIndividuals(data);
+            countEthnicity(data);
+            countGender(data);
+            countDateOfBirth(data);
+            const diseases = countDiseases(data);
+            setDiseasesObject(diseases);
+            setDiseasesSum(Object.keys(diseases).length);
+            setEducationObject(
+              getCounterUnderExtraProperties(data, "education")
+            );
+            setBoxPlotObject(groupExtraPropertieByGender(data, "weight"));
+            setDidFetch(true);
+          }
         })
         .catch(() => {
           notify(
             notifyEl,
-            'The resources you requested were not available.',
-            'warning',
+            "The resources you requested were not available.",
+            "warning"
           );
-          setIndividualCount('Not available');
-          setDiseasesSum('Not available');
-        }),
+          setIndividualCount("Not available");
+          setDiseasesSum("Not available");
+        })
     );
     return () => {
       updateState({ datasetVisible: true });
+      isMounted = false;
     };
   }, [didFetch, updateState]);
 
