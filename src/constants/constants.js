@@ -7,6 +7,8 @@ const BASE_URL = 'http://ga4ghdev01.bcgsc.ca:20127';
 
 export const CHORD_METADATA_URL = 'http://ga4ghdev01.bcgsc.ca:4000';
 
+export const HTSGET_URL = 'http://ga4ghdev01.bcgsc.ca:3333';
+
 export const CLIN_METADATA = [
   'celltransplants',
   'chemotherapies',
