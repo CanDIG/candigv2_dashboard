@@ -13,6 +13,10 @@ import { notify, NotificationAlert } from '../utils/alert';
 import { fetchIndividuals } from '../api/api';
 
 function groupByExtraProperty(data, property) {
+  /**
+   * Group by some property under extra property
+   * from the response data from Chord service
+   */
   const obj = {};
   for (let i = 0; i < data.results.length; i += 1) {
     const key = data.results[i].extra_properties[property];
@@ -26,10 +30,16 @@ function groupByExtraProperty(data, property) {
 }
 
 function countFromExtraProperty(data, property) {
+  /**
+   * Return the count of keys on a object
+   */
   return Object.keys(groupByExtraProperty(data, property)).length;
 }
 
 function Overview({ updateState }) {
+  /**
+   * Dashboard landing view
+   */
   const [individualsCounter, setIndividualsCounter] = useState(0);
   const [hospitalCounter, setHospitalCounter] = useState(0);
   const [hostHospitalObj, setHostHospitalObj] = useState({ '': 0 });
@@ -284,6 +294,7 @@ function Overview({ updateState }) {
                     dataObject={hostHospitalObj}
                     chartType="pie"
                     barTitle="Host Hospital"
+                    height="400px; auto"
                   />
                 )}
               </CardBody>
@@ -300,99 +311,13 @@ function Overview({ updateState }) {
                     dataObject={employmentObj}
                     chartType="pie"
                     barTitle="Employment"
+                    height="400px; auto"
                   />
                 )}
               </CardBody>
             </Card>
           </Col>
         </Row>
-        {/* <Row>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                {promiseInProgress === true ? (
-                  <LoadingIndicator />
-                ) : (
-                  <CustomOfflineChart
-                    datasetName=""
-                    dataObject={birthCountryObj}
-                    chartType="bar"
-                    barTitle="Country of Birth"
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="6" md="12" sm="12">
-            <Card>
-              <CardBody>
-                {promiseInProgress === true ? (
-                  <LoadingIndicator />
-                ) : (
-                  <CustomOfflineChart
-                    datasetName=""
-                    dataObject={residenceTypeObj}
-                    chartType="bar"
-                    barTitle="Type of Residence"
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </Col>
-        </Row> */}
-        {/* <Row>
-          <Col lg="4" md="12" sm="12">
-            <Card>
-              <CardBody>
-                {promiseInProgress === true ? (
-                  <LoadingIndicator />
-                ) : (
-                  <CustomOfflineChart
-                    datasetName=""
-                    dataObject={enrollmentDateObj}
-                    chartType="pie"
-                    barTitle="Enrollment Date"
-                    height="400px; auto"
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4" md="12" sm="12">
-            <Card>
-              <CardBody>
-                {promiseInProgress === true ? (
-                  <LoadingIndicator />
-                ) : (
-                  <CustomOfflineChart
-                    datasetName=""
-                    dataObject={covid19TestDateObj}
-                    chartType="pie"
-                    barTitle="Test Date"
-                    height="400px; auto"
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4" md="12" sm="12">
-            <Card>
-              <CardBody>
-                {promiseInProgress === true ? (
-                  <LoadingIndicator />
-                ) : (
-                  <CustomOfflineChart
-                    datasetName=""
-                    dataObject={covid19DiagnosisDateObj}
-                    chartType="pie"
-                    barTitle="Diagnosis Date"
-                    height="400px; auto"
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </Col>
-        </Row> */}
       </div>
     </>
   );
