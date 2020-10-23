@@ -4,7 +4,7 @@ import React, {
 import PropTypes from 'prop-types';
 
 import {
-  Row, Button, InputGroup,
+  Button, InputGroup,
   InputGroupAddon, Col, Input,
 } from 'reactstrap';
 import Autosuggest from 'react-autosuggest';
