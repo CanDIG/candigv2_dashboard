@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 import { searchSymptom } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
-import { SearchBySymptom } from '../components/Queries/KatsuSymptoms';
+import SearchBySymptom from '../components/Queries/KatsuSymptoms';
 
 import {
   ProcessData, diseaseSchema,
