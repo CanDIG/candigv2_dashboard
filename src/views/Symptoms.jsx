@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 
 import {
-  Row,
+  Row, UncontrolledAlert
 } from 'reactstrap';
 import { searchSymptom } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
@@ -249,6 +249,27 @@ function TableApp() {
 
   return (
     <div className="content">
+
+      <Row>
+          <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+            <span
+              data-notify="icon"
+              className="nc-icon nc-zoom-split"
+            />
+
+            <b>
+              <span>
+                <p> Search for a symptom to get started. </p>
+                <p>
+                  {' '}
+                  A table of individuals exhibiting the searched symptom will be generated.
+                  Clicking on a row will bring up more tables about the specific individual,
+                  including their symptoms and associated diseases.
+                </p>
+              </span>
+            </b>
+          </UncontrolledAlert>
+        </Row>
 
       <Row>
         <SearchBySymptom

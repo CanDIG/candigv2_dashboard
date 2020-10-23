@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {
   Row, Button, InputGroup,
   InputGroupAddon, Col, Input,
-  UncontrolledAlert,
 } from 'reactstrap';
 import Autosuggest from 'react-autosuggest';
 import AutoSuggestStyle from '../../assets/css/StyledComponents/AutoSuggestStyled';
@@ -109,26 +108,6 @@ function SearchBySymptom({ setSymptom }) {
     <>
       <Style>
         <NotificationAlert ref={notifyEl} />
-        <Row>
-          <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
-            <span
-              data-notify="icon"
-              className="nc-icon nc-zoom-split"
-            />
-
-            <b>
-              <span>
-                <p> Search for a symptom to get started. </p>
-                <p>
-                  {' '}
-                  A table of individuals exhibiting the searched symptom will be generated.
-                  Clicking on a row will bring up more tables about the specific individual,
-                  including their symptoms and associated diseases.
-                </p>
-              </span>
-            </b>
-          </UncontrolledAlert>
-        </Row>
         <Row>
           <Col>
 
