@@ -28,8 +28,8 @@ function HtsgetBrowser({ datasetId }) {
         const tmpDataObj = {};
         // File name is set as key, while its url is set as the value
         data.forEach((element) => {
-          if (!element.name.endsWith("bai")){
-              tmpDataObj[element.name] = element.access_methods[0].access_url.url;
+          if (!element.name.endsWith('bai')) {
+            tmpDataObj[element.name] = element.access_methods[0].access_url.url;
           }
         });
 
