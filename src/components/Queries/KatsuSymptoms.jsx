@@ -38,7 +38,6 @@ function SearchBySymptom({ setSymptom }) {
             const [_, phenopackets] = ProcessMetadata(dataResponse.results);
             /* eslint-enable */
             ProcessSymptoms(phenopackets).then((symptoms) => {
-              console.log(symptoms);
               setFetchedSuggesions(symptoms);
             });
           })
@@ -72,9 +71,13 @@ function SearchBySymptom({ setSymptom }) {
     </div>
   );
 
+  // 3rd Party implmentation, disabling the linter because it doesn't like the value shadowing
+/* eslint-disable */
+
   const onSuggestionsFetchRequested = ({ value }) => {
     setSuggestions(getSuggestions(value));
   };
+  /* eslint-enable */
 
   // Autosuggest will call this function every time you need to clear suggestions.
   const onSuggestionsClearRequested = () => {
@@ -108,25 +111,25 @@ function SearchBySymptom({ setSymptom }) {
     <>
       <Style>
         <NotificationAlert ref={notifyEl} />
-        
-          <Col xs="4"></Col>
-          <Col xs="4">
 
-            <AutoSuggestStyle>
-              <Autosuggest
-                suggestions={suggestions}
-                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                getSuggestionValue={getSuggestionValue}
-                renderSuggestion={renderSuggestion}
-                renderInputComponent={renderInputComponent}
-                inputProps={inputProps}
-              />
-            </AutoSuggestStyle>
+        <Col xs="4" />
+        <Col xs="4">
 
-          </Col>
-          <Col xs="4"></Col>
-        
+          <AutoSuggestStyle>
+            <Autosuggest
+              suggestions={suggestions}
+              onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={onSuggestionsClearRequested}
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
+              renderInputComponent={renderInputComponent}
+              inputProps={inputProps}
+            />
+          </AutoSuggestStyle>
+
+        </Col>
+        <Col xs="4" />
+
       </Style>
 
     </>

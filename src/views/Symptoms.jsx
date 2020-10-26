@@ -1,9 +1,9 @@
 import React, {
-  useState, useEffect,
+  useState, useEffect, useRef,
 } from 'react';
 
 import {
-  Row, Col, UncontrolledAlert
+  Row, Col, UncontrolledAlert,
 } from 'reactstrap';
 import { searchSymptom } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
@@ -14,6 +14,7 @@ import {
   featureSchema, ProcessPhenopackets,
   ProcessFeatures,
 } from '../components/Processing/ChordSchemas';
+import { notify, NotificationAlert } from '../utils/alert';
 
 import LoadingIndicator, {
   trackPromise,
@@ -94,6 +95,8 @@ function TableApp() {
 
   const { promiseInProgress } = usePromiseTracker();
 
+  const notifyEl = useRef(null);
+
   const clearSubTables = () => {
     setDiseaseTableData([]);
     setSymptomsTableData([]);
@@ -111,11 +114,22 @@ function TableApp() {
             setPhenopackets(tphenopackets);
             setActiveID('');
             clearSubTables();
+          })
+          .catch(() => {
+            notify(
+              notifyEl,
+              'The resources you requested were not available.',
+              'warning',
+            );
+            setData([]);
+            setPhenopackets([]);
+            setActiveID('');
+            clearSubTables();
           }),
       );
     } catch (err) {
       // Need better reporting
-      console.log(err);
+      // console.log(err);
     }
   }, [selectedSymptom]);
 
@@ -126,7 +140,7 @@ function TableApp() {
       CreateColumns(Object.keys(data[0]), setColumns);
     } catch (err) {
       // Need better reporting
-      console.log(err);
+      // console.log(err);
     }
   }, [data]);
 
@@ -149,7 +163,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }, [activeID, diseases, phenopackets]);
 
@@ -251,33 +265,35 @@ function TableApp() {
     <div className="content">
 
       <Row>
-          <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
-            <span
-              data-notify="icon"
-              className="nc-icon nc-zoom-split"
-            />
+        <NotificationAlert ref={notifyEl} />
 
-            <b>
-              <span>
-                <p> Search for a symptom to get started. </p>
-                <p>
-                  {' '}
-                  A table of individuals exhibiting the searched symptom will be generated.
-                  Clicking on a row will bring up more tables about the specific individual,
-                  including their symptoms and associated diseases.
-                </p>
-              </span>
-            </b>
-          </UncontrolledAlert>
-        </Row>
+        <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+          <span
+            data-notify="icon"
+            className="nc-icon nc-zoom-split"
+          />
+
+          <b>
+            <span>
+              <p> Search for a symptom to get started. </p>
+              <p>
+                {' '}
+                A table of individuals exhibiting the searched symptom will be generated.
+                Clicking on a row will bring up more tables about the specific individual,
+                including their symptoms and associated diseases.
+              </p>
+            </span>
+          </b>
+        </UncontrolledAlert>
+      </Row>
 
       <Row>
         <SearchBySymptom
           setSymptom={setSelectedSymptom}
         />
       </Row>
-<Row><Col>{' '}</Col></Row>
-<Row><Col>{' '}</Col></Row>
+      <Row><Col>{' '}</Col></Row>
+      <Row><Col>{' '}</Col></Row>
       {promiseInProgress === true ? (
         <LoadingIndicator />
       ) : (
