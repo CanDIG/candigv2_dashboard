@@ -24,9 +24,10 @@ import CustomVisualization from './views/CustomVisualization';
 import GwasBrowser from './views/GwasBrowser';
 import HtsgetBrowser from './views/HtsgetBrowser';
 import TableList from "./views/MetadataTableApp";
-import ChordTable from "./views/ChordTableApp"
+// import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
 import VariantsSearch from './views/VariantsSearch';
+import SearchBySymptom from './views/Symptoms';
 
 const routes = [
   {
@@ -92,11 +93,18 @@ const routes = [
     component: TableList,
     layout: "/dashboard",
   },
+  // {
+  //   path: "/Chord",
+  //   name: "Chord Metadata",
+  //   icon: "nc-icon nc-tile-56",
+  //   component: ChordTable,
+  //   layout: "/dashboard",
+  // },
   {
-    path: "/Chord",
-    name: "Chord Metadata",
+    path: "/Symptoms",
+    name: "Search by Symptom",
     icon: "nc-icon nc-tile-56",
-    component: ChordTable,
+    component: SearchBySymptom,
     layout: "/dashboard",
   },
 ];

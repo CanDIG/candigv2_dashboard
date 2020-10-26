@@ -184,11 +184,12 @@ function ClinMetadataTable({
 
   return (
     <>
-      <TopBar />
 
       {data.length > 0
         ? (
           <>
+          <TopBar />
+
             <Row>
 
               <Styles rowFilter={rowFilterVisible} rowAggregation={rowAggregationVisible}>

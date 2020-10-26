@@ -13,8 +13,9 @@ function ClinMetadataDropdown({ metadataCallback, isActive }) {
   const toggleOpen = () => setIsOpen(!isOpen);
 
   const handleClick = (entry) => {
-    metadataCallback(entry);
     setSelected(entry);
+
+    metadataCallback(entry);
   };
 
   //TODO: Fix selected update to reflect chosen dataset
