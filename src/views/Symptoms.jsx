@@ -129,7 +129,7 @@ function TableApp() {
       );
     } catch (err) {
       // Need better reporting
-      // console.log(err);
+      ;
     }
   }, [selectedSymptom]);
 
@@ -140,7 +140,7 @@ function TableApp() {
       CreateColumns(Object.keys(data[0]), setColumns);
     } catch (err) {
       // Need better reporting
-      // console.log(err);
+      ;
     }
   }, [data]);
 
@@ -163,7 +163,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      ;
     }
   }, [activeID, diseases, phenopackets]);
 
@@ -172,7 +172,7 @@ function TableApp() {
       CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
     } catch (err) {
       // Need better reporting
-      // console.log(err);
+      ;
     }
   }, [diseaseTableData]);
 
@@ -199,7 +199,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      ;
     }
   }, [activeID, symptomsTable, phenopackets]);
 
@@ -227,7 +227,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      ;
     }
   }, [activeID, complicationsTable, phenopackets]);
 
@@ -236,7 +236,7 @@ function TableApp() {
       CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
     } catch (err) {
       // Need better reporting
-      // console.log(err);
+      ;
     }
   }, [symptomsTableData]);
 
@@ -245,7 +245,7 @@ function TableApp() {
       CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
     } catch (err) {
       // Need better reporting
-      // console.log(err);
+      ;
     }
   }, [complicationsTableData]);
 

@@ -50,7 +50,6 @@ function SearchBySymptom({ setSymptom }) {
           }),
       );
     } catch (err) {
-      // console.log(err)
     }
   }, []);
 
