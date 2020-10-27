@@ -4,7 +4,10 @@ import React, {
 
 import {
   Row, Col, UncontrolledAlert,
+  TabContent, TabPane, Nav, NavItem, NavLink,
 } from 'reactstrap';
+import classnames from 'classnames';
+import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import { searchSymptom } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import SearchBySymptom from '../components/Queries/KatsuSymptoms';
@@ -37,44 +40,9 @@ function CreateColumns(columnNames, cb) {
   cb(columnList);
 }
 
-// function isEmpty(obj) {
-//   for (const key in obj) {
-//     if (obj.hasOwnProperty(key)) { return false; }
-//   }
-//   return true;
-// }
-
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
-
-// function getMetadataData(setData, setPhenopackets) {
-//   return fetch(`${CHORD_METADATA_URL}/api/individuals`, {
-//     method: 'GET',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   })
-//     .then((response) => {
-//       if (response.ok) {
-//         return response.json();
-//       }
-//     })
-//     .then((data) => {
-//       const [dataset, phenopackets] = ProcessMetadata(data.results);
-//       setData(dataset);
-//       setPhenopackets(phenopackets);
-//     });
-// }
-
-// const MOCKED = (query) => {
-//     console.log(query === 'fatigue')
-//     if (query === 'fatigue') {
-//         return RESPONSE.results
-//     }
-
-//     return {}
-// }
 
 function TableApp() {
   const [selectedSymptom, setSelectedSymptom] = useState('');
@@ -94,6 +62,11 @@ function TableApp() {
   const [complicationsTableColumns, setComplicationsTableColumns] = useState([]);
 
   const { promiseInProgress } = usePromiseTracker();
+  const [activeTab, setActiveTab] = useState('1');
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab);
+  };
 
   const notifyEl = useRef(null);
 
@@ -129,7 +102,7 @@ function TableApp() {
       );
     } catch (err) {
       // Need better reporting
-      ;
+
     }
   }, [selectedSymptom]);
 
@@ -140,7 +113,7 @@ function TableApp() {
       CreateColumns(Object.keys(data[0]), setColumns);
     } catch (err) {
       // Need better reporting
-      ;
+
     }
   }, [data]);
 
@@ -163,7 +136,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      ;
+      // Need better reporting
     }
   }, [activeID, diseases, phenopackets]);
 
@@ -172,7 +145,6 @@ function TableApp() {
       CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
     } catch (err) {
       // Need better reporting
-      ;
     }
   }, [diseaseTableData]);
 
@@ -199,7 +171,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      ;
+      // Need better reporting
     }
   }, [activeID, symptomsTable, phenopackets]);
 
@@ -227,7 +199,7 @@ function TableApp() {
         }
       }
     } catch (err) {
-      ;
+      // Need better reporting
     }
   }, [activeID, complicationsTable, phenopackets]);
 
@@ -236,7 +208,7 @@ function TableApp() {
       CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
     } catch (err) {
       // Need better reporting
-      ;
+
     }
   }, [symptomsTableData]);
 
@@ -245,20 +217,24 @@ function TableApp() {
       CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
     } catch (err) {
       // Need better reporting
-      ;
+
     }
   }, [complicationsTableData]);
 
-  const dataM = React.useMemo(() => data, [data]);
+  let dataM = React.useMemo(() => data, [data]);
+  dataM = (typeof dataM === 'undefined') ? [] : dataM;
   const columnsM = React.useMemo(() => columns, [columns]);
 
-  const dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
+  let dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
+  dataD = (typeof dataD === 'undefined') ? [] : dataD;
   const columnsD = React.useMemo(() => diseaseTableColumns, [diseaseTableColumns]);
 
-  const dataS = React.useMemo(() => symptomsTableData, [symptomsTableData]);
+  let dataS = React.useMemo(() => symptomsTableData, [symptomsTableData]);
+  dataS = (typeof dataS === 'undefined') ? [] : dataS;
   const columnsS = React.useMemo(() => symptomsTableColumns, [symptomsTableColumns]);
 
-  const dataC = React.useMemo(() => complicationsTableData, [complicationsTableData]);
+  let dataC = React.useMemo(() => complicationsTableData, [complicationsTableData]);
+  dataC = (typeof dataC === 'undefined') ? [] : dataC;
   const columnsC = React.useMemo(() => complicationsTableColumns, [complicationsTableColumns]);
 
   return (
@@ -294,42 +270,94 @@ function TableApp() {
       </Row>
       <Row><Col>{' '}</Col></Row>
       <Row><Col>{' '}</Col></Row>
-      {promiseInProgress === true ? (
-        <LoadingIndicator />
-      ) : (
-        <ClinMetadataTable
-          columns={columnsM}
-          data={dataM}
-          metadataCallback={() => {}}
-          activeMetadata={false}
-          setActiveID={setActiveID}
-          isMainTable
-        />
-      )}
-      <ClinMetadataTable
-        columns={columnsD}
-        data={dataD}
-        metadataCallback={() => {}}
-        activeMetadata={false}
-        setActiveID={() => {}}
-        isMainTable={false}
-      />
-      <ClinMetadataTable
-        columns={columnsS}
-        data={dataS}
-        metadataCallback={() => {}}
-        activeMetadata={false}
-        setActiveID={() => {}}
-        isMainTable={false}
-      />
-      <ClinMetadataTable
-        columns={columnsC}
-        data={dataC}
-        metadataCallback={() => {}}
-        activeMetadata={false}
-        setActiveID={() => {}}
-        isMainTable={false}
-      />
+      <TabStyle>
+        <Nav tabs>
+          <NavItem hidden={dataM.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '1' })}
+              onClick={() => { toggle('1'); }}
+            >
+              Individuals
+            </NavLink>
+          </NavItem>
+
+          <NavItem hidden={dataD.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '2' })}
+              onClick={() => { toggle('2'); }}
+            >
+              Diseases
+            </NavLink>
+          </NavItem>
+
+          <NavItem hidden={dataS.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '3' })}
+              onClick={() => { toggle('3'); }}
+            >
+              Symptoms
+            </NavLink>
+          </NavItem>
+
+          <NavItem hidden={dataC.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '4' })}
+              onClick={() => { toggle('4'); }}
+            >
+              Complications
+            </NavLink>
+          </NavItem>
+
+        </Nav>
+        <TabContent activeTab={activeTab}>
+          <TabPane tabId="1">
+            {promiseInProgress === true ? (
+              <LoadingIndicator />
+            ) : (
+              <ClinMetadataTable
+                columns={columnsM}
+                data={dataM}
+                metadataCallback={() => {}}
+                activeMetadata={false}
+                setActiveID={setActiveID}
+                isMainTable
+              />
+            )}
+
+          </TabPane>
+          <TabPane tabId="2">
+            <ClinMetadataTable
+              columns={columnsD}
+              data={dataD}
+              metadataCallback={() => {}}
+              activeMetadata={false}
+              setActiveID={() => {}}
+              isMainTable
+            />
+          </TabPane>
+          <TabPane tabId="3">
+            <ClinMetadataTable
+              columns={columnsS}
+              data={dataS}
+              metadataCallback={() => {}}
+              activeMetadata={false}
+              setActiveID={() => {}}
+              isMainTable
+            />
+          </TabPane>
+          <TabPane tabId="4">
+            <ClinMetadataTable
+              columns={columnsC}
+              data={dataC}
+              metadataCallback={() => {}}
+              activeMetadata={false}
+              setActiveID={() => {}}
+              isMainTable
+            />
+          </TabPane>
+        </TabContent>
+      </TabStyle>
+
     </div>
   );
 }
