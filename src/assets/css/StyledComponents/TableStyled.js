@@ -6,25 +6,21 @@ const Styles = styled.div`
 
   div.card {
     background: #f4f3ef
-    // padding-top: 0px
   }
   table {
-    border: 1px solid #127e12;
+    // border: 1px solid #127e12;
+    border: 1px solid #579DD9;
     background-color: #EEEEEE;
     width: 50%;
     text-align: center;
     border-collapse: collapse;
   }
   table td {
-    border-right: 1px solid #127e12;
+    // border-right: 1px solid #127e12;
+    border-right: 1px solid #579DD9;
     padding: 3px 2px;
-    // word-wrap: break-word;
-    // text-overflow: ellipsis;
-    // overflow: auto;
-    // white-space: nowrap;
     max-width: 250px;
     min-width: 100px;
-    // max-height: 100px;
 
   }
 
@@ -32,10 +28,12 @@ const Styles = styled.div`
     font-size: 14px;
   }
   table tbody tr:nth-child(even) {
-    background: #b0dfb0;
+    // background: #b0dfb0;
+    background: #C7E6F8
   }
   table thead {
-    background: rgb(23,160,24);
+    // background: rgb(23,160,24);
+    background: #2D6FB3
    
   }
   table thead th {
@@ -43,7 +41,8 @@ const Styles = styled.div`
     font-weight: bold;
     color: #FFFFFF;
     text-align: center;
-    border-left: 1px solid #444444;
+    // border-left: 1px solid #444444;
+    border-left: 1px solid #579DD9;
     // word-wrap: break-word;
     max-width: 200px;
     max-height: 50px;

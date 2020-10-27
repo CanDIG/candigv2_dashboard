@@ -1,13 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
+import {
+  Row, TabContent, TabPane, Nav, NavItem, NavLink,
+} from 'reactstrap';
+import classnames from 'classnames';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
-  ProcessMetadata, ProcessData, diseaseSchema, featureSchema,
+  ProcessMetadata, ProcessData, diseaseSchema, featureSchema, ProcessFeatures,
 } from '../components/Processing/ChordSchemas';
-
+import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import {fetchIndividuals} from '../api/api'
+import { fetchIndividuals } from '../api/api';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -34,16 +38,31 @@ function TableApp() {
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
   const [diseases, setDiseases] = useState({});
-  const [features, setFeatures] = useState({});
+  const [symptomsTable, setSymptomsTable] = useState({});
+  const [complicationsTable, setComplicationsTable] = useState({});
+
   const [activeID, setActiveID] = useState('');
   const [diseaseTableData, setDiseaseTableData] = useState([]);
   const [diseaseTableColumns, setDiseaseTableColumns] = useState([]);
-  const [featuresTableData, setFeaturesTableData] = useState([]);
-  const [featuresTableColumns, setFeaturesTableColumns] = useState([]);
+  const [symptomsTableData, setSymptomsTableData] = useState([]);
+  const [symptomsTableColumns, setSymptomsTableColumns] = useState([]);
+  const [complicationsTableData, setComplicationsTableData] = useState([]);
+  const [complicationsTableColumns, setComplicationsTableColumns] = useState([]);
 
   const { promiseInProgress } = usePromiseTracker();
+  const [activeTab, setActiveTab] = useState('1');
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab);
+  };
 
   const notifyEl = useRef(null);
+
+  const clearSubTables = () => {
+    setDiseaseTableData([]);
+    setSymptomsTableData([]);
+    setComplicationsTableData([]);
+  };
 
   React.useEffect(() => {
     // fetch data
@@ -54,7 +73,8 @@ function TableApp() {
             const [dataset, phenopacket] = ProcessMetadata(dataResponse.results);
             setData(dataset);
             setPhenopackets(phenopacket);
-            CreateColumns(Object.keys(dataset[0]), setColumns);
+            setActiveID('');
+            clearSubTables();
           })
           .catch(() => {
             notify(
@@ -62,19 +82,30 @@ function TableApp() {
               'The resources you requested were not available.',
               'warning',
             );
+            setData([]);
+            setPhenopackets([]);
+            setActiveID('');
+            clearSubTables();
           }),
       );
     } catch (err) {
       // Need better reporting
-      notify(
-        notifyEl,
-        'The resources you requested were not available.',
-        'warning',
-      );
+
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Separate Effect since state change is async and columns depends on data
+    // Not entirely sure if necessary
+    try {
+      CreateColumns(Object.keys(data[0]), setColumns);
+    } catch (err) {
+      // Need better reporting
+
+    }
+  }, [data]);
+
+  useEffect(() => {
     try {
       if (activeID) {
         if (diseases[activeID]) {
@@ -93,108 +124,209 @@ function TableApp() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // Need better reporting
     }
   }, [activeID, diseases, phenopackets]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
-      if (diseaseTableData[0]) {
-        CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
-      }
+      CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
     } catch (err) {
-      // This catch will always error out at least once due to async timing.
-      // Need a better way to handle the logic
-
+      // Need better reporting
     }
   }, [diseaseTableData]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Want to store previously created tables rather than reprocessing them
+    // each time the same sub tables are needed
     try {
       if (activeID) {
-        if (features[activeID]) {
-          setFeaturesTableData(features[activeID]);
+        if (symptomsTable[activeID]) {
+          // The sub tables have already been created once, so set them back
+          setSymptomsTableData(symptomsTable[activeID]);
         } else {
-          console.log(phenopackets[activeID]);
-
-          const newFeature = ProcessData(
-            activeID,
-            phenopackets[activeID].phenotypic_features,
-            featureSchema,
-          );
-          if (!isEmpty(features)) {
-            setFeatures((prevState) => ({
+          const newFeature = ProcessFeatures(activeID, phenopackets[activeID].phenotypic_features, featureSchema, 'symptom');
+          if (!isEmpty(symptomsTable)) {
+            // Add onto the existing dictionary of created sub
+            setSymptomsTable((prevState) => ({
               ...prevState, ...newFeature,
             }));
-            setFeaturesTableData(features[activeID]);
+            setSymptomsTableData(symptomsTable[activeID]);
           } else {
-            setFeatures(newFeature);
-            setFeaturesTableData(features[activeID]);
+            setSymptomsTable(newFeature);
+            setSymptomsTableData(symptomsTable[activeID]);
           }
         }
       }
     } catch (err) {
-      console.log(err);
+      // Need better reporting
     }
-  }, [activeID, features, phenopackets]);
+  }, [activeID, symptomsTable, phenopackets]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Want to store previously created tables rather than reprocessing them
+    // each time the same sub tables are needed
+
     try {
-      if (featuresTableData[0]) {
-        CreateColumns(Object.keys(featuresTableData[0]), setFeaturesTableColumns);
+      if (activeID) {
+        if (complicationsTable[activeID]) {
+          // The sub tables have already been created once, so set them back
+          setComplicationsTableData(complicationsTable[activeID]);
+        } else {
+          const newFeature = ProcessFeatures(activeID, phenopackets[activeID].phenotypic_features, featureSchema, 'complication');
+          if (!isEmpty(complicationsTable)) {
+            // Add onto the existing dictionary of created sub
+            setComplicationsTable((prevState) => ({
+              ...prevState, ...newFeature,
+            }));
+            setComplicationsTableData(complicationsTable[activeID]);
+          } else {
+            setComplicationsTable(newFeature);
+            setComplicationsTableData(complicationsTable[activeID]);
+          }
+        }
       }
     } catch (err) {
-      // This catch will always error out at least once due to async timing.
-      // Need a better way to handle the logic
+      // Need better reporting
+    }
+  }, [activeID, complicationsTable, phenopackets]);
+
+  useEffect(() => {
+    try {
+      CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
+    } catch (err) {
+      // Need better reporting
 
     }
-  }, [featuresTableData]);
+  }, [symptomsTableData]);
 
-  const dataM = React.useMemo(() => data, [data]);
+  useEffect(() => {
+    try {
+      CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
+    } catch (err) {
+      // Need better reporting
+
+    }
+  }, [complicationsTableData]);
+
+  let dataM = React.useMemo(() => data, [data]);
+  dataM = (typeof dataM === 'undefined') ? [] : dataM;
   const columnsM = React.useMemo(() => columns, [columns]);
 
-  const dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
+  let dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
+  dataD = (typeof dataD === 'undefined') ? [] : dataD;
   const columnsD = React.useMemo(() => diseaseTableColumns, [diseaseTableColumns]);
 
-  const dataF = React.useMemo(() => featuresTableData, [featuresTableData]);
-  const columnsF = React.useMemo(() => featuresTableColumns, [featuresTableColumns]);
+  let dataS = React.useMemo(() => symptomsTableData, [symptomsTableData]);
+  dataS = (typeof dataS === 'undefined') ? [] : dataS;
+  const columnsS = React.useMemo(() => symptomsTableColumns, [symptomsTableColumns]);
+
+  let dataC = React.useMemo(() => complicationsTableData, [complicationsTableData]);
+  dataC = (typeof dataC === 'undefined') ? [] : dataC;
+  const columnsC = React.useMemo(() => complicationsTableColumns, [complicationsTableColumns]);
 
   return (
     <div className="content">
-      {promiseInProgress === true ? (
-        <LoadingIndicator />
-      ) : (
-        <>
-          <NotificationAlert ref={notifyEl} />
 
-          <ClinMetadataTable
-            columns={columnsM}
-            data={dataM}
-            metadataCallback={() => {}}
-            isActiveMetadataDropdown={false}
-            setActiveID={setActiveID}
-            isMainTable
-          />
-          <ClinMetadataTable
-            columns={columnsD}
-            data={dataD}
-            metadataCallback={() => {}}
-            isActiveMetadataDropdown={false}
-            setActiveID={() => {}}
-            isMainTable={false}
-          />
-          <ClinMetadataTable
-            columns={columnsF}
-            data={dataF}
-            metadataCallback={() => {}}
-            isActiveMetadataDropdown={false}
-            setActiveID={() => {}}
-            isMainTable={false}
-          />
-        </>
-      )}
+      <Row>
+        <NotificationAlert ref={notifyEl} />
+      </Row>
+
+      <TabStyle>
+        <Nav tabs>
+          <NavItem hidden={dataM.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '1' })}
+              onClick={() => { toggle('1'); }}
+            >
+              Individuals
+            </NavLink>
+          </NavItem>
+
+          <NavItem hidden={dataD.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '2' })}
+              onClick={() => { toggle('2'); }}
+            >
+              Diseases
+            </NavLink>
+          </NavItem>
+
+          <NavItem hidden={dataS.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '3' })}
+              onClick={() => { toggle('3'); }}
+            >
+              Symptoms
+            </NavLink>
+          </NavItem>
+
+          <NavItem hidden={dataC.length > 0 ? '' : 'hidden'}>
+            <NavLink
+              className={classnames({ active: activeTab === '4' })}
+              onClick={() => { toggle('4'); }}
+            >
+              Complications
+            </NavLink>
+          </NavItem>
+
+        </Nav>
+        <TabContent activeTab={activeTab}>
+          <TabPane tabId="1">
+            {promiseInProgress === true ? (
+              <LoadingIndicator />
+            ) : (
+              <ClinMetadataTable
+                columns={columnsM}
+                data={dataM}
+                metadataCallback={() => {}}
+                activeMetadata={false}
+                setActiveID={setActiveID}
+                isMainTable
+              />
+            )}
+
+          </TabPane>
+          <TabPane tabId="2">
+            <ClinMetadataTable
+              columns={columnsD}
+              data={dataD}
+              metadataCallback={() => {}}
+              activeMetadata={false}
+              setActiveID={() => {}}
+              isMainTable
+            />
+          </TabPane>
+          <TabPane tabId="3">
+            <ClinMetadataTable
+              columns={columnsS}
+              data={dataS}
+              metadataCallback={() => {}}
+              activeMetadata={false}
+              setActiveID={() => {}}
+              isMainTable
+            />
+          </TabPane>
+          <TabPane tabId="4">
+            <ClinMetadataTable
+              columns={columnsC}
+              data={dataC}
+              metadataCallback={() => {}}
+              activeMetadata={false}
+              setActiveID={() => {}}
+              isMainTable
+            />
+          </TabPane>
+        </TabContent>
+      </TabStyle>
+
     </div>
   );
 }
+
+TableApp.propTypes = {
+};
+TableApp.defaultProps = {
+};
 
 export default TableApp;

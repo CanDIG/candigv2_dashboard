@@ -59,7 +59,6 @@ export function ProcessMetadata(metadata) {
   const mainTable = [];
   const phenopacketsList = {};
   Object.values(metadata).forEach((entry) => {
-    // console.log(entry)
     mainTable.push(subjectSchema(entry));
     const ID = entry.id;
     const Pheno = entry.phenopackets[0];

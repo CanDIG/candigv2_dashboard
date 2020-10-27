@@ -50,6 +50,7 @@ function SearchBySymptom({ setSymptom }) {
           }),
       );
     } catch (err) {
+      // Need error logging
     }
   }, []);
 
