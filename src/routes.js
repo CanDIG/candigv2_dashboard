@@ -23,8 +23,8 @@ import APIInfo from './views/APIInfo';
 import CustomVisualization from './views/CustomVisualization';
 import GwasBrowser from './views/GwasBrowser';
 import HtsgetBrowser from './views/HtsgetBrowser';
-import TableList from "./views/MetadataTableApp";
-// import ChordTable from "./views/ChordTableApp"
+// import TableList from "./views/MetadataTableApp";
+import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
 import VariantsSearch from './views/VariantsSearch';
 import SearchBySymptom from './views/Symptoms';
@@ -86,23 +86,23 @@ const routes = [
     component: CustomVisualization,
     layout: '/dashboard',
   },
-  {
-    path: "/tables",
-    name: "Clinical Metadata",
-    icon: "nc-icon nc-single-copy-04",
-    component: TableList,
-    layout: "/dashboard",
-  },
   // {
-  //   path: "/Chord",
-  //   name: "Chord Metadata",
-  //   icon: "nc-icon nc-tile-56",
-  //   component: ChordTable,
+  //   path: "/tables",
+  //   name: "Clinical Metadata",
+  //   icon: "nc-icon nc-single-copy-04",
+  //   component: TableList,
   //   layout: "/dashboard",
   // },
   {
-    path: "/Symptoms",
-    name: "Search by Symptom",
+    path: "/katsu_overview",
+    name: "Katsu Metadata Overview",
+    icon: "nc-icon nc-tile-56",
+    component: ChordTable,
+    layout: "/dashboard",
+  },
+  {
+    path: "/katsu_symptom_search",
+    name: "Katsu Symptom Search",
     icon: "nc-icon nc-tile-56",
     component: SearchBySymptom,
     layout: "/dashboard",
