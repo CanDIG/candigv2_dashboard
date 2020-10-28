@@ -4,6 +4,7 @@ import {
   Row, TabContent, TabPane, Nav, NavItem, NavLink,
 } from 'reactstrap';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema, ProcessFeatures,
@@ -33,7 +34,7 @@ function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
-function TableApp() {
+function TableApp({ updateState }) {
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
@@ -67,6 +68,8 @@ function TableApp() {
   React.useEffect(() => {
     // fetch data
     try {
+      updateState({ datasetVisible: false });
+
       trackPromise(
         fetchIndividuals()
           .then((dataResponse) => {
@@ -325,8 +328,10 @@ function TableApp() {
 }
 
 TableApp.propTypes = {
+  updateState: PropTypes.func,
 };
 TableApp.defaultProps = {
+  updateState: () => {},
 };
 
 export default TableApp;

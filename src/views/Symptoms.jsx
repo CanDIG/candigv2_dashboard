@@ -1,6 +1,7 @@
 import React, {
   useState, useEffect, useRef,
 } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Row, Col, UncontrolledAlert,
@@ -44,7 +45,7 @@ function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
-function TableApp() {
+function TableApp({ updateState }) {
   const [selectedSymptom, setSelectedSymptom] = useState('');
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
@@ -78,6 +79,8 @@ function TableApp() {
 
   useEffect(() => {
     // fetch data
+    updateState({ datasetVisible: false });
+
     try {
       trackPromise(
         searchSymptom(selectedSymptom)
@@ -363,8 +366,10 @@ function TableApp() {
 }
 
 TableApp.propTypes = {
+  updateState: PropTypes.func,
 };
 TableApp.defaultProps = {
+  updateState: () => {},
 };
 
 export default TableApp;

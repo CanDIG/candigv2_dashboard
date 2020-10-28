@@ -21,7 +21,7 @@ function TableHeader({ headerGroups, getColumnSortSymbol }) {
       {headerGroups.map((headerGroup) => (
         <tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map((column) => (
-            <th scope="row" {...column.getHeaderProps()}>
+            <th scope="row" {...column.getHeaderProps()} className={column.id}>
               <div>
                 {column.canGroupBy ? (
                 // If the column can be grouped, add a toggle
@@ -188,7 +188,7 @@ function ClinMetadataTable({
       {data.length > 0
         ? (
           <>
-          <TopBar />
+            <TopBar />
 
             <Row>
 

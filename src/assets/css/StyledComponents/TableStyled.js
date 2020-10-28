@@ -71,6 +71,10 @@ const Styles = styled.div`
     display: ${(props) => (props.rowFilter ? 'none' : '')};
   }
 
+  th.description {
+    min-width: 300px;
+  }
+
   table thead tr th div select {
     max-width: 100px;
     max-height: 50px;
