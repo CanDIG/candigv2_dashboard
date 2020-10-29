@@ -163,37 +163,28 @@ function ClinMetadataTable({
     return cell.render('Cell');
   }
 
-  const TopBar = () => {
-    if (isMainTable) {
-      return (
-        <DataControl
-          metadataCallback={metadataCallback}
-          toggleHideAllColumns={toggleHideAllColumns}
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          setGlobalFilter={setGlobalFilter}
-          state={state}
-          allColumns={allColumns}
-          toggleRowFilter={toggleRowFilterVisible}
-          toggleRowAggregation={toggleRowAggregationVisible}
-          isActiveMetadataDropdown={isActiveMetadataDropdown}
-        />
-      );
-    }
-    return (<></>);
-  };
-
   return (
     <>
 
       {data.length > 0
         ? (
           <>
-            <TopBar />
+            <DataControl
+              metadataCallback={metadataCallback}
+              toggleHideAllColumns={toggleHideAllColumns}
+              preGlobalFilteredRows={preGlobalFilteredRows}
+              setGlobalFilter={setGlobalFilter}
+              state={state}
+              allColumns={allColumns}
+              toggleRowFilter={toggleRowFilterVisible}
+              toggleRowAggregation={toggleRowAggregationVisible}
+              isActiveMetadataDropdown={isActiveMetadataDropdown}
+            />
 
             <Row>
 
               <Styles rowFilter={rowFilterVisible} rowAggregation={rowAggregationVisible}>
-                <table {...getTableProps()}>
+                <table {...getTableProps()} className={isMainTable ? 'mainTable' : ''}>
                   <TableHeader
                     headerGroups={headerGroups}
                     getColumnSortSymbol={getColumnSortSymbol}
@@ -252,7 +243,7 @@ ClinMetadataTable.defaultProps = {
   data: [],
   metadataCallback: () => {},
   isActiveMetadataDropdown: false,
-  isMainTable: true,
+  isMainTable: false,
   setActiveID: () => {},
 
 };

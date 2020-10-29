@@ -24,6 +24,10 @@ const Styles = styled.div`
 
   }
 
+  table.mainTable {
+    cursor: pointer;
+  }
+
   table tbody td {
     font-size: 14px;
   }

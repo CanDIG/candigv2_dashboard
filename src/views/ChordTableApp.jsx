@@ -297,7 +297,8 @@ function TableApp({ updateState }) {
               metadataCallback={() => {}}
               activeMetadata={false}
               setActiveID={() => {}}
-              isMainTable
+              isMainTable={false}
+
             />
           </TabPane>
           <TabPane tabId="3">
@@ -307,7 +308,8 @@ function TableApp({ updateState }) {
               metadataCallback={() => {}}
               activeMetadata={false}
               setActiveID={() => {}}
-              isMainTable
+              isMainTable={false}
+
             />
           </TabPane>
           <TabPane tabId="4">
@@ -317,7 +319,8 @@ function TableApp({ updateState }) {
               metadataCallback={() => {}}
               activeMetadata={false}
               setActiveID={() => {}}
-              isMainTable
+              isMainTable={false}
+
             />
           </TabPane>
         </TabContent>
