@@ -12,6 +12,8 @@ import {
   Col,
 } from 'reactstrap';
 
+import BASE_URL, { CHORD_METADATA_URL, HTSGET_URL, DRS } from '../constants/constants';
+
 function Services({ updateState }) {
   useEffect(() => {
     updateState({ datasetVisible: false });
@@ -41,25 +43,25 @@ function Services({ updateState }) {
                   <tbody>
                     <tr>
                       <td>Candig Server</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:20127</td>
+                      <td>{BASE_URL}</td>
                       <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
                       <td>Katsu Metadata Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:4000</td>
+                      <td>{CHORD_METADATA_URL}</td>
                       <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
                       <td>Htsget App</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:3333</td>
+                      <td>{HTSGET_URL}</td>
                       <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
                       <td>DRS Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:5000</td>
+                      <td>{DRS}</td>
                       <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
