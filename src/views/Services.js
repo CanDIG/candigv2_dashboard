@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 // reactstrap components
 import {
@@ -11,7 +12,13 @@ import {
   Col,
 } from 'reactstrap';
 
-function Services() {
+function Services({ updateState }) {
+  useEffect(() => {
+    updateState({ datasetVisible: false });
+    return () => {
+      updateState({ datasetVisible: true });
+    };
+  }, [updateState]);
   return (
     <>
       <div className="content">
@@ -33,33 +40,27 @@ function Services() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Federation Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:37201</td>
-                      <td><i className="nc-icon nc-simple-remove" /></td>
+                      <td>Candig Server</td>
+                      <td>http://ga4ghdev01.bcgsc.ca:20127</td>
+                      <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
-                      <td>Datasets Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:37203</td>
-                      <td><i className="nc-icon nc-simple-remove" /></td>
+                      <td>Katsu Metadata Service</td>
+                      <td>http://ga4ghdev01.bcgsc.ca:4000</td>
+                      <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
-                      <td>CHORD Metadata Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:20931</td>
-                      <td><i className="nc-icon nc-simple-remove" /></td>
+                      <td>Htsget App</td>
+                      <td>http://ga4ghdev01.bcgsc.ca:3333</td>
+                      <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                     <tr>
-                      <td>GWAS Hosting Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:24545</td>
-                      <td><i className="nc-icon nc-simple-remove" /></td>
-                      <td className="text-right">Just now</td>
-                    </tr>
-                    <tr>
-                      <td>Htsget Service</td>
-                      <td>http://ga4ghdev01.bcgsc.ca:53223</td>
-                      <td><i className="nc-icon nc-simple-remove" /></td>
+                      <td>DRS Service</td>
+                      <td>http://ga4ghdev01.bcgsc.ca:5000</td>
+                      <td><i className="nc-icon nc-check-2" /></td>
                       <td className="text-right">Just now</td>
                     </tr>
                   </tbody>
@@ -72,5 +73,9 @@ function Services() {
     </>
   );
 }
+
+Services.propTypes = {
+  updateState: PropTypes.func.isRequired,
+};
 
 export default Services;
