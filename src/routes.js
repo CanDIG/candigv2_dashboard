@@ -94,8 +94,8 @@ const routes = [
   //   layout: "/dashboard",
   // },
   {
-    path: "/clincal_data",
-    name: "Clincal Data",
+    path: "/clinical_data",
+    name: "Clinical Data",
     icon: "nc-icon nc-tile-56",
     component: ChordTable,
     layout: "/dashboard",

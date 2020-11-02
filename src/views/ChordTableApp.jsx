@@ -65,10 +65,13 @@ function TableApp({ updateState }) {
     setComplicationsTableData([]);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    updateState({ datasetVisible: false });
+  }, [updateState])
+
+  useEffect(() => {
     // fetch data
     try {
-      updateState({ datasetVisible: false });
 
       trackPromise(
         fetchIndividuals()

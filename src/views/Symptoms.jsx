@@ -78,8 +78,13 @@ function TableApp({ updateState }) {
   };
 
   useEffect(() => {
-    // fetch data
     updateState({ datasetVisible: false });
+  }, [updateState])
+
+
+
+  useEffect(() => {
+    // fetch data
 
     try {
       trackPromise(
