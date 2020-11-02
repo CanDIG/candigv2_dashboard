@@ -8,15 +8,12 @@ const Styles = styled.div`
     background: #f4f3ef
   }
   table.mainTable, table.subTable {
-    // border: 1px solid #127e12;
     border: 1px solid #579DD9;
-    // background-color: #EEEEEE;
     width: 50%;
     text-align: center;
     border-collapse: collapse;
   }
   table.mainTable td, table.subTable td {
-    // border-right: 1px solid #127e12;
     border-right: 1px solid #579DD9;
     padding: 3px 2px;
     max-width: 250px;
@@ -32,11 +29,9 @@ const Styles = styled.div`
     font-size: 14px;
   }
   table tbody tr:nth-child(even) {
-    // background: #b0dfb0;
     background: #C7E6F8
   }
   table thead {
-    // background: rgb(23,160,24);
     background: #2D6FB3
    
   }
@@ -45,14 +40,8 @@ const Styles = styled.div`
     font-weight: bold;
     color: #FFFFFF;
     text-align: center;
-    // border-left: 1px solid #444444;
-    // border-left: 1px solid #579DD9;
-    // border-right: 1px solid #579DD9;
-
-    // word-wrap: break-word;
     max-width: 200px;
     max-height: 50px;
-    // overflow: auto;
     padding-left: 5px;
     padding-right: 5px;
   }
@@ -71,12 +60,9 @@ const Styles = styled.div`
   }
 
   
-
   table thead th:first-child {
     border-left: none;
   }
-
-
 
   table tbody tr:hover {
     background-color:#c4d5e7;
