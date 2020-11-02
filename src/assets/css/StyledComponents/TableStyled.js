@@ -62,6 +62,16 @@ const Styles = styled.div`
     margin-left: auto;
   }
 
+  table.mainTable table th, table.subTable table th {
+    cursor: default;
+  }
+
+  table.mainTable  th, table.subTable  th {
+    cursor: default;
+  }
+
+  
+
   table thead th:first-child {
     border-left: none;
   }
