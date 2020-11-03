@@ -7,16 +7,13 @@ const Styles = styled.div`
   div.card {
     background: #f4f3ef
   }
-  table {
-    // border: 1px solid #127e12;
+  table.mainTable, table.subTable {
     border: 1px solid #579DD9;
-    background-color: #EEEEEE;
     width: 50%;
     text-align: center;
     border-collapse: collapse;
   }
-  table td {
-    // border-right: 1px solid #127e12;
+  table.mainTable td, table.subTable td {
     border-right: 1px solid #579DD9;
     padding: 3px 2px;
     max-width: 250px;
@@ -24,39 +21,48 @@ const Styles = styled.div`
 
   }
 
+  table.mainTable {
+    cursor: pointer;
+  }
+
   table tbody td {
     font-size: 14px;
   }
   table tbody tr:nth-child(even) {
-    // background: #b0dfb0;
     background: #C7E6F8
   }
   table thead {
-    // background: rgb(23,160,24);
     background: #2D6FB3
    
   }
-  table thead th {
+  table.mainTable thead th, table.subTable thead th  {
     font-size: 15px;
     font-weight: bold;
     color: #FFFFFF;
     text-align: center;
-    // border-left: 1px solid #444444;
-    border-left: 1px solid #579DD9;
-    // word-wrap: break-word;
     max-width: 200px;
     max-height: 50px;
-    // overflow: auto;
     padding-left: 5px;
     padding-right: 5px;
-
-
   }
+
+  table.mainTable table, table.subTable table {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  table.mainTable table th, table.subTable table th {
+    cursor: default;
+  }
+
+  table.mainTable  th, table.subTable  th {
+    cursor: default;
+  }
+
+  
   table thead th:first-child {
     border-left: none;
   }
-
-
 
   table tbody tr:hover {
     background-color:#c4d5e7;
@@ -69,6 +75,10 @@ const Styles = styled.div`
     background-color: #FFFFFF;
     width: 100px;
     display: ${(props) => (props.rowFilter ? 'none' : '')};
+  }
+
+  th.description {
+    min-width: 300px;
   }
 
   table thead tr th div select {

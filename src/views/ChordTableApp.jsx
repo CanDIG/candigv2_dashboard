@@ -4,6 +4,7 @@ import {
   Row, TabContent, TabPane, Nav, NavItem, NavLink,
 } from 'reactstrap';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema, ProcessFeatures,
@@ -33,7 +34,7 @@ function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
-function TableApp() {
+function TableApp({ updateState }) {
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
@@ -64,9 +65,14 @@ function TableApp() {
     setComplicationsTableData([]);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    updateState({ datasetVisible: false });
+  }, [updateState])
+
+  useEffect(() => {
     // fetch data
     try {
+
       trackPromise(
         fetchIndividuals()
           .then((dataResponse) => {
@@ -294,7 +300,8 @@ function TableApp() {
               metadataCallback={() => {}}
               activeMetadata={false}
               setActiveID={() => {}}
-              isMainTable
+              isMainTable={false}
+
             />
           </TabPane>
           <TabPane tabId="3">
@@ -304,7 +311,8 @@ function TableApp() {
               metadataCallback={() => {}}
               activeMetadata={false}
               setActiveID={() => {}}
-              isMainTable
+              isMainTable={false}
+
             />
           </TabPane>
           <TabPane tabId="4">
@@ -314,7 +322,8 @@ function TableApp() {
               metadataCallback={() => {}}
               activeMetadata={false}
               setActiveID={() => {}}
-              isMainTable
+              isMainTable={false}
+
             />
           </TabPane>
         </TabContent>
@@ -325,8 +334,10 @@ function TableApp() {
 }
 
 TableApp.propTypes = {
+  updateState: PropTypes.func,
 };
 TableApp.defaultProps = {
+  updateState: () => {},
 };
 
 export default TableApp;
