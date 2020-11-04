@@ -2,14 +2,14 @@ version: '3.7'
 
 services:
 
-  sample:
-    container_name: candigv2_dashboard
+  DASHBOARD:
+    container_name: cancogen_dashboard
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - '.:/candigv2_dashboard'
-      - '/candigv2_dashboard/node_modules'
+      - '.:/cancogen_dashboard'
+      - '/cancogen_dashboard/node_modules'
     ports:
       - 3001:3000
     environment:
