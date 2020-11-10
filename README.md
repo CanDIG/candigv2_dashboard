@@ -1,4 +1,6 @@
-# CanDIGv2 Dashboard
+# CanCOGeN Dashboard
+
+This is a react.js-based visualization dashboard that provides visualizations on clinical, genomic data for the CanCOGeN project. You may learn more about the CanCOGeN initiative from https://www.genomecanada.ca/en/cancogen.
 
 ### Table of Contents
 - [Installation](#installation)
@@ -19,7 +21,7 @@ git clone git@github.com:CanDIG/candigv2_dashboard.git
 cd candigv2_dashboard
 npm install
 ```
-That command will install all the dependencies used on the application.
+These commands will install all the dependencies used in the application.
 
 Once the installation is completed, you may start the dashboard using:
 ```bash
@@ -30,7 +32,7 @@ npm start
 
 ### Dataset selection
 
-First thing first, select the desirable dataset on the top-right corner. This will load all the information for the charts. Here is a sample:
+For pages with data sources of multiple datasets, you may switch datasets in the top right corner.
 
 ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/datasets_dropdown.png)
 
