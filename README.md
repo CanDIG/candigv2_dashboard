@@ -1,4 +1,6 @@
-# CanDIGv2 Dashboard
+# CanCOGeN Dashboard
+
+This is a react.js-based visualization dashboard that provides visualizations on clinical, genomic data for the CanCOGeN project. You may learn more about the CanCOGeN initiative from [here](https://www.genomecanada.ca/en/cancogen).
 
 ### Table of Contents
 - [Installation](#installation)
@@ -15,11 +17,11 @@ Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org
 
 Clone this repository and start the installation using the following commands:
 ```bash
-git clone git@github.com:CanDIG/candigv2_dashboard.git
-cd candigv2_dashboard
+git clone git@github.com:CanDIG/cancogen_dashboard.git
+cd cancogen_dashboard
 npm install
 ```
-That command will install all the dependencies used on the application.
+These commands will install all the dependencies used in the application.
 
 Once the installation is completed, you may start the dashboard using:
 ```bash
@@ -30,23 +32,23 @@ npm start
 
 ### Dataset selection
 
-First thing first, select the desirable dataset on the top-right corner. This will load all the information for the charts. Here is a sample:
+For pages with data sources of multiple datasets, you may switch datasets in the top right corner.
 
-![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/datasets_dropdown.png)
+![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/datasets_dropdown.png)
 
 ### Available pages
 
-Below there is a list of some (but not limited to) available pages for data visualization. Click on the picture to expand it.
+Below there is a list of screenshots of selected pages. Click on the picture to expand it.
 
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/patients_overview.png) |
+| ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/htsget_browser.png) |
 |------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/individuals_overview.png) | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/gwas_browser.png)      |
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/clinical_metadata.png) |
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/chord_metadata.png)       |   ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/services_status.png)                                                                                                              |
+| ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/individuals_overview.png) | ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/gwas_browser.png)      |
+| ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/symptoms_search.png) |
+| ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/chord_metadata.png)       |   ![](https://raw.githubusercontent.com/CanDIG/cancogen_dashboard/develop/docs/services_status.png)                                                                                                              |
 
 ## Contributing to this project
 
-If you encounter a bug, or have a problem of using the service, please contact us by opening an issue at [issues page](https://github.com/CanDIG/candigv2_dashboard/issues)
+If you encounter a bug, or have a problem of using the service, please contact us by opening an issue at [issues page](https://github.com/CanDIG/cancogen_dashboard/issues)
 
 ### GitHub workflow
 
