@@ -40,10 +40,10 @@ For pages with data sources of multiple datasets, you may switch datasets in the
 
 Below there is a list of some (but not limited to) available pages for data visualization. Click on the picture to expand it.
 
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/patients_overview.png) |
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/htsget_browser.png) |
 |------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/individuals_overview.png) | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/gwas_browser.png)      |
-| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/clinical_metadata.png) |
+| ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/variants_search.png)      | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/symptoms_search.png) |
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/chord_metadata.png)       |   ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/services_status.png)                                                                                                              |
 
 ## Contributing to this project
