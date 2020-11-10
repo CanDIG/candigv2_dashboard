@@ -17,8 +17,8 @@ Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org
 
 Clone this repository and start the installation using the following commands:
 ```bash
-git clone git@github.com:CanDIG/candigv2_dashboard.git
-cd candigv2_dashboard
+git clone git@github.com:CanDIG/cancogen_dashboard.git
+cd cancogen_dashboard
 npm install
 ```
 These commands will install all the dependencies used in the application.
@@ -38,7 +38,7 @@ For pages with data sources of multiple datasets, you may switch datasets in the
 
 ### Available pages
 
-Below there is a list of some (but not limited to) available pages for data visualization. Click on the picture to expand it.
+Below there is a list of screenshots of selected pages. Click on the picture to expand it.
 
 | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/overview_page.png)        | ![](https://raw.githubusercontent.com/CanDIG/candigv2_dashboard/develop/docs/htsget_browser.png) |
 |------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
