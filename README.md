@@ -1,6 +1,6 @@
 # CanCOGeN Dashboard
 
-This is a react.js-based visualization dashboard that provides visualizations on clinical, genomic data for the CanCOGeN project. You may learn more about the CanCOGeN initiative from https://www.genomecanada.ca/en/cancogen.
+This is a react.js-based visualization dashboard that provides visualizations on clinical, genomic data for the CanCOGeN project. You may learn more about the CanCOGeN initiative from [here](https://www.genomecanada.ca/en/cancogen).
 
 ### Table of Contents
 - [Installation](#installation)
