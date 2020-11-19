@@ -48,7 +48,7 @@ function HtsgetBrowser({ datasetId }) {
           'warning',
         );
       });
-  }, [selectedBamName]);
+  }, []);
 
   return (
     <>
