@@ -23,6 +23,7 @@ import APIInfo from './views/APIInfo';
 import CustomVisualization from './views/CustomVisualization';
 import GwasBrowser from './views/GwasBrowser';
 import HtsgetBrowser from './views/HtsgetBrowser';
+import VcfBrowser from './views/VcfBrowser';
 // import TableList from "./views/MetadataTableApp";
 import ChordTable from "./views/ChordTableApp"
 import IndividualsOverview from "./views/IndividualsOverview";
@@ -70,6 +71,13 @@ const routes = [
     name: 'Htsget Browser',
     icon: 'nc-icon nc-compass-05',
     component: HtsgetBrowser,
+    layout: '/dashboard',
+  },
+  {
+    path: '/vcf_browser',
+    name: 'VCF Browser',
+    icon: 'nc-icon nc-compass-05',
+    component: VcfBrowser,
     layout: '/dashboard',
   },
   {
