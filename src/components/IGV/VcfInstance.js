@@ -12,22 +12,21 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
   const notifyEl = useRef(null);
 
   useEffect(() => {
-
     const igvOptions = {
       genome: 'hg38',
       tracks: [
         {
-            type: "variant",
-            format: "vcf",
-            url: "",
-            indexURL: "",
-            name: "",
-            squishedCallHeight: 1,
-            expandedCallHeight: 4,
-            displayMode: "squished",
-            height: 250,
-            visibilityWindow: 10000
-          }
+          type: 'variant',
+          format: 'vcf',
+          url: '',
+          indexURL: '',
+          name: '',
+          squishedCallHeight: 1,
+          expandedCallHeight: 4,
+          displayMode: 'squished',
+          height: 250,
+          visibilityWindow: 10000,
+        },
       ],
     };
 
@@ -58,7 +57,7 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
 VcfInstance.propTypes = {
   selectedVcfName: PropTypes.string.isRequired,
   selectedVcfLink: PropTypes.string.isRequired,
-  selectedVcfIndexLink: PropTypes.string.isRequired
+  selectedVcfIndexLink: PropTypes.string.isRequired,
 };
 
 export default VcfInstance;

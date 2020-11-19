@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
 import VcfInstance from '../components/IGV/VcfInstance';
 import { notify, NotificationAlert } from '../utils/alert';
@@ -7,7 +6,7 @@ import { notify, NotificationAlert } from '../utils/alert';
 // Consts
 import { DRS } from '../constants/constants';
 
-function VcfBrowser({ datasetId }) {
+function VcfBrowser() {
   /** *
    * A functional component that renders a view with a IGV.js browser.
    */
@@ -25,36 +24,31 @@ function VcfBrowser({ datasetId }) {
   ];
 
   useEffect(() => {
-
-      fetch(`${DRS}/search?fuzzy_name=.vcf`)
+    fetch(`${DRS}/search?fuzzy_name=.vcf`)
       .then((response) => response.json())
       .then((data) => {
         const tmpDataObj = {};
 
         // File name is set as key, while its url is set as the value
         data.forEach((element) => {
-
           if (element.name.endsWith('vcf.gz')) {
-
             if (!(element.name in tmpDataObj)) {
-              tmpDataObj[element.name] = {}
-              tmpDataObj[element.name]['vcf_file_link'] = element.access_methods[1].access_url.url.replace('s3://', 'http://');
+              tmpDataObj[element.name] = {};
+              tmpDataObj[element.name].vcf_file_link = element.access_methods[1].access_url.url.replace('s3://', 'http://');
+            } else {
+              tmpDataObj[element.name].vcf_file_link = element.access_methods[1].access_url.url.replace('s3://', 'http://');
             }
-            else {
-              tmpDataObj[element.name]['vcf_file_link'] = element.access_methods[1].access_url.url.replace('s3://', 'http://');
-            }          
           }
 
           if (element.name.endsWith('vcf.gz.tbi')) {
-            let file_name = element.name.replace('.tbi', '')
+            const fileName = element.name.replace('.tbi', '');
 
-            if (!(file_name in tmpDataObj)) {
-              tmpDataObj[file_name] = {}
-              tmpDataObj[file_name]['vcf_index_link'] = element.access_methods[1].access_url.url.replace('s3://', 'http://');
+            if (!(fileName in tmpDataObj)) {
+              tmpDataObj[fileName] = {};
+              tmpDataObj[fileName].vcf_index_link = element.access_methods[1].access_url.url.replace('s3://', 'http://');
+            } else {
+              tmpDataObj[fileName].vcf_index_link = element.access_methods[1].access_url.url.replace('s3://', 'http://');
             }
-            else {
-              tmpDataObj[file_name]['vcf_index_link'] = element.access_methods[1].access_url.url.replace('s3://', 'http://');
-            }     
           }
         });
 
@@ -66,7 +60,6 @@ function VcfBrowser({ datasetId }) {
 
         setVcfDataObj(tmpDataObj);
         setVcfDropdown(vcfList);
-
       })
       .catch(() => {
         notify(
@@ -101,8 +94,8 @@ function VcfBrowser({ datasetId }) {
           defaultValue="disabled"
           onChange={(e) => {
             setSelectedVcfName(e.currentTarget.value);
-            setSelectedVcfLink(vcfDataObj[e.currentTarget.value]['vcf_file_link']);
-            setSelectedVcfIndexLink(vcfDataObj[e.currentTarget.value]['vcf_index_link']);
+            setSelectedVcfLink(vcfDataObj[e.currentTarget.value].vcf_file_link);
+            setSelectedVcfIndexLink(vcfDataObj[e.currentTarget.value].vcf_index_link);
           }}
           type="select"
         >
@@ -118,10 +111,5 @@ function VcfBrowser({ datasetId }) {
     </>
   );
 }
-
-VcfBrowser.propTypes = {
-  datasetId: PropTypes.string.isRequired,
-};
-
 
 export default VcfBrowser;
