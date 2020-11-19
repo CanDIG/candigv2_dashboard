@@ -25,7 +25,7 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
             squishedCallHeight: 1,
             expandedCallHeight: 4,
             displayMode: "squished",
-            height: 300,
+            height: 250,
             visibilityWindow: 10000
           }
       ],
