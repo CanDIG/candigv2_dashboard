@@ -41,7 +41,7 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
 
       igv.createBrowser(igvBrowser.current, igvOptions);
     }
-  }, [selectedVcfName]);
+  }, [selectedVcfName, selectedVcfLink, selectedVcfIndexLink]);
 
   return (
     <>
