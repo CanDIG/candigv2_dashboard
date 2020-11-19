@@ -84,7 +84,7 @@ function VcfBrowser() {
             <b>
               <span>
                 <p> Reminders: </p>
-                <p> Select a sample to get started. Only .vcf files are supported for now.</p>
+                <p> Select a sample to get started.</p>
               </span>
             </b>
           </UncontrolledAlert>
