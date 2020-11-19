@@ -49,7 +49,7 @@ function GwasBrowser({ datasetId }) {
           'warning',
         );
       });
-  }, []);
+  }, [selectedGwasName]);
 
   return (
     <>
