@@ -13,19 +13,25 @@ This is a react.js-based visualization dashboard that provides visualizations on
 
 ## Installation
 
-Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org/en/) version v10.13.0 or above installed on your environment.
+Before installing the Dashboard, make sure you have [Node.js](https://nodejs.org/en/) version v10.13.0 or above and [Yarn](https://yarnpkg.com/) installed on your environment.
 
 Clone this repository and start the installation using the following commands:
 ```bash
 git clone git@github.com:CanDIG/cancogen_dashboard.git
 cd cancogen_dashboard
-npm install
+yarn install
 ```
-These commands will install all the dependencies used in the application.
+These commands will install all the dependencies used in the application. Next, specify the URLs of the backend CanCOGen services:
+```bash
+export REACT_APP_BASE_URL='http://ga4ghdev01.bcgsc.ca:20127'
+export REACT_APP_METADATA_URL='http://ga4ghdev01.bcgsc.ca:4000'
+export REACT_APP_HTSGET_URL='http://ga4ghdev01.bcgsc.ca:3333'
+export REACT_APP_DRS_URL='http://ga4ghdev01.bcgsc.ca:5000'
+```
 
 Once the installation is completed, you may start the dashboard using:
 ```bash
-npm start
+yarn start
 ```
 
 ## Usage

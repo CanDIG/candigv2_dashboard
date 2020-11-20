@@ -3,11 +3,11 @@
  */
 
 // API URL where the Dashboard get all the data
-const BASE_URL = 'http://ga4ghdev01.bcgsc.ca:20127';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export const CHORD_METADATA_URL = 'http://ga4ghdev01.bcgsc.ca:4000';
+export const CHORD_METADATA_URL = process.env.REACT_APP_METADATA_URL;
 
-export const HTSGET_URL = 'http://ga4ghdev01.bcgsc.ca:3333';
+export const HTSGET_URL = process.env.REACT_APP_HTSGET_URL;
 
 export const CLIN_METADATA = [
   'celltransplants',
@@ -29,6 +29,6 @@ export const CLIN_METADATA = [
   'tumourboards',
 ];
 
-export const DRS = 'http://ga4ghdev01.bcgsc.ca:5000';
+export const DRS = process.env.REACT_APP_DRS_URL;
 
 export default BASE_URL;
