@@ -3,7 +3,7 @@
  */
 
 // API URL where the Dashboard get all the data
-const BASE_URL = process.env.REACT_APP_DATA_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const CHORD_METADATA_URL = process.env.REACT_APP_METADATA_URL;
 
