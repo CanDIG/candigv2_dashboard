@@ -57,7 +57,7 @@ class Sidebar extends React.Component {
         data-active-color={this.props.activeColor}
       >
         <div className="logo">
-          <a href="/" className="simple-text logo-mini">
+          <a href="/v2/dashboard/overview" className="simple-text logo-mini">
             <div className="logo-img">
               <img
                 src="https://www.distributedgenomics.ca/img/logo_only.png"
@@ -65,7 +65,7 @@ class Sidebar extends React.Component {
               />
             </div>
           </a>
-          <a href="/" className="simple-text logo-normal">
+          <a href="/v2/dashboard/overview" className="simple-text logo-normal">
             Dashboard
           </a>
         </div>
