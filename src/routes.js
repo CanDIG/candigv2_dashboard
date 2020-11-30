@@ -13,66 +13,107 @@
 
 =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+* The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.js";
-import Notifications from "views/Notifications.js";
-import Icons from "views/Icons.js";
-import Typography from "views/Typography.js";
-import TableList from "views/Tables.js";
-import Maps from "views/Map.js";
-import UserPage from "views/User.js";
+import Overview from './views/Overview';
+import Services from './views/Services';
+import APIInfo from './views/APIInfo';
+import CustomVisualization from './views/CustomVisualization';
+import GwasBrowser from './views/GwasBrowser';
+import HtsgetBrowser from './views/HtsgetBrowser';
+import VcfBrowser from './views/VcfBrowser';
+// import TableList from "./views/MetadataTableApp";
+import ChordTable from "./views/ChordTableApp"
+import IndividualsOverview from "./views/IndividualsOverview";
+import VariantsSearch from './views/VariantsSearch';
+import SearchBySymptom from './views/Symptoms';
 
-var routes = [
+const routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-bank",
-    component: Dashboard,
-    layout: "/admin",
+    path: '/overview',
+    name: 'Overview',
+    icon: 'nc-icon nc-bank',
+    component: Overview,
+    layout: '/v2/dashboard',
   },
   {
-    path: "/icons",
-    name: "Icons",
-    icon: "nc-icon nc-diamond",
-    component: Icons,
-    layout: "/admin",
+    path: '/individuals-overview',
+    name: 'Individuals Overview',
+    icon: 'nc-icon nc-circle-10',
+    component: IndividualsOverview,
+    layout: '/v2/dashboard',
   },
   {
-    path: "/maps",
-    name: "Maps",
-    icon: "nc-icon nc-pin-3",
-    component: Maps,
-    layout: "/admin",
+    path: '/services',
+    name: 'Services status',
+    icon: 'nc-icon nc-tv-2',
+    component: Services,
+    layout: '/v2/dashboard',
   },
   {
-    path: "/notifications",
-    name: "Notifications",
-    icon: "nc-icon nc-bell-55",
-    component: Notifications,
-    layout: "/admin",
+    path: '/api_info',
+    name: 'API info',
+    icon: 'nc-icon nc-sound-wave',
+    component: APIInfo,
+    layout: '/v2/dashboard',
   },
   {
-    path: "/user-page",
-    name: "User Profile",
-    icon: "nc-icon nc-single-02",
-    component: UserPage,
-    layout: "/admin",
+    path: '/gwas_browser',
+    name: 'GWAS Browser',
+    icon: 'nc-icon nc-compass-05',
+    component: GwasBrowser,
+    layout: '/v2/dashboard',
   },
   {
-    path: "/tables",
-    name: "Table List",
+    path: '/htsget_browser',
+    name: 'Htsget Browser',
+    icon: 'nc-icon nc-compass-05',
+    component: HtsgetBrowser,
+    layout: '/v2/dashboard',
+  },
+  {
+    path: '/vcf_browser',
+    name: 'VCF Browser',
+    icon: 'nc-icon nc-compass-05',
+    component: VcfBrowser,
+    layout: '/v2/dashboard',
+  },
+  {
+    path: '/variants_search',	
+    name: 'Variants Search',	
+    icon: 'nc-icon nc-zoom-split',	
+    component: VariantsSearch,	
+    layout: '/v2/dashboard',	
+  },
+  {
+    path: '/custom_visualization',
+    name: 'Custom Visualization',
+    icon: 'nc-icon nc-chart-pie-36',
+    component: CustomVisualization,
+    layout: '/v2/dashboard',
+  },
+  // {
+  //   path: "/tables",
+  //   name: "Clinical Metadata",
+  //   icon: "nc-icon nc-single-copy-04",
+  //   component: TableList,
+  //   layout: "/dashboard",
+  // },
+  {
+    path: "/clinical_data",
+    name: "Clinical Data",
     icon: "nc-icon nc-tile-56",
-    component: TableList,
-    layout: "/admin",
+    component: ChordTable,
+    layout: "/v2/dashboard",
   },
   {
-    path: "/typography",
-    name: "Typography",
-    icon: "nc-icon nc-caps-small",
-    component: Typography,
-    layout: "/admin",
+    path: "/symptom_search",
+    name: "Symptom Search",
+    icon: "nc-icon nc-tile-56",
+    component: SearchBySymptom,
+    layout: "/v2/dashboard",
   },
 ];
 export default routes;

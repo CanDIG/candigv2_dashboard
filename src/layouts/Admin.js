@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*!
 
 =========================================================
@@ -21,14 +22,15 @@ import React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Route, Switch } from "react-router-dom";
 
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
+import TopBar from "components/Navbars/TopBar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
-import routes from "routes.js";
+import routes from "./../routes.js";
 
-var ps;
+import BASE_URL from "../constants/constants";
+
+let ps;
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -36,7 +38,12 @@ class Dashboard extends React.Component {
     this.state = {
       backgroundColor: "black",
       activeColor: "info",
+      datasetId: "",
+      datasetName: "",
+      patientsList: [],
+      datasetVisible: true
     };
+    this.updateState = this.updateState.bind(this)    
     this.mainPanel = React.createRef();
   }
   componentDidMount() {
@@ -45,24 +52,23 @@ class Dashboard extends React.Component {
       document.body.classList.toggle("perfect-scrollbar-on");
     }
   }
+
+  updateState (values){
+    this.setState(values);
+  };
+ 
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
       document.body.classList.toggle("perfect-scrollbar-on");
     }
   }
-  componentDidUpdate(e) {
-    if (e.history.action === "PUSH") {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.history.action === "PUSH") {
       this.mainPanel.current.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
-    }
+    }    
   }
-  handleActiveClick = (color) => {
-    this.setState({ activeColor: color });
-  };
-  handleBgClick = (color) => {
-    this.setState({ backgroundColor: color });
-  };
   render() {
     return (
       <div className="wrapper">
@@ -73,26 +79,23 @@ class Dashboard extends React.Component {
           activeColor={this.state.activeColor}
         />
         <div className="main-panel" ref={this.mainPanel}>
-          <DemoNavbar {...this.props} />
+          <TopBar {...this.props} updateState={this.updateState} datasetVisible = {this.state.datasetVisible} />
           <Switch>
             {routes.map((prop, key) => {
               return (
-                <Route
-                  path={prop.layout + prop.path}
-                  component={prop.component}
-                  key={key}
-                />
+                <Route path={prop.layout + prop.path} key={key}>
+                  <prop.component
+                    updateState={this.updateState}
+                    datasetId={this.state.datasetId}
+                    datasetName={this.state.datasetName}
+                    patientsList={this.state.patientsList}
+                  />
+                </Route>
               );
             })}
           </Switch>
           <Footer fluid />
         </div>
-        {/* <FixedPlugin
-          bgColor={this.state.backgroundColor}
-          activeColor={this.state.activeColor}
-          handleActiveClick={this.handleActiveClick}
-          handleBgClick={this.handleBgClick}
-        /> */}
       </div>
     );
   }
