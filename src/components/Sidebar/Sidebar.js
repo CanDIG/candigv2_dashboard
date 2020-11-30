@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*!
 
 =========================================================
@@ -30,6 +31,7 @@ class Sidebar extends React.Component {
     this.activeRoute.bind(this);
     this.sidebar = React.createRef();
   }
+
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -55,18 +57,15 @@ class Sidebar extends React.Component {
         data-active-color={this.props.activeColor}
       >
         <div className="logo">
-          <a
-            href="/"
-            className="simple-text logo-mini"
-          >
+          <a href="/v2/dashboard/overview" className="simple-text logo-mini">
             <div className="logo-img">
-              <img src="https://www.distributedgenomics.ca/img/logo_only.png" alt="react-logo" />
+              <img
+                src="https://www.distributedgenomics.ca/img/logo_only.png"
+                alt="react-logo"
+              />
             </div>
           </a>
-          <a
-            href="/"
-            className="simple-text logo-normal"
-          >
+          <a href="/v2/dashboard/overview" className="simple-text logo-normal">
             Dashboard
           </a>
         </div>
