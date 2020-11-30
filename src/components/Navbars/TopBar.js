@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*!
 
 =========================================================
@@ -29,18 +30,12 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Container,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input,
+  Container
 } from "reactstrap";
 
 import routes from "routes.js";
 
-import DatasetsDropdown from "views/Dropdown";
-
-const url = "http://ga4ghdev01.bcgsc.ca:20127"
+import DatasetsDropdown from "../Dropdowns/DatasetsDropdown.js";
 
 class Header extends React.Component {
   constructor(props) {
@@ -101,18 +96,6 @@ class Header extends React.Component {
   }
   componentDidMount() {
     window.addEventListener("resize", this.updateColor.bind(this));
-
-    fetch(url + "/datasets/search", {
-      method:"post"})
-    .then(response => response.json())
-    .then(data => {
-      let datasets = {}
-      for(let i = 0; i < data.results.datasets.length; i++){
-        const ds = data.results.datasets[i]
-        datasets[i] = ds
-      }
-      this.setState({datasets: datasets})
-    })
   }
   componentDidUpdate(e) {
     if (
@@ -168,15 +151,10 @@ class Header extends React.Component {
             className="justify-content-end"
           >
             <Nav navbar>
-              <NavItem>
-                <Link to="#pablo" className="nav-link btn-magnify">
-                  <i className="nc-icon nc-layout-11" />
-                  <p>
-                    <span className="d-lg-none d-md-block">Stats</span>
-                  </p>
-                </Link>
-              </NavItem>
-              <DatasetsDropdown props={this.state.datasets}/>
+              {this.props.datasetVisible === true ? 
+                (<DatasetsDropdown updateState={this.props.updateState}/>) :
+                <></> }
+              {/* Leaving this commented out for now */}
               <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
@@ -185,23 +163,21 @@ class Header extends React.Component {
                 <DropdownToggle caret nav>
                   <i className="nc-icon nc-bell-55" />
                   <p>
-                    <span className="d-lg-none d-md-block">Some Actions</span>
+                    <span className="d-lg-none d-md-block">Account</span>
                   </p>
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem tag="a">Action</DropdownItem>
-                  <DropdownItem tag="a">Another Action</DropdownItem>
-                  <DropdownItem tag="a">Something else here</DropdownItem>
+                  <DropdownItem href="/auth/logout">Logout</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <NavItem>
+              {/* <NavItem>
                 <Link to="#pablo" className="nav-link btn-rotate">
                   <i className="nc-icon nc-settings-gear-65" />
                   <p>
                     <span className="d-lg-none d-md-block">Account</span>
                   </p>
                 </Link>
-              </NavItem>
+              </NavItem> */}
             </Nav>
           </Collapse>
         </Container>
