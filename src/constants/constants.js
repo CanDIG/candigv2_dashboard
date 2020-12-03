@@ -6,7 +6,8 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const CHORD_METADATA_URL = process.env.REACT_APP_METADATA_URL;
-
+export const DRS = process.env.REACT_APP_DRS_URL;
+export const FEDERATION_URL = process.env.REACT_APP_FEDERATION_URL;
 export const HTSGET_URL = process.env.REACT_APP_HTSGET_URL;
 
 export const CLIN_METADATA = [
@@ -28,7 +29,5 @@ export const CLIN_METADATA = [
   'treatments',
   'tumourboards',
 ];
-
-export const DRS = process.env.REACT_APP_DRS_URL;
 
 export default BASE_URL;

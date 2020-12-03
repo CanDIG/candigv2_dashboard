@@ -1,4 +1,47 @@
-import BASE_URL, { CHORD_METADATA_URL } from '../constants/constants';
+import BASE_URL, {
+  CHORD_METADATA_URL,
+  FEDERATION_URL,
+} from '../constants/constants';
+
+function fetchIndividualsFederation() {
+  return fetch(FEDERATION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      request_type: 'GET',
+      endpoint_path: 'api/individuals?page_size=10000',
+      endpoint_payload: {},
+      endpoint_service: 'katsu',
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return {};
+  });
+}
+
+function fetchIndividualsFederationWithParams(patientParams) {
+  return fetch(FEDERATION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      request_type: 'GET',
+      endpoint_path: `api/individuals?${patientParams}`,
+      endpoint_payload: {},
+      endpoint_service: 'katsu',
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return {};
+  });
+}
 
 /*
 Fetch individuals from CHORD Metadata service and returns a promise
@@ -125,25 +168,49 @@ function searchVariant(datasetId, start, end, referenceName) {
 }
 
 function searchSymptom(symptom) {
-  if (!symptom || 0 === symptom.length) {
-    return {}
+  if (!symptom || symptom.length === 0) {
+    return {};
   }
-  return fetch(`${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`, {
-    method: 'GET',
+
+  return fetch(FEDERATION_URL, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      request_type: 'GET',
+      endpoint_path: `api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`,
+      endpoint_payload: {},
+      endpoint_service: 'katsu',
+    }),
   }).then((response) => {
     if (response.ok) {
       return response.json();
     }
     return {};
   });
+
+  // return fetch(
+  //   `${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   }
+  // ).then((response) => {
+  //   if (response.ok) {
+  //     return response.json();
+  //   }
+  //   return {};
+  // });
 }
 
 export {
   fetchPatients,
   fetchIndividuals,
+  fetchIndividualsFederation,
+  fetchIndividualsFederationWithParams,
   fetchDatasets,
   getCounts,
   fetchServers,
