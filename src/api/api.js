@@ -8,7 +8,6 @@ function fetchIndividualsFederation() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'auth',
     },
     body: JSON.stringify({
       request_type: 'GET',
@@ -29,7 +28,6 @@ function fetchIndividualsFederationWithParams(patientParams) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'auth',
     },
     body: JSON.stringify({
       request_type: 'GET',
@@ -178,7 +176,6 @@ function searchSymptom(symptom) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'auth',
     },
     body: JSON.stringify({
       request_type: 'GET',
