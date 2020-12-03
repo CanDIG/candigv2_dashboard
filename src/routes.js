@@ -25,8 +25,8 @@ import GwasBrowser from './views/GwasBrowser';
 import HtsgetBrowser from './views/HtsgetBrowser';
 import VcfBrowser from './views/VcfBrowser';
 // import TableList from "./views/MetadataTableApp";
-import ChordTable from "./views/ChordTableApp"
-import IndividualsOverview from "./views/IndividualsOverview";
+import ChordTable from './views/ChordTableApp';
+import IndividualsOverview from './views/IndividualsOverview';
 import VariantsSearch from './views/VariantsSearch';
 import SearchBySymptom from './views/Symptoms';
 
@@ -81,11 +81,11 @@ const routes = [
     layout: '/v2/dashboard',
   },
   {
-    path: '/variants_search',	
-    name: 'Variants Search',	
-    icon: 'nc-icon nc-zoom-split',	
-    component: VariantsSearch,	
-    layout: '/v2/dashboard',	
+    path: '/variants_search',
+    name: 'Variants Search',
+    icon: 'nc-icon nc-zoom-split',
+    component: VariantsSearch,
+    layout: '/v2/dashboard',
   },
   {
     path: '/custom_visualization',
@@ -102,18 +102,18 @@ const routes = [
   //   layout: "/dashboard",
   // },
   {
-    path: "/clinical_data",
-    name: "Clinical Data",
-    icon: "nc-icon nc-tile-56",
+    path: '/clinical_data',
+    name: 'Clinical Data',
+    icon: 'nc-icon nc-tile-56',
     component: ChordTable,
-    layout: "/v2/dashboard",
+    layout: '/v2/dashboard',
   },
   {
-    path: "/symptom_search",
-    name: "Symptom Search",
-    icon: "nc-icon nc-tile-56",
+    path: '/symptom_search',
+    name: 'Symptom Search',
+    icon: 'nc-icon nc-tile-56',
     component: SearchBySymptom,
-    layout: "/v2/dashboard",
+    layout: '/v2/dashboard',
   },
 ];
 export default routes;

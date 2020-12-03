@@ -10,7 +10,7 @@ import {
 import Autosuggest from 'react-autosuggest';
 import AutoSuggestStyle from '../../assets/css/StyledComponents/AutoSuggestStyled';
 
-import { fetchIndividuals } from '../../api/api';
+import { fetchIndividualsFederation } from '../../api/api';
 import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
 import {
   ProcessMetadata, ProcessSymptoms,
@@ -20,6 +20,17 @@ import { notify, NotificationAlert } from '../../utils/alert';
 import {
   trackPromise,
 } from '../LoadingIndicator/LoadingIndicator';
+
+function mergeFederatedResults(data) {
+  let output = []
+
+  const results = data.results
+  for(let i = 0; i < results.length; i++) {
+      output = output.concat(results[i].results)    	
+  }
+  return output
+
+}
 
 function SearchBySymptom({ setSymptom }) {
   const [search, setSearch] = useState('');
@@ -32,10 +43,11 @@ function SearchBySymptom({ setSymptom }) {
   useEffect(() => {
     try {
       trackPromise(
-        fetchIndividuals()
-          .then((dataResponse) => {
+        fetchIndividualsFederation()
+          .then((dataResponse) => {            
             /* eslint-disable */
-            const [_, phenopackets] = ProcessMetadata(dataResponse.results);
+            const merged = mergeFederatedResults(dataResponse)
+            const [_, phenopackets] = ProcessMetadata(merged);
             /* eslint-enable */
             ProcessSymptoms(phenopackets).then((symptoms) => {
               setFetchedSuggesions(symptoms);
@@ -59,7 +71,6 @@ function SearchBySymptom({ setSymptom }) {
   const getSuggestions = (input) => {
     const inputValue = input.trim().toLowerCase();
     const inputLength = inputValue.length;
-
     return inputLength === 0 ? [] : fetchedSuggestions.filter((lang) => lang.name.toLowerCase().slice(0, inputLength) === inputValue);
   };
 

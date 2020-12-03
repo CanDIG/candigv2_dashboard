@@ -61,10 +61,14 @@ export function ProcessMetadata(metadata) {
   Object.values(metadata).forEach((entry) => {
     mainTable.push(subjectSchema(entry));
     const ID = entry.id;
-    const Pheno = entry.phenopackets[0];
+    let Pheno;
+    try {
+      Pheno = entry.phenopackets[0];
+    } catch (e) {
+      return;
+    }
     phenopacketsList[ID] = Pheno;
   });
-
   return [mainTable, phenopacketsList];
 }
 

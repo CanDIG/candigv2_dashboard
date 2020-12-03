@@ -1,10 +1,14 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
-import BASE_URL, { CHORD_METADATA_URL } from '../../constants/constants';
+import BASE_URL from '../../constants/constants';
 import IndividualTable from './IndividualTable';
 import { notify, NotificationAlert } from '../../utils/alert';
 import VariantsTableButton from './VariantsTableButton';
+
+import { fetchIndividualsFederationWithParams } from '../../api/api';
+
+import { mergeFederatedResults } from '../../utils/utils';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -68,16 +72,16 @@ function VariantsTable({ rowData, datasetId }) {
           patientParams += `id=${data.results.patients[i].patientId}&`;
         }
 
-        fetch(`${CHORD_METADATA_URL}/api/individuals?${patientParams}`)
-          .then((response) => response.json())
+        fetchIndividualsFederationWithParams(patientParams)
           .then((chordData) => {
-            if (chordData.results === undefined) {
+            const merged = mergeFederatedResults(chordData);
+            if (merged === undefined) {
               setIndividualsRowData([]);
               setDisplayIndividualsTable(false);
               throw new Error('The variant you selected does not have associated individuals.');
             }
             setDisplayIndividualsTable(true);
-            setIndividualsRowData(chordData.results);
+            setIndividualsRowData(merged);
           }).catch((err) => {
             notify(
               notifyEl,

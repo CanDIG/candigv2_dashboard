@@ -12,7 +12,7 @@ import {
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividuals } from '../api/api';
+import { fetchIndividuals, fetchIndividualsFederation } from '../api/api';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -32,6 +32,15 @@ function CreateColumns(columnNames, setState) {
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
+}
+
+function mergeFederatedResults(data) {
+  let output = []
+  const results = data.results
+  for(let i = 0; i < results.length; i++) {
+      output = output.concat(results[i].results)    	
+  }
+  return output
 }
 
 function TableApp({ updateState }) {
@@ -74,9 +83,10 @@ function TableApp({ updateState }) {
     try {
 
       trackPromise(
-        fetchIndividuals()
+        fetchIndividualsFederation()
           .then((dataResponse) => {
-            const [dataset, phenopacket] = ProcessMetadata(dataResponse.results);
+            const merged = mergeFederatedResults(dataResponse)
+            const [dataset, phenopacket] = ProcessMetadata(merged);
             setData(dataset);
             setPhenopackets(phenopacket);
             setActiveID('');

@@ -45,6 +45,16 @@ function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
+function mergeFederatedResults(data) {
+  let output = []
+  const results = data.results
+  for(let i = 0; i < results.length; i++) {
+      output = output.concat(results[i].results)    	
+  }
+  return output
+}
+
+
 function TableApp({ updateState }) {
   const [selectedSymptom, setSelectedSymptom] = useState('');
   const [data, setData] = useState([]);
@@ -90,6 +100,7 @@ function TableApp({ updateState }) {
       trackPromise(
         searchSymptom(selectedSymptom)
           .then((dataResponse) => {
+            const merged = mergeFederatedResults(dataResponse)
             const [tdatasets, tphenopackets] = ProcessPhenopackets(dataResponse.results);
             setData(tdatasets);
             setPhenopackets(tphenopackets);
