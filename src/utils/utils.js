@@ -19,10 +19,10 @@ export function groupBy(objectArray, property) {
 }
 
 export function mergeFederatedResults(data) {
-  let output = []
-  const results = data.results
-  for(let i = 0; i < results.length; i++) {
-      output = output.concat(results[i].results)    	
+  let output = [];
+  const { results } = data;
+  for (let i = 0; i < results.length; i += 1) {
+    output = output.concat(results[i].results);
   }
-  return output
+  return output;
 }

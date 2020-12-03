@@ -12,9 +12,8 @@ import LoadingIndicator, {
 } from '../components/LoadingIndicator/LoadingIndicator';
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
-import { groupBy } from '../utils/utils';
+import { groupBy, mergeFederatedResults } from '../utils/utils';
 import { fetchIndividualsFederation } from '../api/api';
-import { mergeFederatedResults } from '../utils/utils'
 
 /*
  * Return a specific extra property grouped by gender
@@ -43,20 +42,19 @@ function groupExtraPropertieByGender(data, property) {
 function countDiseases(data) {
   const diseases = {};
   for (let i = 0; i < data.length; i += 1) {
-    if(!data[i].phenopackets) {
-      continue
-    }
-    for (let j = 0; j < data[i].phenopackets.length; j += 1) {
-      for (
-        let k = 0;
-        k < data[i].phenopackets[j].diseases.length;
-        k += 1
-      ) {
-        const key = data[i].phenopackets[j].diseases[k].term.label;
-        if (!diseases[key]) {
-          diseases[key] = 0;
+    if (data[i].phenopackets) {
+      for (let j = 0; j < data[i].phenopackets.length; j += 1) {
+        for (
+          let k = 0;
+          k < data[i].phenopackets[j].diseases.length;
+          k += 1
+        ) {
+          const key = data[i].phenopackets[j].diseases[k].term.label;
+          if (!diseases[key]) {
+            diseases[key] = 0;
+          }
+          diseases[key] += 1;
         }
-        diseases[key] += 1;
       }
     }
   }
@@ -119,7 +117,7 @@ function IndividualsOverview({ updateState }) {
       fetchIndividualsFederation()
         .then((data) => {
           if (isMounted) {
-            const merged = mergeFederatedResults(data)
+            const merged = mergeFederatedResults(data);
             countIndividuals(merged);
             countEthnicity(merged);
             countGender(merged);

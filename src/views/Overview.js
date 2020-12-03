@@ -11,7 +11,7 @@ import LoadingIndicator, {
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import { notify, NotificationAlert } from '../utils/alert';
 import { fetchIndividualsFederation } from '../api/api';
-import { mergeFederatedResults } from '../utils/utils'
+import { mergeFederatedResults } from '../utils/utils';
 
 function groupByExtraProperty(data, property) {
   /**
@@ -62,7 +62,7 @@ function Overview({ updateState }) {
       trackPromise(
         fetchIndividualsFederation()
           .then((data) => {
-            const merged = mergeFederatedResults(data)
+            const merged = mergeFederatedResults(data);
             const numberOfIndividuals = merged.length;
             const numberOfHospitalized = groupByExtraProperty(
               merged,
