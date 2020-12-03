@@ -24,6 +24,7 @@ import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
 } from '../components/LoadingIndicator/LoadingIndicator';
+import {mergeFederatedResults} from '../utils/utils'
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -44,16 +45,6 @@ function CreateColumns(columnNames, cb) {
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
-
-function mergeFederatedResults(data) {
-  let output = []
-  const results = data.results
-  for(let i = 0; i < results.length; i++) {
-      output = output.concat(results[i].results)    	
-  }
-  return output
-}
-
 
 function TableApp({ updateState }) {
   const [selectedSymptom, setSelectedSymptom] = useState('');

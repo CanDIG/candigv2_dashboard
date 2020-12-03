@@ -12,7 +12,8 @@ import {
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividuals, fetchIndividualsFederation } from '../api/api';
+import { fetchIndividualsFederation } from '../api/api';
+import {mergeFederatedResults} from '../utils/utils'
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -32,15 +33,6 @@ function CreateColumns(columnNames, setState) {
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
-}
-
-function mergeFederatedResults(data) {
-  let output = []
-  const results = data.results
-  for(let i = 0; i < results.length; i++) {
-      output = output.concat(results[i].results)    	
-  }
-  return output
 }
 
 function TableApp({ updateState }) {

@@ -16,21 +16,11 @@ import {
   ProcessMetadata, ProcessSymptoms,
 } from '../Processing/ChordSchemas';
 import { notify, NotificationAlert } from '../../utils/alert';
+import { mergeFederatedResults } from '../../utils/utils';
 
 import {
   trackPromise,
 } from '../LoadingIndicator/LoadingIndicator';
-
-function mergeFederatedResults(data) {
-  let output = []
-
-  const results = data.results
-  for(let i = 0; i < results.length; i++) {
-      output = output.concat(results[i].results)    	
-  }
-  return output
-
-}
 
 function SearchBySymptom({ setSymptom }) {
   const [search, setSearch] = useState('');
@@ -44,7 +34,7 @@ function SearchBySymptom({ setSymptom }) {
     try {
       trackPromise(
         fetchIndividualsFederation()
-          .then((dataResponse) => {            
+          .then((dataResponse) => {
             /* eslint-disable */
             const merged = mergeFederatedResults(dataResponse)
             const [_, phenopackets] = ProcessMetadata(merged);
