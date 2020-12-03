@@ -1,13 +1,59 @@
-import BASE_URL, { CHORD_METADATA_URL } from '../constants/constants';
+import BASE_URL, {
+  CHORD_METADATA_URL,
+  FEDERATION_URL,
+} from "../constants/constants";
+
+function fetchIndividualsFederation() {
+  return fetch(FEDERATION_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "auth",
+    },
+    body: JSON.stringify({
+      request_type: "GET",
+      endpoint_path: "api/individuals?page_size=10000",
+      endpoint_payload: {},
+      endpoint_service: "katsu",
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return {};
+  });
+}
+
+function fetchIndividualsFederationWithParams(patientParams) {
+  return fetch(FEDERATION_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "auth",
+    },
+    body: JSON.stringify({
+      request_type: "GET",
+      endpoint_path: `api/individuals?${patientParams}`,
+      endpoint_payload: {},
+      endpoint_service: "katsu",
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return {};
+  });
+
+}
 
 /*
 Fetch individuals from CHORD Metadata service and returns a promise
 */
 function fetchIndividuals() {
   return fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   }).then((response) => {
     if (response.ok) {
@@ -22,8 +68,8 @@ Fetch patients from CanDIG web api and returns a promise
 */
 function fetchPatients(datasetId) {
   return fetch(`${BASE_URL}/patients/search`, {
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
     body: JSON.stringify({
       datasetId,
     }),
@@ -40,7 +86,7 @@ Fetch datasets from CanDIG web api datasets endpoint and returns a promise
 */
 function fetchDatasets() {
   return fetch(`${BASE_URL}/datasets/search`, {
-    method: 'post',
+    method: "post",
   }).then((response) => {
     if (response.ok) {
       return response.json();
@@ -71,16 +117,16 @@ function getCounts(datasetId, table, field) {
   }
 
   return fetch(`${BASE_URL}/count`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       dataset_id: datasetId,
       logic: {
-        id: 'A',
+        id: "A",
       },
       components: [
         {
-          id: 'A',
+          id: "A",
           patients: {},
         },
       ],
@@ -108,8 +154,8 @@ Fetch variant for a specific Dataset Id; start; and reference name; and returns 
 */
 function searchVariant(datasetId, start, end, referenceName) {
   return fetch(`${BASE_URL}/variants/search`, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
+    method: "post",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       start,
       end,
@@ -126,24 +172,49 @@ function searchVariant(datasetId, start, end, referenceName) {
 
 function searchSymptom(symptom) {
   if (!symptom || 0 === symptom.length) {
-    return {}
+    return {};
   }
-  return fetch(`${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`, {
-    method: 'GET',
+
+  return fetch(FEDERATION_URL, {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
+      Authorization: "auth",
     },
+    body: JSON.stringify({
+      request_type: "GET",
+      endpoint_path: `api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`,
+      endpoint_payload: {},
+      endpoint_service: "katsu",
+    }),
   }).then((response) => {
     if (response.ok) {
       return response.json();
     }
     return {};
   });
+
+  // return fetch(
+  //   `${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   }
+  // ).then((response) => {
+  //   if (response.ok) {
+  //     return response.json();
+  //   }
+  //   return {};
+  // });
 }
 
 export {
   fetchPatients,
   fetchIndividuals,
+  fetchIndividualsFederation,
+  fetchIndividualsFederationWithParams,
   fetchDatasets,
   getCounts,
   fetchServers,

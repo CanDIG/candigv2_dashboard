@@ -10,7 +10,8 @@ import LoadingIndicator, {
 } from '../components/LoadingIndicator/LoadingIndicator';
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividuals } from '../api/api';
+import { fetchIndividualsFederation } from '../api/api';
+import { mergeFederatedResults } from '../utils/utils'
 
 function groupByExtraProperty(data, property) {
   /**
@@ -18,8 +19,8 @@ function groupByExtraProperty(data, property) {
    * from the response data from Chord service
    */
   const obj = {};
-  for (let i = 0; i < data.results.length; i += 1) {
-    const key = data.results[i].extra_properties[property];
+  for (let i = 0; i < data.length; i += 1) {
+    const key = data[i].extra_properties[property];
     if (!obj[key]) {
       obj[key] = 0;
     }
@@ -59,14 +60,15 @@ function Overview({ updateState }) {
   useEffect(() => {
     if (!didFetch) {
       trackPromise(
-        fetchIndividuals()
+        fetchIndividualsFederation()
           .then((data) => {
-            const numberOfIndividuals = data.results.length;
+            const merged = mergeFederatedResults(data)
+            const numberOfIndividuals = merged.length;
             const numberOfHospitalized = groupByExtraProperty(
-              data,
+              merged,
               'hospitalized',
             );
-            const numberOfResults = groupByExtraProperty(data, 'covid19_test');
+            const numberOfResults = groupByExtraProperty(merged, 'covid19_test');
 
             setIndividualsCounter(numberOfIndividuals);
             setHospitalizedObj(numberOfHospitalized);
@@ -81,11 +83,11 @@ function Overview({ updateState }) {
                 (numberOfResults.Positive / numberOfIndividuals) * 100,
               ),
             );
-            setHospitalCounter(countFromExtraProperty(data, 'host_hospital'));
-            setHostHospitalObj(groupByExtraProperty(data, 'host_hospital'));
-            setEmploymentObj(groupByExtraProperty(data, 'employment'));
-            setAsymptomaticObj(groupByExtraProperty(data, 'asymptomatic'));
-            setResidenceTypeObj(groupByExtraProperty(data, 'residence_type'));
+            setHospitalCounter(countFromExtraProperty(merged, 'host_hospital'));
+            setHostHospitalObj(groupByExtraProperty(merged, 'host_hospital'));
+            setEmploymentObj(groupByExtraProperty(merged, 'employment'));
+            setAsymptomaticObj(groupByExtraProperty(merged, 'asymptomatic'));
+            setResidenceTypeObj(groupByExtraProperty(merged, 'residence_type'));
 
             setDidFetch(true);
           })

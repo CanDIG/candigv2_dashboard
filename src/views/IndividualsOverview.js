@@ -13,7 +13,8 @@ import LoadingIndicator, {
 import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
 import { groupBy } from '../utils/utils';
-import { fetchIndividuals } from '../api/api';
+import { fetchIndividualsFederation } from '../api/api';
+import { mergeFederatedResults } from '../utils/utils'
 
 /*
  * Return a specific extra property grouped by gender
@@ -22,14 +23,14 @@ import { fetchIndividuals } from '../api/api';
  */
 function groupExtraPropertieByGender(data, property) {
   const extraPropertieList = {};
-  for (let i = 0; i < data.results.length; i += 1) {
-    const key = data.results[i].sex.charAt(0).toUpperCase()
-      + data.results[i].sex.slice(1).toLowerCase().replace('_', ' ');
+  for (let i = 0; i < data.length; i += 1) {
+    const key = data[i].sex.charAt(0).toUpperCase()
+      + data[i].sex.slice(1).toLowerCase().replace('_', ' ');
     if (!extraPropertieList[key]) {
       extraPropertieList[key] = [];
     }
     extraPropertieList[key].push(
-      parseFloat(data.results[i].extra_properties[property]),
+      parseFloat(data[i].extra_properties[property]),
     );
   }
   return extraPropertieList;
@@ -41,14 +42,17 @@ function groupExtraPropertieByGender(data, property) {
  */
 function countDiseases(data) {
   const diseases = {};
-  for (let i = 0; i < data.results.length; i += 1) {
-    for (let j = 0; j < data.results[i].phenopackets.length; j += 1) {
+  for (let i = 0; i < data.length; i += 1) {
+    if(!data[i].phenopackets) {
+      continue
+    }
+    for (let j = 0; j < data[i].phenopackets.length; j += 1) {
       for (
         let k = 0;
-        k < data.results[i].phenopackets[j].diseases.length;
+        k < data[i].phenopackets[j].diseases.length;
         k += 1
       ) {
-        const key = data.results[i].phenopackets[j].diseases[k].term.label;
+        const key = data[i].phenopackets[j].diseases[k].term.label;
         if (!diseases[key]) {
           diseases[key] = 0;
         }
@@ -66,8 +70,8 @@ function countDiseases(data) {
  */
 function getCounterUnderExtraProperties(data, property) {
   const education = {};
-  for (let i = 0; i < data.results.length; i += 1) {
-    const key = data.results[i].extra_properties[property];
+  for (let i = 0; i < data.length; i += 1) {
+    const key = data[i].extra_properties[property];
     if (!education[key]) {
       education[key] = 0;
     }
@@ -93,39 +97,40 @@ function IndividualsOverview({ updateState }) {
   const notifyEl = useRef(null);
 
   const countIndividuals = (data) => {
-    setIndividualCount(data.results.length);
+    setIndividualCount(data.length);
   };
 
   const countEthnicity = (data) => {
-    setEthnicityObject(groupBy(data.results, 'ethnicity'));
+    setEthnicityObject(groupBy(data, 'ethnicity'));
   };
 
   const countGender = (data) => {
-    setGenderObject(groupBy(data.results, 'sex'));
+    setGenderObject(groupBy(data, 'sex'));
   };
 
   const countDateOfBirth = (data) => {
-    setDoBObject(groupBy(data.results, 'date_of_birth'));
+    setDoBObject(groupBy(data, 'date_of_birth'));
   };
 
   useEffect(() => {
     let isMounted = true;
     updateState({ datasetVisible: false });
     trackPromise(
-      fetchIndividuals()
+      fetchIndividualsFederation()
         .then((data) => {
           if (isMounted) {
-            countIndividuals(data);
-            countEthnicity(data);
-            countGender(data);
-            countDateOfBirth(data);
-            const diseases = countDiseases(data);
+            const merged = mergeFederatedResults(data)
+            countIndividuals(merged);
+            countEthnicity(merged);
+            countGender(merged);
+            countDateOfBirth(merged);
+            const diseases = countDiseases(merged);
             setDiseasesObject(diseases);
             setDiseasesSum(Object.keys(diseases).length);
             setEducationObject(
-              getCounterUnderExtraProperties(data, 'education'),
+              getCounterUnderExtraProperties(merged, 'education'),
             );
-            setBoxPlotObject(groupExtraPropertieByGender(data, 'weight'));
+            setBoxPlotObject(groupExtraPropertieByGender(merged, 'weight'));
             setDidFetch(true);
           }
         })
