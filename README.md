@@ -27,6 +27,7 @@ export REACT_APP_BASE_URL='http://ga4ghdev01.bcgsc.ca:20127'
 export REACT_APP_METADATA_URL='http://ga4ghdev01.bcgsc.ca:4000'
 export REACT_APP_HTSGET_URL='http://ga4ghdev01.bcgsc.ca:3333'
 export REACT_APP_DRS_URL='http://ga4ghdev01.bcgsc.ca:5000'
+export REACT_APP_FEDERATION_URL='http://ga4ghdev01.bcgsc.ca:8890/federation/search'
 ```
 
 Once the installation is completed, you may start the dashboard using:
