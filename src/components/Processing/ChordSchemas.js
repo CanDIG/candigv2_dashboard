@@ -64,10 +64,8 @@ export function ProcessMetadata(metadata) {
     let Pheno;
     try {
       Pheno = entry.phenopackets[0];
-    } catch (e) {
-      return;
-    }
-    phenopacketsList[ID] = Pheno;
+      phenopacketsList[ID] = Pheno;
+    } catch (e) {}    
   });
   return [mainTable, phenopacketsList];
 }
