@@ -76,7 +76,7 @@ export function ProcessPhenopackets(response) {
   // console.log(response);
   const mainTable = [];
   const phenopacketsList = {};
-  Object.values(response).forEach((entry) => {
+  response.forEach((entry) => {
     // console.log(entry);
     mainTable.push(subjectSchema(entry.subject));
     const ID = entry.id;

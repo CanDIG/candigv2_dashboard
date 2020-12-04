@@ -92,7 +92,7 @@ function TableApp({ updateState }) {
         searchSymptom(selectedSymptom)
           .then((dataResponse) => {
             const merged = mergeFederatedResults(dataResponse)
-            const [tdatasets, tphenopackets] = ProcessPhenopackets(dataResponse.results);
+            const [tdatasets, tphenopackets] = ProcessPhenopackets(merged);
             setData(tdatasets);
             setPhenopackets(tphenopackets);
             setActiveID('');
