@@ -61,10 +61,14 @@ export function ProcessMetadata(metadata) {
   Object.values(metadata).forEach((entry) => {
     mainTable.push(subjectSchema(entry));
     const ID = entry.id;
-    const Pheno = entry.phenopackets[0];
-    phenopacketsList[ID] = Pheno;
+    let Pheno;
+    /* eslint-disable */
+    try {
+      Pheno = entry.phenopackets[0];
+      phenopacketsList[ID] = Pheno;
+    } catch (e) {}
+    /* eslint-enable */
   });
-
   return [mainTable, phenopacketsList];
 }
 
@@ -74,7 +78,7 @@ export function ProcessPhenopackets(response) {
   // console.log(response);
   const mainTable = [];
   const phenopacketsList = {};
-  Object.values(response).forEach((entry) => {
+  response.forEach((entry) => {
     // console.log(entry);
     mainTable.push(subjectSchema(entry.subject));
     const ID = entry.id;

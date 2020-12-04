@@ -24,6 +24,7 @@ import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
 } from '../components/LoadingIndicator/LoadingIndicator';
+import {mergeFederatedResults} from '../utils/utils'
 
 function CreateColumns(columnNames, cb) {
   const columnList = [];
@@ -90,7 +91,8 @@ function TableApp({ updateState }) {
       trackPromise(
         searchSymptom(selectedSymptom)
           .then((dataResponse) => {
-            const [tdatasets, tphenopackets] = ProcessPhenopackets(dataResponse.results);
+            const merged = mergeFederatedResults(dataResponse)
+            const [tdatasets, tphenopackets] = ProcessPhenopackets(merged);
             setData(tdatasets);
             setPhenopackets(tphenopackets);
             setActiveID('');

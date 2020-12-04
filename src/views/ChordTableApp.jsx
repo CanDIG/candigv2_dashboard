@@ -12,7 +12,8 @@ import {
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividuals } from '../api/api';
+import { fetchIndividualsFederation } from '../api/api';
+import {mergeFederatedResults} from '../utils/utils'
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -74,9 +75,10 @@ function TableApp({ updateState }) {
     try {
 
       trackPromise(
-        fetchIndividuals()
+        fetchIndividualsFederation()
           .then((dataResponse) => {
-            const [dataset, phenopacket] = ProcessMetadata(dataResponse.results);
+            const merged = mergeFederatedResults(dataResponse)
+            const [dataset, phenopacket] = ProcessMetadata(merged);
             setData(dataset);
             setPhenopackets(phenopacket);
             setActiveID('');
