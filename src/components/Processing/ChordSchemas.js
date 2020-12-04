@@ -62,10 +62,12 @@ export function ProcessMetadata(metadata) {
     mainTable.push(subjectSchema(entry));
     const ID = entry.id;
     let Pheno;
+    /* eslint-disable */
     try {
       Pheno = entry.phenopackets[0];
       phenopacketsList[ID] = Pheno;
-    } catch (e) {}    
+    } catch (e) {}
+    /* eslint-enable */
   });
   return [mainTable, phenopacketsList];
 }
