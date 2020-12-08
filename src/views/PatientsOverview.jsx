@@ -9,9 +9,9 @@ import useStateWithCallback from 'use-state-with-callback';
 import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
-} from '../components/LoadingIndicator/LoadingIndicator';
+} from '../components/LoadingIndicator/LoadingIndicator.jsx';
 import { groupBy } from '../utils/utils';
-import { notify, NotificationAlert } from '../utils/alert';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import { fetchPatients } from '../api/api';
 

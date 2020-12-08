@@ -5,7 +5,7 @@ import {
   Container, Card, CardBody, Row, Col, Input,
 } from 'reactstrap';
 // Consts
-import CustomChart from '../Graphs/CustomChart';
+import CustomChart from '../Graphs/CustomChart.jsx';
 import tableSchema from '../../constants/tableSchema';
 
 /*

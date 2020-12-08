@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
-import VcfInstance from '../components/IGV/VcfInstance';
-import { notify, NotificationAlert } from '../utils/alert';
+import VcfInstance from '../components/IGV/VcfInstance.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 
 // Consts
 import { DRS } from '../constants/constants';

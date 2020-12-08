@@ -11,7 +11,7 @@ import {
 
 import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
 import ClinMetadataDropdown from '../Dropdowns/ClinMetadataDropdown';
-import { GlobalFilter } from '../Filters/filters';
+import { GlobalFilter } from '../Filters/filters.jsx';
 
 const IndeterminateButton = forwardRef(
   ({ indeterminate, ...rest }, ref) => {

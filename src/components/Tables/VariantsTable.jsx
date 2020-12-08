@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import BASE_URL from '../../constants/constants';
-import IndividualTable from './IndividualTable';
-import { notify, NotificationAlert } from '../../utils/alert';
-import VariantsTableButton from './VariantsTableButton';
+import IndividualTable from './IndividualTable.jsx';
+import { notify, NotificationAlert } from '../../utils/alert.jsx';
+import VariantsTableButton from './VariantsTableButton.jsx';
 
 import { fetchIndividualsFederationWithParams } from '../../api/api';
 

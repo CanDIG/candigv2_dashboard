@@ -18,12 +18,12 @@ import {
   featureSchema, ProcessPhenopackets,
   ProcessFeatures,
 } from '../components/Processing/ChordSchemas';
-import { notify, NotificationAlert } from '../utils/alert';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 
 import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
-} from '../components/LoadingIndicator/LoadingIndicator';
+} from '../components/LoadingIndicator/LoadingIndicator.jsx';
 import {mergeFederatedResults} from '../utils/utils'
 
 function CreateColumns(columnNames, cb) {

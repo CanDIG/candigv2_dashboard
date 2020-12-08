@@ -4,8 +4,8 @@ import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 
 import BASE_URL from '../constants/constants';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
-import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
-import { notify, NotificationAlert } from '../utils/alert';
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 import { tableSchema } from '../constants/tableSchemaFilters';
 
 function CreateColumns(columnNames, setColumnState, columnSchema) {

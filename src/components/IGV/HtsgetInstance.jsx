@@ -2,9 +2,10 @@ import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import igv from 'igv/dist/igv.esm';
-import { NotificationAlert } from '../../utils/alert';
+import { NotificationAlert } from '../../utils/alert.jsx';
+import { HTSGET_URL } from '../../constants/constants';
 
-function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink }) {
+function HtsgetInstance({ selectedBamName, datasetId }) {
   /** *
    * A functional component that returns an IGV.js instance dedicated to rendering GWAS data.
    */
@@ -16,16 +17,12 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
       genome: 'hg38',
       tracks: [
         {
-          type: 'variant',
-          format: 'vcf',
-          url: '',
-          indexURL: '',
+          type: 'alignment',
+          sourceType: 'htsget',
           name: '',
-          squishedCallHeight: 1,
-          expandedCallHeight: 4,
-          displayMode: 'squished',
-          height: 250,
-          visibilityWindow: 10000,
+          url: HTSGET_URL,
+          endpoint: '/htsget/v1/reads/',
+          id: '',
         },
       ],
     };
@@ -33,14 +30,13 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
     igv.removeAllBrowsers(); // Remove existing browser instances
 
     // Do not create new browser instance on page load as no sample is selected.
-    if (selectedVcfName !== '') {
-      igvOptions.tracks[0].name = selectedVcfName;
-      igvOptions.tracks[0].url = selectedVcfLink;
-      igvOptions.tracks[0].indexURL = selectedVcfIndexLink;
+    if (selectedBamName !== '') {
+      igvOptions.tracks[0].name = selectedBamName;
+      igvOptions.tracks[0].id = selectedBamName;
 
       igv.createBrowser(igvBrowser.current, igvOptions);
     }
-  }, [selectedVcfName, selectedVcfLink, selectedVcfIndexLink]);
+  }, [selectedBamName, datasetId]);
 
   return (
     <>
@@ -54,10 +50,9 @@ function VcfInstance({ selectedVcfName, selectedVcfLink, selectedVcfIndexLink })
   );
 }
 
-VcfInstance.propTypes = {
-  selectedVcfName: PropTypes.string.isRequired,
-  selectedVcfLink: PropTypes.string.isRequired,
-  selectedVcfIndexLink: PropTypes.string.isRequired,
+HtsgetInstance.propTypes = {
+  selectedBamName: PropTypes.string.isRequired,
+  datasetId: PropTypes.string.isRequired,
 };
 
-export default VcfInstance;
+export default HtsgetInstance;

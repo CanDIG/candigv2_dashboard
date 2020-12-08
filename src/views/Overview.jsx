@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
-} from '../components/LoadingIndicator/LoadingIndicator';
-import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
-import { notify, NotificationAlert } from '../utils/alert';
+} from '../components/LoadingIndicator/LoadingIndicator.jsx';
+import CustomOfflineChart from '../components/Graphs/CustomOfflineChart.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 import { fetchIndividualsFederation } from '../api/api';
 import { mergeFederatedResults } from '../utils/utils';
 

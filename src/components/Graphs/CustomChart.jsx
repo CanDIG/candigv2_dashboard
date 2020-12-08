@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import { notify, NotificationAlert } from '../../utils/alert';
+import { notify, NotificationAlert } from '../../utils/alert.jsx';
 import { getCounts } from '../../api/api';
 
 function splitString(newString) {

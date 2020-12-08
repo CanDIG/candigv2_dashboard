@@ -20,7 +20,7 @@ import "assets/scss/paper-dashboard.scss?v=1.2.0";
 import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import routes from "./routes";
-import AdminLayout from "layouts/Admin.js";
+import AdminLayout from "layouts/Admin.jsx";
 const hist = createBrowserHistory();
 ReactDOM.render(
   <SideBar>

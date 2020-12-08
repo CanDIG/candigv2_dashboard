@@ -22,11 +22,11 @@ import React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Route, Switch } from "react-router-dom";
 
-import TopBar from "components/Navbars/TopBar.js";
-import Footer from "components/Footer/Footer.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import TopBar from "components/Navbars/TopBar.jsx";
+import Footer from "components/Footer/Footer.jsx";
+import Sidebar from "components/Sidebar/Sidebar.jsx";
 
-import routes from "./../routes.js";
+import routes from "../routes.js";
 
 import BASE_URL from "../constants/constants";
 

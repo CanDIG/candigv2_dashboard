@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
-import { notify, NotificationAlert } from '../../utils/alert';
+import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator.jsx';
+import { notify, NotificationAlert } from '../../utils/alert.jsx';
 import { getCounts } from '../../api/api';
 
 // Hook

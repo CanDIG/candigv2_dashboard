@@ -1,55 +1,54 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
-import GwasInstance from '../components/IGV/GwasInstance';
-import { notify, NotificationAlert } from '../utils/alert';
+import HtsgetInstance from '../components/IGV/HtsgetInstance.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 
 // Consts
 import { DRS } from '../constants/constants';
 
-function GwasBrowser({ datasetId }) {
+function HtsgetBrowser({ datasetId }) {
   /** *
    * A functional component that renders a view with a IGV.js browser.
    */
-  const [selectedGwasName, setSelectedGwasName] = useState('');
-  const [selectedGwasUrl, setSelectedGwasUrl] = useState('');
-  const [gwasDropdown, setGwasDropdown] = useState([]);
-  const [gwasDataObj, setGwasDataObj] = useState({});
+  const [selectedBamName, setSelectedBamName] = useState('');
+  const [bamDropdown, setBamDropdown] = useState([]);
   const notifyEl = useRef(null);
 
   const disabledElementList = [
     <option key="disabled" value="disabled" disabled>
-      Select a GWAS Sample...
+      Select a BAM Sample...
     </option>,
   ];
 
   useEffect(() => {
-    fetch(`${DRS}/search?fuzzy_name=.gwas`)
+    fetch(`${DRS}/search?fuzzy_name=.bam`)
       .then((response) => response.json())
       .then((data) => {
         const tmpDataObj = {};
         // File name is set as key, while its url is set as the value
         data.forEach((element) => {
-          tmpDataObj[element.name] = element.access_methods[0].access_url.url;
+          if (!element.name.endsWith('bai')) {
+            tmpDataObj[element.name] = element.access_methods[0].access_url.url;
+          }
         });
 
-        const gwasList = Object.keys(tmpDataObj).map((x) => (
+        const bamList = Object.keys(tmpDataObj).map((x) => (
           <option key={x} value={x}>
             {x}
           </option>
         ));
 
-        setGwasDataObj(tmpDataObj);
-        setGwasDropdown(gwasList);
+        setBamDropdown(bamList);
       })
       .catch(() => {
         notify(
           notifyEl,
-          'No GWAS Samples are available.',
+          'No BAM Samples are available.',
           'warning',
         );
       });
-  }, [selectedGwasName]);
+  }, []);
 
   return (
     <>
@@ -65,14 +64,7 @@ function GwasBrowser({ datasetId }) {
             <b>
               <span>
                 <p> Reminders: </p>
-                <p> Select a sample to get started. </p>
-                <p>
-                  {' '}
-                  To adjust the range of data, click on the setting icon on the right of the track
-                  and select &quot;Autoscale&quot;, or manually adjust the range by
-                  clicking on &quot;Set data range&quot;.
-                </p>
-                <p> To adjust the height of the track, use &quot;Set track height&quot;. </p>
+                <p> Select a sample to get started. Only .bam files are supported for now.</p>
               </span>
             </b>
           </UncontrolledAlert>
@@ -81,17 +73,15 @@ function GwasBrowser({ datasetId }) {
         <Input
           defaultValue="disabled"
           onChange={(e) => {
-            setSelectedGwasName(e.currentTarget.value);
-            setSelectedGwasUrl(gwasDataObj[e.currentTarget.value]);
+            setSelectedBamName(e.currentTarget.value);
           }}
           type="select"
         >
-          { disabledElementList.concat(gwasDropdown) }
+          { disabledElementList.concat(bamDropdown) }
         </Input>
 
-        <GwasInstance
-          selectedGwasName={selectedGwasName}
-          selectedGwasUrl={selectedGwasUrl}
+        <HtsgetInstance
+          selectedBamName={selectedBamName}
           datasetId={datasetId}
         />
       </div>
@@ -99,8 +89,8 @@ function GwasBrowser({ datasetId }) {
   );
 }
 
-GwasBrowser.propTypes = {
+HtsgetBrowser.propTypes = {
   datasetId: PropTypes.string.isRequired,
 };
 
-export default GwasBrowser;
+export default HtsgetBrowser;

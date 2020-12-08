@@ -4,10 +4,10 @@ import {
   Button, Form, FormGroup, Label, Input, Row, UncontrolledAlert,
 } from 'reactstrap';
 
-import VariantsTable from '../components/Tables/VariantsTable';
+import VariantsTable from '../components/Tables/VariantsTable.jsx';
 import { searchVariant } from '../api/api';
 
-import { notify, NotificationAlert } from '../utils/alert';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 
 import '../assets/css/VariantsSearch.css';
 

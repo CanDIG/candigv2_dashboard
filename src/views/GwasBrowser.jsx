@@ -1,54 +1,55 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Input, UncontrolledAlert } from 'reactstrap';
-import HtsgetInstance from '../components/IGV/HtsgetInstance';
-import { notify, NotificationAlert } from '../utils/alert';
+import GwasInstance from '../components/IGV/GwasInstance.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 
 // Consts
 import { DRS } from '../constants/constants';
 
-function HtsgetBrowser({ datasetId }) {
+function GwasBrowser({ datasetId }) {
   /** *
    * A functional component that renders a view with a IGV.js browser.
    */
-  const [selectedBamName, setSelectedBamName] = useState('');
-  const [bamDropdown, setBamDropdown] = useState([]);
+  const [selectedGwasName, setSelectedGwasName] = useState('');
+  const [selectedGwasUrl, setSelectedGwasUrl] = useState('');
+  const [gwasDropdown, setGwasDropdown] = useState([]);
+  const [gwasDataObj, setGwasDataObj] = useState({});
   const notifyEl = useRef(null);
 
   const disabledElementList = [
     <option key="disabled" value="disabled" disabled>
-      Select a BAM Sample...
+      Select a GWAS Sample...
     </option>,
   ];
 
   useEffect(() => {
-    fetch(`${DRS}/search?fuzzy_name=.bam`)
+    fetch(`${DRS}/search?fuzzy_name=.gwas`)
       .then((response) => response.json())
       .then((data) => {
         const tmpDataObj = {};
         // File name is set as key, while its url is set as the value
         data.forEach((element) => {
-          if (!element.name.endsWith('bai')) {
-            tmpDataObj[element.name] = element.access_methods[0].access_url.url;
-          }
+          tmpDataObj[element.name] = element.access_methods[0].access_url.url;
         });
 
-        const bamList = Object.keys(tmpDataObj).map((x) => (
+        const gwasList = Object.keys(tmpDataObj).map((x) => (
           <option key={x} value={x}>
             {x}
           </option>
         ));
 
-        setBamDropdown(bamList);
+        setGwasDataObj(tmpDataObj);
+        setGwasDropdown(gwasList);
       })
       .catch(() => {
         notify(
           notifyEl,
-          'No BAM Samples are available.',
+          'No GWAS Samples are available.',
           'warning',
         );
       });
-  }, []);
+  }, [selectedGwasName]);
 
   return (
     <>
@@ -64,7 +65,14 @@ function HtsgetBrowser({ datasetId }) {
             <b>
               <span>
                 <p> Reminders: </p>
-                <p> Select a sample to get started. Only .bam files are supported for now.</p>
+                <p> Select a sample to get started. </p>
+                <p>
+                  {' '}
+                  To adjust the range of data, click on the setting icon on the right of the track
+                  and select &quot;Autoscale&quot;, or manually adjust the range by
+                  clicking on &quot;Set data range&quot;.
+                </p>
+                <p> To adjust the height of the track, use &quot;Set track height&quot;. </p>
               </span>
             </b>
           </UncontrolledAlert>
@@ -73,15 +81,17 @@ function HtsgetBrowser({ datasetId }) {
         <Input
           defaultValue="disabled"
           onChange={(e) => {
-            setSelectedBamName(e.currentTarget.value);
+            setSelectedGwasName(e.currentTarget.value);
+            setSelectedGwasUrl(gwasDataObj[e.currentTarget.value]);
           }}
           type="select"
         >
-          { disabledElementList.concat(bamDropdown) }
+          { disabledElementList.concat(gwasDropdown) }
         </Input>
 
-        <HtsgetInstance
-          selectedBamName={selectedBamName}
+        <GwasInstance
+          selectedGwasName={selectedGwasName}
+          selectedGwasUrl={selectedGwasUrl}
           datasetId={datasetId}
         />
       </div>
@@ -89,8 +99,8 @@ function HtsgetBrowser({ datasetId }) {
   );
 }
 
-HtsgetBrowser.propTypes = {
+GwasBrowser.propTypes = {
   datasetId: PropTypes.string.isRequired,
 };
 
-export default HtsgetBrowser;
+export default GwasBrowser;

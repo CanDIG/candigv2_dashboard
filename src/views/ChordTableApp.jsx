@@ -10,8 +10,8 @@ import {
   ProcessMetadata, ProcessData, diseaseSchema, featureSchema, ProcessFeatures,
 } from '../components/Processing/ChordSchemas';
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
-import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
-import { notify, NotificationAlert } from '../utils/alert';
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 import { fetchIndividualsFederation } from '../api/api';
 import {mergeFederatedResults} from '../utils/utils'
 

@@ -5,13 +5,13 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
+import CustomOfflineChart from '../components/Graphs/CustomOfflineChart.jsx';
 import LoadingIndicator, {
   trackPromise,
   usePromiseTracker,
-} from '../components/LoadingIndicator/LoadingIndicator';
-import BoxPlotChart from '../components/Graphs/BoxPlotChart';
-import { notify, NotificationAlert } from '../utils/alert';
+} from '../components/LoadingIndicator/LoadingIndicator.jsx';
+import BoxPlotChart from '../components/Graphs/BoxPlotChart.jsx';
+import { notify, NotificationAlert } from '../utils/alert.jsx';
 import { groupBy, mergeFederatedResults } from '../utils/utils';
 import { fetchIndividualsFederation } from '../api/api';
 

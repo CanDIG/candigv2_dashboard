@@ -8,7 +8,7 @@ import {
 // reactstrap components
 import { Row } from 'reactstrap';
 import Styles from '../../assets/css/StyledComponents/TableStyled';
-import { DefaultColumnFilter, FuzzyTextFilterFn, SelectColumnFilter } from '../Filters/filters';
+import { DefaultColumnFilter, FuzzyTextFilterFn, SelectColumnFilter } from '../Filters/filters.jsx';
 
 import PaginationBar from './Pagination';
 import DataControl from './DataControls';

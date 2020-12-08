@@ -17,18 +17,18 @@
   included in all copies or substantial portions of the Software.
 
 */
-import Overview from './views/Overview';
-import Services from './views/Services';
-import APIInfo from './views/APIInfo';
-import CustomVisualization from './views/CustomVisualization';
-import GwasBrowser from './views/GwasBrowser';
-import HtsgetBrowser from './views/HtsgetBrowser';
-import VcfBrowser from './views/VcfBrowser';
+import Overview from './views/Overview.jsx';
+import Services from './views/Services.jsx';
+import APIInfo from './views/APIInfo.jsx';
+import CustomVisualization from './views/CustomVisualization.jsx';
+import GwasBrowser from './views/GwasBrowser.jsx';
+import HtsgetBrowser from './views/HtsgetBrowser.jsx';
+import VcfBrowser from './views/VcfBrowser.jsx';
 // import TableList from "./views/MetadataTableApp";
-import ChordTable from './views/ChordTableApp';
-import IndividualsOverview from './views/IndividualsOverview';
-import VariantsSearch from './views/VariantsSearch';
-import SearchBySymptom from './views/Symptoms';
+import ChordTable from './views/ChordTableApp.jsx';
+import IndividualsOverview from './views/IndividualsOverview.jsx';
+import VariantsSearch from './views/VariantsSearch.jsx';
+import SearchBySymptom from './views/Symptoms.jsx';
 
 const routes = [
   {

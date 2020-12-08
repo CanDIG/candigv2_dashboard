@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // reactstrap components
 import { Row, Col, Container } from 'reactstrap';
 
-import CustomVisualizationDropDown from '../components/Dropdowns/CustomVisualizationDropDown';
+import CustomVisualizationDropDown from '../components/Dropdowns/CustomVisualizationDropDown.jsx';
 
 /*
  * Custom visualization view component

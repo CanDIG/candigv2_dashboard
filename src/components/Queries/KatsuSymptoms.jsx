@@ -15,12 +15,12 @@ import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
 import {
   ProcessMetadata, ProcessSymptoms,
 } from '../Processing/ChordSchemas';
-import { notify, NotificationAlert } from '../../utils/alert';
+import { notify, NotificationAlert } from '../../utils/alert.jsx';
 import { mergeFederatedResults } from '../../utils/utils';
 
 import {
   trackPromise,
-} from '../LoadingIndicator/LoadingIndicator';
+} from '../LoadingIndicator/LoadingIndicator.jsx';
 
 function SearchBySymptom({ setSymptom }) {
   const [search, setSearch] = useState('');

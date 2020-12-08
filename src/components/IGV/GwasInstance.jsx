@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 // TODO: Importing from igv.esm.min.js is not working
 import igv from 'igv/dist/igv.esm';
-import { notify, NotificationAlert } from '../../utils/alert';
-import VariantsTable from '../Tables/VariantsTable';
+import { notify, NotificationAlert } from '../../utils/alert.jsx';
+import VariantsTable from '../Tables/VariantsTable.jsx';
 import BASE_URL from '../../constants/constants';
 
 function GwasInstance({ selectedGwasName, selectedGwasUrl, datasetId }) {
