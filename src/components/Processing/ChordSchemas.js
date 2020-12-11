@@ -1,11 +1,22 @@
+// Wrapper function to access nested objects
+// returns an empty string if it doesn't exist
+
+const schemaFxn = (fxn, fallback = '') => {
+  try {
+    return fxn();
+  } catch (error) {
+    return fallback;
+  }
+};
+
 export const diseaseSchema = (data) => {
   const entry = {
-    ID: data.id,
-    term: data.term.id,
-    label: data.term.label,
-    comorbidities: data.extra_properties.comorbidities_group,
-    created: data.created,
-    updated: data.updated,
+    ID: schemaFxn(() => data.id),
+    term: schemaFxn(() => data.term.id),
+    label: schemaFxn(() => data.term.label),
+    comorbidities: schemaFxn(() => data.extra_properties.comorbidities_group),
+    created: schemaFxn(() => data.created),
+    updated: schemaFxn(() => data.updated),
   };
   return entry;
 };
@@ -13,42 +24,42 @@ export const diseaseSchema = (data) => {
 // can be either symptom or complication depending on datatype
 export const featureSchema = (data) => {
   const entry = {
-    ID: data.type.id,
-    label: data.type.label,
-    description: data.description,
-    negated: data.negated,
-    created: data.created,
-    updated: data.updated,
+    ID: schemaFxn(() => data.type.id),
+    label: schemaFxn(() => data.type.label),
+    description: schemaFxn(() => data.description),
+    negated: schemaFxn(() => data.negated),
+    created: schemaFxn(() => data.created),
+    updated: schemaFxn(() => data.updated),
   };
   return entry;
 };
 
 export const subjectSchema = (data) => {
   const subject = {
-    ID: data.id,
-    DOB: data.date_of_birth,
-    Sex: data.sex,
-    KSex: data.karyotypic_sex,
-    ethnicity: data.ethnicity,
-    height: data.extra_properties.height,
-    weight: data.extra_properties.weight,
-    education: data.extra_properties.education,
-    abo_type: data.extra_properties.abo_type,
-    taxID: data.taxonomy.id,
-    taxLabel: data.taxonomy.label,
-    household: data.extra_properties.household,
-    employment: data.extra_properties.employment,
-    asymptomatic: data.extra_properties.asymptomatic,
-    covid19_test: data.extra_properties.covid19_test,
-    covid19_test_date: data.extra_properties.covid19_test_date,
-    covid19_diagnosis_date: data.extra_properties.covid19_diagnosis_date,
-    hospitalized: data.extra_properties.hospitalized,
-    birth_country: data.extra_properties.birth_country,
-    host_hospital: data.extra_properties.host_hospital,
-    residence_type: data.extra_properties.residence_type,
-    enrollment_date: data.extra_properties.enrollment_date,
-    created: data.created,
-    updated: data.updated,
+    ID: schemaFxn(() => data.id),
+    DOB: schemaFxn(() => data.date_of_birth),
+    Sex: schemaFxn(() => data.sex),
+    KSex: schemaFxn(() => data.karyotypic_sex),
+    ethnicity: schemaFxn(() => data.ethnicity),
+    height: schemaFxn(() => data.extra_properties.height),
+    weight: schemaFxn(() => data.extra_properties.weight),
+    education: schemaFxn(() => data.extra_properties.education),
+    abo_type: schemaFxn(() => data.extra_properties.abo_type),
+    taxID: schemaFxn(() => data.taxonomy.id),
+    taxLabel: schemaFxn(() => data.taxonomy.label),
+    household: schemaFxn(() => data.extra_properties.household),
+    employment: schemaFxn(() => data.extra_properties.employment),
+    asymptomatic: schemaFxn(() => data.extra_properties.asymptomatic),
+    covid19_test: schemaFxn(() => data.extra_properties.covid19_test),
+    covid19_test_date: schemaFxn(() => data.extra_properties.covid19_test_date),
+    covid19_diagnosis_date: schemaFxn(() => data.extra_properties.covid19_diagnosis_date),
+    hospitalized: schemaFxn(() => data.extra_properties.hospitalized),
+    birth_country: schemaFxn(() => data.extra_properties.birth_country),
+    host_hospital: schemaFxn(() => data.extra_properties.host_hospital),
+    residence_type: schemaFxn(() => data.extra_properties.residence_type),
+    enrollment_date: schemaFxn(() => data.extra_properties.enrollment_date),
+    created: schemaFxn(() => data.created),
+    updated: schemaFxn(() => data.updated),
   };
   return subject;
 };
