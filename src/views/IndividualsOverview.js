@@ -14,6 +14,8 @@ import BoxPlotChart from '../components/Graphs/BoxPlotChart';
 import { notify, NotificationAlert } from '../utils/alert';
 import { groupBy, mergeFederatedResults } from '../utils/utils';
 import { fetchIndividualsFederation } from '../api/api';
+import { schemaFxn } from '../components/Processing/ChordSchemas';
+
 
 /*
  * Return a specific extra property grouped by gender
@@ -29,7 +31,7 @@ function groupExtraPropertieByGender(data, property) {
       extraPropertieList[key] = [];
     }
     extraPropertieList[key].push(
-      parseFloat(data[i].extra_properties[property]),
+      parseFloat(schemaFxn(() => data[i].extra_properties[property])),
     );
   }
   return extraPropertieList;
@@ -69,7 +71,7 @@ function countDiseases(data) {
 function getCounterUnderExtraProperties(data, property) {
   const education = {};
   for (let i = 0; i < data.length; i += 1) {
-    const key = data[i].extra_properties[property];
+    const key = schemaFxn(() => data[i].extra_properties[property]);
     if (!education[key]) {
       education[key] = 0;
     }

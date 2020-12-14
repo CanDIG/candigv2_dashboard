@@ -12,6 +12,8 @@ import CustomOfflineChart from '../components/Graphs/CustomOfflineChart';
 import { notify, NotificationAlert } from '../utils/alert';
 import { fetchIndividualsFederation } from '../api/api';
 import { mergeFederatedResults } from '../utils/utils';
+import { schemaFxn } from '../components/Processing/ChordSchemas';
+
 
 function groupByExtraProperty(data, property) {
   /**
@@ -20,7 +22,7 @@ function groupByExtraProperty(data, property) {
    */
   const obj = {};
   for (let i = 0; i < data.length; i += 1) {
-    const key = data[i].extra_properties[property];
+    const key = schemaFxn(() => data[i].extra_properties[property]);
     if (!obj[key]) {
       obj[key] = 0;
     }
