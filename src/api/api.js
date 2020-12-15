@@ -61,29 +61,20 @@ function fetchIndividuals() {
 }
 
 /*
-Fetch patients from CanDIG web api and returns a promise
+Fetch datasets from Federation Service endpoint and returns a promise
 */
-function fetchPatients(datasetId) {
-  return fetch(`${BASE_URL}/patients/search`, {
-    headers: { 'Content-Type': 'application/json' },
+function fetchDatasetsFederation() {
+  return fetch(FEDERATION_URL, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
-      datasetId,
+      request_type: 'POST',
+      endpoint_path: 'datasets/search',
+      endpoint_payload: {},
+      endpoint_service: 'candig-server',
     }),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return {};
-  });
-}
-
-/*
-Fetch datasets from CanDIG web api datasets endpoint and returns a promise
-*/
-function fetchDatasets() {
-  return fetch(`${BASE_URL}/datasets/search`, {
-    method: 'post',
   }).then((response) => {
     if (response.ok) {
       return response.json();
@@ -96,7 +87,7 @@ function fetchDatasets() {
 Fetch servers from CanDIG web api datasets endpoint and returns a promise
 */
 function fetchServers() {
-  return fetchDatasets();
+  return fetchDatasetsFederation();
 }
 
 /*
@@ -105,7 +96,7 @@ Fetch counter for a specific Dataset Id; table; and field; and returns a promise
  * @param {string}... Table to be fetched from
  * @param {list}... Field to be fetched from
 */
-function getCounts(datasetId, table, field) {
+function getCountsFederation(datasetId, table, field) {
   let temp;
   if (!Array.isArray(field)) {
     temp = [field];
@@ -113,26 +104,60 @@ function getCounts(datasetId, table, field) {
     temp = field;
   }
 
-  return fetch(`${BASE_URL}/count`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      dataset_id: datasetId,
-      logic: {
+  const payload = JSON.stringify({
+    dataset_id: datasetId,
+    logic: {
+      id: 'A',
+    },
+    components: [
+      {
         id: 'A',
+        patients: {},
       },
-      components: [
-        {
-          id: 'A',
-          patients: {},
-        },
-      ],
-      results: [
-        {
-          table,
-          fields: temp,
-        },
-      ],
+    ],
+    results: [
+      {
+        table,
+        fields: temp,
+      },
+    ],
+  });
+
+  return fetch(FEDERATION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      request_type: 'POST',
+      endpoint_service: 'candig-server',
+      endpoint_path: 'count',
+      endpoint_payload: payload,
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return {};
+  });
+}
+
+function searchVariantFederation(datasetId, start, end, referenceName) {
+  return fetch(FEDERATION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      request_type: 'POST',
+      endpoint_path: 'variants/search',
+      endpoint_payload: JSON.stringify({
+        start,
+        end,
+        referenceName,
+        datasetId,
+      }),
+      endpoint_service: 'candig-server',
     }),
   }).then((response) => {
     if (response.ok) {
@@ -189,30 +214,15 @@ function searchSymptom(symptom) {
     }
     return {};
   });
-
-  // return fetch(
-  //   `${CHORD_METADATA_URL}/api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`,
-  //   {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   }
-  // ).then((response) => {
-  //   if (response.ok) {
-  //     return response.json();
-  //   }
-  //   return {};
-  // });
 }
 
 export {
-  fetchPatients,
   fetchIndividuals,
   fetchIndividualsFederation,
   fetchIndividualsFederationWithParams,
-  fetchDatasets,
-  getCounts,
+  fetchDatasetsFederation,
+  getCountsFederation,
+  searchVariantFederation,
   fetchServers,
   searchVariant,
   searchSymptom,

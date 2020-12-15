@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../../utils/alert';
-import { getCounts } from '../../api/api';
+import { getCountsFederation } from '../../api/api';
+import { mergeFederatedResults } from '../../utils/utils';
 
 // Initialize HighchartsMap
 HighchartsMap(Highcharts);
@@ -117,15 +118,16 @@ function TreatingCentreProvince({ datasetId }) {
     try {
       if (datasetId) {
         trackPromise(
-          getCounts(datasetId, 'enrollments', 'treatingCentreProvince')
+          getCountsFederation(datasetId, 'enrollments', 'treatingCentreProvince')
             .then((data) => {
               let dataCount;
 
               if (data) {
-                if (!data.results.enrollments[0]) {
+                if (!data.results[0].enrollments[0]) {
                   throw new Error();
                 }
-                const { treatingCentreProvince } = data.results.enrollments[0];
+                const merged = mergeFederatedResults(data);
+                const { treatingCentreProvince } = merged[0].enrollments[0];
 
                 dataCount = processJson(treatingCentreProvince);
               }

@@ -28,8 +28,7 @@
     "react-table": "^7.3.2",
     "reactstrap": "8.4.1",
     "styled-components": "^5.1.1",
-    "swagger-ui-react": "^3.28.0",
-    "use-state-with-callback": "^2.0.3"
+    "swagger-ui-react": "^3.28.0"
   },
   "scripts": {
     "start": "react-scripts start",

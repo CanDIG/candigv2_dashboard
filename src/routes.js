@@ -24,7 +24,6 @@ import CustomVisualization from './views/CustomVisualization';
 import GwasBrowser from './views/GwasBrowser';
 import HtsgetBrowser from './views/HtsgetBrowser';
 import VcfBrowser from './views/VcfBrowser';
-// import TableList from "./views/MetadataTableApp";
 import ChordTable from './views/ChordTableApp';
 import IndividualsOverview from './views/IndividualsOverview';
 import VariantsSearch from './views/VariantsSearch';
@@ -94,13 +93,6 @@ const routes = [
     component: CustomVisualization,
     layout: '/v2/dashboard',
   },
-  // {
-  //   path: "/tables",
-  //   name: "Clinical Metadata",
-  //   icon: "nc-icon nc-single-copy-04",
-  //   component: TableList,
-  //   layout: "/dashboard",
-  // },
   {
     path: '/clinical_data',
     name: 'Clinical Data',
