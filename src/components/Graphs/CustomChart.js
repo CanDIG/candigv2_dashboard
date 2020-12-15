@@ -6,7 +6,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import { notify, NotificationAlert } from '../../utils/alert';
-import { getCounts } from '../../api/api';
+import { getCountsFederation } from '../../api/api';
+import {mergeFederatedResults} from '../../utils/utils'
 
 function splitString(newString) {
   const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -74,9 +75,12 @@ function CustomChart({
 
   useEffect(() => {
     if (datasetId) {
-      getCounts(datasetId, table, field)
+      getCountsFederation(datasetId, table, field)
         .then((data) => {
+          console.log("data", data)
           if (data) {
+            const merged = mergeFederatedResults(data)
+            console.log("merged", merged)
             if (!data.results[table][0]) {
               throw new Error();
             }

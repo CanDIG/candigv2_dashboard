@@ -5,9 +5,11 @@ import {
 } from 'reactstrap';
 
 import VariantsTable from '../components/Tables/VariantsTable';
-import { searchVariant } from '../api/api';
+import { searchVariantFederation } from '../api/api';
 
 import { notify, NotificationAlert } from '../utils/alert';
+
+import { mergeFederatedResults } from '../utils/utils'
 
 import '../assets/css/VariantsSearch.css';
 
@@ -20,10 +22,11 @@ function VariantsSearch({ datasetId }) {
     e.preventDefault(); // Prevent form submission
 
     // searchVariant(datasetId, e.target.start.value, e.target.end.value,)
-    searchVariant(datasetId, e.target.start.value, e.target.end.value, e.target.referenceName.value)
+    searchVariantFederation(datasetId, e.target.start.value, e.target.end.value, e.target.referenceName.value)
       .then((data) => {
         setDisplayVariantsTable(true);
-        setRowData(data.results.variants);
+        const merged = mergeFederatedResults(data)
+        setRowData(merged[0].variants);
       }).catch(() => {
         setRowData([]);
         setDisplayVariantsTable(false);
