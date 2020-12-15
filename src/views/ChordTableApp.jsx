@@ -13,7 +13,7 @@ import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
 import { fetchIndividualsFederation } from '../api/api';
-import {mergeFederatedResults} from '../utils/utils'
+import { mergeFederatedResults } from '../utils/utils';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -33,6 +33,21 @@ function CreateColumns(columnNames, setState) {
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
+}
+
+function announceEmpty(activeID, category, notifyEl) {
+  try {
+    if (activeID) {
+      notify(
+        notifyEl,
+        `Individual ${activeID} does not have any ${category} data associated with it`,
+        'warning',
+      );
+    }
+  } catch (error) {
+    // Notify ref will be null the first time this function runs so we need to silence the TypeError
+  }
+  return [];
 }
 
 function TableApp({ updateState }) {
@@ -68,16 +83,15 @@ function TableApp({ updateState }) {
 
   useEffect(() => {
     updateState({ datasetVisible: false });
-  }, [updateState])
+  }, [updateState]);
 
   useEffect(() => {
     // fetch data
     try {
-
       trackPromise(
         fetchIndividualsFederation()
           .then((dataResponse) => {
-            const merged = mergeFederatedResults(dataResponse)
+            const merged = mergeFederatedResults(dataResponse);
             const [dataset, phenopacket] = ProcessMetadata(merged);
             setData(dataset);
             setPhenopackets(phenopacket);
@@ -222,15 +236,15 @@ function TableApp({ updateState }) {
   const columnsM = React.useMemo(() => columns, [columns]);
 
   let dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
-  dataD = (typeof dataD === 'undefined') ? [] : dataD;
+  dataD = ((typeof dataD === 'undefined') || !dataD.length) ? announceEmpty(activeID, 'Disease', notifyEl) : dataD;
   const columnsD = React.useMemo(() => diseaseTableColumns, [diseaseTableColumns]);
 
   let dataS = React.useMemo(() => symptomsTableData, [symptomsTableData]);
-  dataS = (typeof dataS === 'undefined') ? [] : dataS;
+  dataS = ((typeof dataS === 'undefined') || !dataS.length) ? announceEmpty(activeID, 'Symptom', notifyEl) : dataS;
   const columnsS = React.useMemo(() => symptomsTableColumns, [symptomsTableColumns]);
 
   let dataC = React.useMemo(() => complicationsTableData, [complicationsTableData]);
-  dataC = (typeof dataC === 'undefined') ? [] : dataC;
+  dataC = ((typeof dataC === 'undefined') || !dataC.length) ? announceEmpty(activeID, 'Complication', notifyEl) : dataC;
   const columnsC = React.useMemo(() => complicationsTableColumns, [complicationsTableColumns]);
 
   return (

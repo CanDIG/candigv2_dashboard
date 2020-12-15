@@ -1,7 +1,7 @@
 // Wrapper function to access nested objects
 // returns an empty string if it doesn't exist
 
-const schemaFxn = (fxn, fallback = '') => {
+export const schemaFxn = (fxn, fallback = '') => {
   try {
     return fxn();
   } catch (error) {
