@@ -7,7 +7,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 import { notify, NotificationAlert } from '../../utils/alert';
 import { getCountsFederation } from '../../api/api';
-import {mergeFederatedResults} from '../../utils/utils'
+import { mergeFederatedResults } from '../../utils/utils';
 
 function splitString(newString) {
   const splitted = newString.replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -77,14 +77,12 @@ function CustomChart({
     if (datasetId) {
       getCountsFederation(datasetId, table, field)
         .then((data) => {
-          console.log("data", data)
           if (data) {
-            const merged = mergeFederatedResults(data)
-            console.log("merged", merged)
             if (!data.results[table][0]) {
               throw new Error();
             }
-            const result = data.results[table][0][field];
+            const merged = mergeFederatedResults(data);
+            const result = merged[0].table.field;
             if (chartType === 'pie') {
               const graphData = processDataForPieChart(result);
               dispatchChartOptions({

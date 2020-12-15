@@ -1,19 +1,19 @@
 import BASE_URL, {
   CHORD_METADATA_URL,
   FEDERATION_URL,
-} from "../constants/constants";
+} from '../constants/constants';
 
 function fetchIndividualsFederation() {
   return fetch(FEDERATION_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      request_type: "GET",
-      endpoint_path: "api/individuals?page_size=10000",
+      request_type: 'GET',
+      endpoint_path: 'api/individuals?page_size=10000',
       endpoint_payload: {},
-      endpoint_service: "katsu",
+      endpoint_service: 'katsu',
     }),
   }).then((response) => {
     if (response.ok) {
@@ -25,15 +25,15 @@ function fetchIndividualsFederation() {
 
 function fetchIndividualsFederationWithParams(patientParams) {
   return fetch(FEDERATION_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      request_type: "GET",
+      request_type: 'GET',
       endpoint_path: `api/individuals?${patientParams}`,
       endpoint_payload: {},
-      endpoint_service: "katsu",
+      endpoint_service: 'katsu',
     }),
   }).then((response) => {
     if (response.ok) {
@@ -48,9 +48,9 @@ Fetch individuals from CHORD Metadata service and returns a promise
 */
 function fetchIndividuals() {
   return fetch(`${CHORD_METADATA_URL}/api/individuals?page_size=10000`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   }).then((response) => {
     if (response.ok) {
@@ -65,15 +65,15 @@ Fetch datasets from Federation Service endpoint and returns a promise
 */
 function fetchDatasetsFederation() {
   return fetch(FEDERATION_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      request_type: "POST",
-      endpoint_path: "datasets/search",
+      request_type: 'POST',
+      endpoint_path: 'datasets/search',
       endpoint_payload: {},
-      endpoint_service: "candig-server",
+      endpoint_service: 'candig-server',
     }),
   }).then((response) => {
     if (response.ok) {
@@ -107,35 +107,34 @@ function getCountsFederation(datasetId, table, field) {
   const payload = JSON.stringify({
     dataset_id: datasetId,
     logic: {
-      id: "A",
+      id: 'A',
     },
     components: [
       {
-        id: "A",
+        id: 'A',
         patients: {},
       },
     ],
     results: [
       {
-        table: table,
+        table,
         fields: temp,
       },
     ],
-  })
+  });
 
   return fetch(FEDERATION_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      request_type: "POST",
-      endpoint_service: "candig-server",
-      endpoint_path: "count",
+      request_type: 'POST',
+      endpoint_service: 'candig-server',
+      endpoint_path: 'count',
       endpoint_payload: payload,
     }),
   }).then((response) => {
-    console.log("response", response)
     if (response.ok) {
       return response.json();
     }
@@ -145,23 +144,22 @@ function getCountsFederation(datasetId, table, field) {
 
 function searchVariantFederation(datasetId, start, end, referenceName) {
   return fetch(FEDERATION_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      request_type: "POST",
-      endpoint_path: "variants/search",
+      request_type: 'POST',
+      endpoint_path: 'variants/search',
       endpoint_payload: JSON.stringify({
         start,
         end,
         referenceName,
         datasetId,
       }),
-      endpoint_service: "candig-server",
+      endpoint_service: 'candig-server',
     }),
   }).then((response) => {
-    console.log("response", response)
     if (response.ok) {
       return response.json();
     }
@@ -178,8 +176,8 @@ Fetch variant for a specific Dataset Id; start; and reference name; and returns 
 */
 function searchVariant(datasetId, start, end, referenceName) {
   return fetch(`${BASE_URL}/variants/search`, {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       start,
       end,
@@ -200,15 +198,15 @@ function searchSymptom(symptom) {
   }
 
   return fetch(FEDERATION_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      request_type: "GET",
+      request_type: 'GET',
       endpoint_path: `api/phenopackets?found_phenotypic_feature=${symptom}&page_size=10000`,
       endpoint_payload: {},
-      endpoint_service: "katsu",
+      endpoint_service: 'katsu',
     }),
   }).then((response) => {
     if (response.ok) {

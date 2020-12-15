@@ -9,7 +9,7 @@ import { searchVariantFederation } from '../api/api';
 
 import { notify, NotificationAlert } from '../utils/alert';
 
-import { mergeFederatedResults } from '../utils/utils'
+import { mergeFederatedResults } from '../utils/utils';
 
 import '../assets/css/VariantsSearch.css';
 
@@ -25,7 +25,7 @@ function VariantsSearch({ datasetId }) {
     searchVariantFederation(datasetId, e.target.start.value, e.target.end.value, e.target.referenceName.value)
       .then((data) => {
         setDisplayVariantsTable(true);
-        const merged = mergeFederatedResults(data)
+        const merged = mergeFederatedResults(data);
         setRowData(merged[0].variants);
       }).catch(() => {
         setRowData([]);

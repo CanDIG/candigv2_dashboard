@@ -7,7 +7,7 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import { fetchDatasetsFederation } from '../../api/api';
-import { mergeFederatedResults } from '../../utils/utils'
+import { mergeFederatedResults } from '../../utils/utils';
 
 /*
  * Dropdown component listing all the available Datasets
@@ -63,7 +63,7 @@ function DatasetsDropdown({ updateState }) {
     if (!selectedDataset) {
       fetchDatasetsFederation().then((data) => {
         if (isMounted) {
-          const merged = mergeFederatedResults(data)
+          const merged = mergeFederatedResults(data);
           const datasetsList = processDatasetJson(merged[0].datasets);
           setDatasets(datasetsList);
           setFirstDataset(datasetsList);
