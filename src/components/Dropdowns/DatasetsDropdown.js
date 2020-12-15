@@ -73,7 +73,7 @@ function DatasetsDropdown({ updateState }) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [selectedDataset, setFirstDataset]);
 
   /*
    * Update both parent and local components state
