@@ -14,7 +14,6 @@ import { fetchIndividualsFederation } from '../api/api';
 import { mergeFederatedResults } from '../utils/utils';
 import { schemaFxn } from '../components/Processing/ChordSchemas';
 
-
 function groupByExtraProperty(data, property) {
   /**
    * Group by some property under extra property

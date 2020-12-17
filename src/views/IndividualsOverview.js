@@ -16,7 +16,6 @@ import { groupBy, mergeFederatedResults } from '../utils/utils';
 import { fetchIndividualsFederation } from '../api/api';
 import { schemaFxn } from '../components/Processing/ChordSchemas';
 
-
 /*
  * Return a specific extra property grouped by gender
  * @param {data}... Object
