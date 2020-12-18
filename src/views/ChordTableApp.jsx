@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
-  Row, TabContent, TabPane, Nav, NavItem, NavLink,
+  Row, TabContent, TabPane, Nav, NavItem, NavLink, UncontrolledAlert,
 } from 'reactstrap';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,7 +13,7 @@ import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
 import { fetchIndividualsFederation } from '../api/api';
-import {mergeFederatedResults} from '../utils/utils'
+import { mergeFederatedResults } from '../utils/utils';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -34,6 +34,52 @@ function CreateColumns(columnNames, setState) {
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
+
+function MissingAlert({
+  activeID, disease, complication, symptom,
+}) {
+  return (
+    <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false} hidden={(!activeID)}>
+      <span
+        data-notify="icon"
+        className="nc-icon nc-zoom-split"
+      />
+
+      <b>
+        <span>
+          <p>
+            {' '}
+            {`Displaying sub tables for ${activeID}`}
+            {' '}
+          </p>
+          <p hidden={disease}>
+            No disease data associated with selected patient
+          </p>
+          <p hidden={complication}>
+            No complication data associated with selected patient
+          </p>
+          <p hidden={symptom}>
+            No symptom data associated with selected patient
+          </p>
+        </span>
+      </b>
+    </UncontrolledAlert>
+  );
+}
+
+MissingAlert.propTypes = {
+  activeID: PropTypes.string,
+  disease: PropTypes.bool,
+  complication: PropTypes.bool,
+  symptom: PropTypes.bool,
+};
+
+MissingAlert.defaultProps = {
+  activeID: '',
+  disease: true,
+  complication: true,
+  symptom: true,
+};
 
 function TableApp({ updateState }) {
   const [data, setData] = useState([]);
@@ -68,16 +114,15 @@ function TableApp({ updateState }) {
 
   useEffect(() => {
     updateState({ datasetVisible: false });
-  }, [updateState])
+  }, [updateState]);
 
   useEffect(() => {
     // fetch data
     try {
-
       trackPromise(
         fetchIndividualsFederation()
           .then((dataResponse) => {
-            const merged = mergeFederatedResults(dataResponse)
+            const merged = mergeFederatedResults(dataResponse);
             const [dataset, phenopacket] = ProcessMetadata(merged);
             setData(dataset);
             setPhenopackets(phenopacket);
@@ -223,14 +268,17 @@ function TableApp({ updateState }) {
 
   let dataD = React.useMemo(() => diseaseTableData, [diseaseTableData]);
   dataD = (typeof dataD === 'undefined') ? [] : dataD;
+  const diseaseFlag = dataD.length === 0;
   const columnsD = React.useMemo(() => diseaseTableColumns, [diseaseTableColumns]);
 
   let dataS = React.useMemo(() => symptomsTableData, [symptomsTableData]);
   dataS = (typeof dataS === 'undefined') ? [] : dataS;
+  const symptomFlag = dataS.length === 0;
   const columnsS = React.useMemo(() => symptomsTableColumns, [symptomsTableColumns]);
 
   let dataC = React.useMemo(() => complicationsTableData, [complicationsTableData]);
   dataC = (typeof dataC === 'undefined') ? [] : dataC;
+  const complicationFlag = dataC.length === 0;
   const columnsC = React.useMemo(() => complicationsTableColumns, [complicationsTableColumns]);
 
   return (
@@ -238,6 +286,7 @@ function TableApp({ updateState }) {
 
       <Row>
         <NotificationAlert ref={notifyEl} />
+        <MissingAlert activeID={activeID} disease={!diseaseFlag} complication={!complicationFlag} symptom={!symptomFlag} />
       </Row>
 
       <TabStyle>
