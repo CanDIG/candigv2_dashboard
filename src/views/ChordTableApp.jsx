@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect, useState, useRef, useLayoutEffect,
+} from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
   Row, TabContent, TabPane, Nav, NavItem, NavLink, UncontrolledAlert,
@@ -12,7 +14,7 @@ import {
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividualsFederation } from '../api/api';
+import { fetchIndividualsFederation } from '../api/MOCK_api';
 import { mergeFederatedResults } from '../utils/utils';
 
 function CreateColumns(columnNames, setState) {
@@ -143,7 +145,7 @@ function TableApp({ updateState }) {
       );
     } catch (err) {
       // Need better reporting
-
+      // console.log(err);
     }
   }, []);
 
@@ -158,7 +160,7 @@ function TableApp({ updateState }) {
     }
   }, [data]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
       if (activeID) {
         if (diseases[activeID]) {
@@ -181,15 +183,19 @@ function TableApp({ updateState }) {
     }
   }, [activeID, diseases, phenopackets]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
-      CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
+      if (diseaseTableData) {
+        if (diseaseTableData.length > 0) {
+          CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
+        }
+      }
     } catch (err) {
-      // Need better reporting
+      // console.log(err);
     }
   }, [diseaseTableData]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Want to store previously created tables rather than reprocessing them
     // each time the same sub tables are needed
     try {
@@ -216,7 +222,7 @@ function TableApp({ updateState }) {
     }
   }, [activeID, symptomsTable, phenopackets]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Want to store previously created tables rather than reprocessing them
     // each time the same sub tables are needed
 
@@ -244,18 +250,26 @@ function TableApp({ updateState }) {
     }
   }, [activeID, complicationsTable, phenopackets]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
-      CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
+      if (symptomsTableData) {
+        if (symptomsTableData.length > 0) {
+          CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
+        }
+      }
     } catch (err) {
       // Need better reporting
 
     }
   }, [symptomsTableData]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
-      CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
+      if (complicationsTableData) {
+        if (complicationsTableData.length > 0) {
+          CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
+        }
+      }
     } catch (err) {
       // Need better reporting
 
