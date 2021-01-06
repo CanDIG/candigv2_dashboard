@@ -3,19 +3,20 @@ import React, {
 } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
-  Row, TabContent, TabPane, Nav, NavItem, NavLink, UncontrolledAlert,
+  Row, TabContent, TabPane, Nav, NavItem, NavLink, UncontrolledAlert, Col,
 } from 'reactstrap';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { searchSymptom } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
-  ProcessMetadata, ProcessData, diseaseSchema, featureSchema, ProcessFeatures,
+  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessPhenopackets,
 } from '../components/Processing/ChordSchemas';
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividualsFederation } from '../api/MOCK_api';
 import { mergeFederatedResults } from '../utils/utils';
+import SearchBySymptom from '../components/Queries/KatsuSymptoms';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -84,6 +85,7 @@ MissingAlert.defaultProps = {
 };
 
 function TableApp({ updateState }) {
+  const [selectedSymptom, setSelectedSymptom] = useState('');
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
@@ -122,10 +124,10 @@ function TableApp({ updateState }) {
     // fetch data
     try {
       trackPromise(
-        fetchIndividualsFederation()
+        searchSymptom(selectedSymptom)
           .then((dataResponse) => {
             const merged = mergeFederatedResults(dataResponse);
-            const [dataset, phenopacket] = ProcessMetadata(merged);
+            const [dataset, phenopacket] = ProcessPhenopackets(merged);
             setData(dataset);
             setPhenopackets(phenopacket);
             setActiveID('');
@@ -147,7 +149,7 @@ function TableApp({ updateState }) {
       // Need better reporting
       // console.log(err);
     }
-  }, []);
+  }, [selectedSymptom]);
 
   useEffect(() => {
     // Separate Effect since state change is async and columns depends on data
@@ -300,8 +302,37 @@ function TableApp({ updateState }) {
 
       <Row>
         <NotificationAlert ref={notifyEl} />
+        <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+          <span
+            data-notify="icon"
+            className="nc-icon nc-zoom-split"
+          />
+
+          <b>
+            <span>
+              <p> Search for a symptom or fetch all available data. </p>
+              <p>
+                {' '}
+                A table of individuals exhibiting the searched symptom will be generated.
+                Clicking on a row will bring up more tables about the specific individual,
+                including their symptoms and associated diseases.
+              </p>
+            </span>
+          </b>
+        </UncontrolledAlert>
         <MissingAlert activeID={activeID} disease={!diseaseFlag} complication={!complicationFlag} symptom={!symptomFlag} />
       </Row>
+      <Row>
+        <SearchBySymptom
+          setSymptom={setSelectedSymptom}
+          setData={setData}
+          setPhenopackets={setPhenopackets}
+          setActiveID={setActiveID}
+          clearSubTables={clearSubTables}
+        />
+      </Row>
+      <Row><Col>{' '}</Col></Row>
+      <Row><Col>{' '}</Col></Row>
 
       <TabStyle>
         <Nav tabs>

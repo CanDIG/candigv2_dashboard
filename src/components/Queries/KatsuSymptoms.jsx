@@ -22,7 +22,9 @@ import {
   trackPromise,
 } from '../LoadingIndicator/LoadingIndicator';
 
-function SearchBySymptom({ setSymptom }) {
+function SearchBySymptom({
+  setSymptom, setData, setPhenopackets, setActiveID, clearSubTables,
+}) {
   const [search, setSearch] = useState('');
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -30,27 +32,33 @@ function SearchBySymptom({ setSymptom }) {
 
   const notifyEl = useRef(null);
 
+  const getSymptomsAndFillTable = () => {
+    trackPromise(
+      fetchIndividualsFederation()
+        .then((dataResponse) => {
+          const merged = mergeFederatedResults(dataResponse);
+          const [dataset, phenopackets] = ProcessMetadata(merged);
+          setData(dataset);
+          setPhenopackets(phenopackets);
+          setActiveID('');
+          clearSubTables();
+          ProcessSymptoms(phenopackets).then((symptoms) => {
+            setFetchedSuggesions(symptoms);
+          });
+        })
+        .catch(() => {
+          notify(
+            notifyEl,
+            'The resources you requested were not available.',
+            'warning',
+          );
+        }),
+    );
+  };
+
   useEffect(() => {
     try {
-      trackPromise(
-        fetchIndividualsFederation()
-          .then((dataResponse) => {
-            /* eslint-disable */
-            const merged = mergeFederatedResults(dataResponse)
-            const [_, phenopackets] = ProcessMetadata(merged);
-            /* eslint-enable */
-            ProcessSymptoms(phenopackets).then((symptoms) => {
-              setFetchedSuggesions(symptoms);
-            });
-          })
-          .catch(() => {
-            notify(
-              notifyEl,
-              'The resources you requested were not available.',
-              'warning',
-            );
-          }),
-      );
+      getSymptomsAndFillTable();
     } catch (err) {
       // Need error logging
     }
@@ -113,7 +121,9 @@ function SearchBySymptom({ setSymptom }) {
       <Style>
         <NotificationAlert ref={notifyEl} />
 
-        <Col xs="4" />
+        <Col xs="4">
+          <Button onClick={getSymptomsAndFillTable}> All Data</Button>
+        </Col>
         <Col xs="4">
 
           <AutoSuggestStyle>
@@ -139,10 +149,18 @@ function SearchBySymptom({ setSymptom }) {
 
 SearchBySymptom.propTypes = {
   setSymptom: PropTypes.func,
+  setData: PropTypes.func,
+  setPhenopackets: PropTypes.func,
+  setActiveID: PropTypes.func,
+  clearSubTables: PropTypes.func,
 };
 
 SearchBySymptom.defaultProps = {
   setSymptom: () => {},
+  setData: () => {},
+  setPhenopackets: () => {},
+  setActiveID: () => {},
+  clearSubTables: () => {},
 };
 
 export default SearchBySymptom;
