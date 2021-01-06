@@ -1,5 +1,5 @@
 import React, {
-  useState, useRef, useEffect,
+  useState, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,61 +9,16 @@ import {
 } from 'reactstrap';
 import Autosuggest from 'react-autosuggest';
 import AutoSuggestStyle from '../../assets/css/StyledComponents/AutoSuggestStyled';
-
-import { fetchIndividualsFederation } from '../../api/api';
 import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
-import {
-  ProcessMetadata, ProcessSymptoms,
-} from '../Processing/ChordSchemas';
-import { notify, NotificationAlert } from '../../utils/alert';
-import { mergeFederatedResults } from '../../utils/utils';
-
-import {
-  trackPromise,
-} from '../LoadingIndicator/LoadingIndicator';
+import { NotificationAlert } from '../../utils/alert';
 
 function SearchBySymptom({
-  setSymptom, fetchData, fetchedSuggestions
+  setSymptom, fetchData, fetchedSuggestions,
 }) {
   const [search, setSearch] = useState('');
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  // const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
-
   const notifyEl = useRef(null);
-
-  // const getSymptomsAndFillTable = () => {
-  //   trackPromise(
-  //     fetchIndividualsFederation()
-  //       .then((dataResponse) => {
-  //         const merged = mergeFederatedResults(dataResponse);
-  //         const [dataset, phenopackets] = ProcessMetadata(merged);
-  //         setData(dataset);
-  //         setPhenopackets(phenopackets);
-  //         setActiveID('');
-  //         clearSubTables();
-  //         setActiveTab('1')
-  //         ProcessSymptoms(phenopackets).then((symptoms) => {
-  //           setFetchedSuggesions(symptoms);
-  //         });
-  //       })
-  //       .catch(() => {
-  //         notify(
-  //           notifyEl,
-  //           'The resources you requested were not available.',
-  //           'warning',
-  //         );
-  //       }),
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   try {
-  //     getSymptomsAndFillTable();
-  //   } catch (err) {
-  //     // Need error logging
-  //   }
-  // }, []);
 
   // From https://github.com/moroshko/react-autosuggest#installation
 
@@ -150,18 +105,14 @@ function SearchBySymptom({
 
 SearchBySymptom.propTypes = {
   setSymptom: PropTypes.func,
-  setData: PropTypes.func,
-  setPhenopackets: PropTypes.func,
-  setActiveID: PropTypes.func,
-  clearSubTables: PropTypes.func,
+  fetchData: PropTypes.func,
+  fetchedSuggestions: PropTypes.arrayOf(PropTypes.object),
 };
 
 SearchBySymptom.defaultProps = {
   setSymptom: () => {},
-  setData: () => {},
-  setPhenopackets: () => {},
-  setActiveID: () => {},
-  clearSubTables: () => {},
+  fetchData: () => {},
+  fetchedSuggestions: [],
 };
 
 export default SearchBySymptom;

@@ -27,7 +27,6 @@ import VcfBrowser from './views/VcfBrowser';
 import ChordTable from './views/ChordTableApp';
 import IndividualsOverview from './views/IndividualsOverview';
 import VariantsSearch from './views/VariantsSearch';
-import SearchBySymptom from './views/Symptoms';
 
 const routes = [
   {
@@ -98,13 +97,6 @@ const routes = [
     name: 'Clinical Data',
     icon: 'nc-icon nc-tile-56',
     component: ChordTable,
-    layout: '/v2/dashboard',
-  },
-  {
-    path: '/symptom_search',
-    name: 'Symptom Search',
-    icon: 'nc-icon nc-tile-56',
-    component: SearchBySymptom,
     layout: '/v2/dashboard',
   },
 ];

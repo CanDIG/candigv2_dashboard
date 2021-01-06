@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useState, useRef, useLayoutEffect,
+  useEffect, useState, useRef, useLayoutEffect, useCallback
 } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { fetchIndividualsFederation } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
-  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessPhenopackets, ProcessSymptoms, ProcessMetadata
+  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessSymptoms, ProcessMetadata
 } from '../components/Processing/ChordSchemas';
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
@@ -117,7 +117,7 @@ function TableApp({ updateState }) {
     setComplicationsTableData([]);
   };
 
-  const getSymptomsAndFillTable = () => {
+  const getSymptomsAndFillTable = useCallback(() => {
     trackPromise(
       fetchIndividualsFederation(selectedSymptom)
         .then((dataResponse) => {
@@ -145,7 +145,7 @@ function TableApp({ updateState }) {
           setActiveTab('1')
         }),
     );
-  };
+  }, [selectedSymptom]);
 
   useEffect(() => {
     updateState({ datasetVisible: false });
@@ -154,12 +154,12 @@ function TableApp({ updateState }) {
   useEffect(() => {
     // fetch data
     try {
-      getSymptomsAndFillTable()
+      getSymptomsAndFillTable(selectedSymptom)
     } catch (err) {
       // Need better reporting
       // console.log(err);
     }
-  }, [selectedSymptom]);
+  }, [selectedSymptom, getSymptomsAndFillTable]);
 
   useEffect(() => {
     // Separate Effect since state change is async and columns depends on data
@@ -320,7 +320,7 @@ function TableApp({ updateState }) {
 
           <b>
             <span>
-              <p> Search for a symptom or fetch all available data. </p>
+              <p> CanCOGen Clincal Data. Narrow down data by searching for a symptom.</p>
               <p>
                 {' '}
                 A table of individuals exhibiting the searched symptom will be generated.
