@@ -23,46 +23,47 @@ import {
 } from '../LoadingIndicator/LoadingIndicator';
 
 function SearchBySymptom({
-  setSymptom, setData, setPhenopackets, setActiveID, clearSubTables,
+  setSymptom, fetchData, fetchedSuggestions
 }) {
   const [search, setSearch] = useState('');
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
+  // const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
 
   const notifyEl = useRef(null);
 
-  const getSymptomsAndFillTable = () => {
-    trackPromise(
-      fetchIndividualsFederation()
-        .then((dataResponse) => {
-          const merged = mergeFederatedResults(dataResponse);
-          const [dataset, phenopackets] = ProcessMetadata(merged);
-          setData(dataset);
-          setPhenopackets(phenopackets);
-          setActiveID('');
-          clearSubTables();
-          ProcessSymptoms(phenopackets).then((symptoms) => {
-            setFetchedSuggesions(symptoms);
-          });
-        })
-        .catch(() => {
-          notify(
-            notifyEl,
-            'The resources you requested were not available.',
-            'warning',
-          );
-        }),
-    );
-  };
+  // const getSymptomsAndFillTable = () => {
+  //   trackPromise(
+  //     fetchIndividualsFederation()
+  //       .then((dataResponse) => {
+  //         const merged = mergeFederatedResults(dataResponse);
+  //         const [dataset, phenopackets] = ProcessMetadata(merged);
+  //         setData(dataset);
+  //         setPhenopackets(phenopackets);
+  //         setActiveID('');
+  //         clearSubTables();
+  //         setActiveTab('1')
+  //         ProcessSymptoms(phenopackets).then((symptoms) => {
+  //           setFetchedSuggesions(symptoms);
+  //         });
+  //       })
+  //       .catch(() => {
+  //         notify(
+  //           notifyEl,
+  //           'The resources you requested were not available.',
+  //           'warning',
+  //         );
+  //       }),
+  //   );
+  // };
 
-  useEffect(() => {
-    try {
-      getSymptomsAndFillTable();
-    } catch (err) {
-      // Need error logging
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     getSymptomsAndFillTable();
+  //   } catch (err) {
+  //     // Need error logging
+  //   }
+  // }, []);
 
   // From https://github.com/moroshko/react-autosuggest#installation
 
@@ -122,7 +123,7 @@ function SearchBySymptom({
         <NotificationAlert ref={notifyEl} />
 
         <Col xs="4">
-          <Button onClick={getSymptomsAndFillTable}> All Data</Button>
+          <Button onClick={fetchData}> All Data</Button>
         </Col>
         <Col xs="4">
 

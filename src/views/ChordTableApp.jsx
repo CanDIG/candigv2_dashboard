@@ -7,10 +7,10 @@ import {
 } from 'reactstrap';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { searchSymptom } from '../api/api';
+import { fetchIndividualsFederation } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
-  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessPhenopackets,
+  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessPhenopackets, ProcessSymptoms, ProcessMetadata
 } from '../components/Processing/ChordSchemas';
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
@@ -100,6 +100,7 @@ function TableApp({ updateState }) {
   const [symptomsTableColumns, setSymptomsTableColumns] = useState([]);
   const [complicationsTableData, setComplicationsTableData] = useState([]);
   const [complicationsTableColumns, setComplicationsTableColumns] = useState([]);
+  const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
 
   const { promiseInProgress } = usePromiseTracker();
   const [activeTab, setActiveTab] = useState('1');
@@ -116,6 +117,36 @@ function TableApp({ updateState }) {
     setComplicationsTableData([]);
   };
 
+  const getSymptomsAndFillTable = () => {
+    trackPromise(
+      fetchIndividualsFederation(selectedSymptom)
+        .then((dataResponse) => {
+          const merged = mergeFederatedResults(dataResponse);
+          const [dataset, phenopackets] = ProcessMetadata(merged);
+          setData(dataset);
+          setPhenopackets(phenopackets);
+          setActiveID('');
+          clearSubTables();
+          setActiveTab('1')
+          ProcessSymptoms(phenopackets).then((symptoms) => {
+            setFetchedSuggesions(symptoms);
+          });
+        })
+        .catch(() => {
+          notify(
+            notifyEl,
+            'The resources you requested were not available.',
+            'warning',
+          );
+          setData([]);
+          setPhenopackets([]);
+          setActiveID('');
+          clearSubTables();
+          setActiveTab('1')
+        }),
+    );
+  };
+
   useEffect(() => {
     updateState({ datasetVisible: false });
   }, [updateState]);
@@ -123,28 +154,7 @@ function TableApp({ updateState }) {
   useEffect(() => {
     // fetch data
     try {
-      trackPromise(
-        searchSymptom(selectedSymptom)
-          .then((dataResponse) => {
-            const merged = mergeFederatedResults(dataResponse);
-            const [dataset, phenopacket] = ProcessPhenopackets(merged);
-            setData(dataset);
-            setPhenopackets(phenopacket);
-            setActiveID('');
-            clearSubTables();
-          })
-          .catch(() => {
-            notify(
-              notifyEl,
-              'The resources you requested were not available.',
-              'warning',
-            );
-            setData([]);
-            setPhenopackets([]);
-            setActiveID('');
-            clearSubTables();
-          }),
-      );
+      getSymptomsAndFillTable()
     } catch (err) {
       // Need better reporting
       // console.log(err);
@@ -325,10 +335,8 @@ function TableApp({ updateState }) {
       <Row>
         <SearchBySymptom
           setSymptom={setSelectedSymptom}
-          setData={setData}
-          setPhenopackets={setPhenopackets}
-          setActiveID={setActiveID}
-          clearSubTables={clearSubTables}
+          fetchData={getSymptomsAndFillTable}
+          fetchedSuggestions={fetchedSuggestions}
         />
       </Row>
       <Row><Col>{' '}</Col></Row>

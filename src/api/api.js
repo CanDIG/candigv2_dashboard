@@ -3,7 +3,27 @@ import BASE_URL, {
   FEDERATION_URL,
 } from '../constants/constants';
 
-function fetchIndividualsFederation() {
+function fetchIndividualsFederation(symptom) {
+  if (!symptom || symptom.length === 0) {
+    return fetch(FEDERATION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        request_type: 'GET',
+        endpoint_path: 'api/individuals?page_size=10000',
+        endpoint_payload: {},
+        endpoint_service: 'katsu',
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return {};
+    });
+  }
+
   return fetch(FEDERATION_URL, {
     method: 'POST',
     headers: {
@@ -11,7 +31,7 @@ function fetchIndividualsFederation() {
     },
     body: JSON.stringify({
       request_type: 'GET',
-      endpoint_path: 'api/individuals?page_size=10000',
+      endpoint_path: `api/individuals?found_phenotypic_feature=${symptom}&page_size=10000`,
       endpoint_payload: {},
       endpoint_service: 'katsu',
     }),
@@ -22,6 +42,8 @@ function fetchIndividualsFederation() {
     return {};
   });
 }
+
+
 
 function fetchIndividualsFederationWithParams(patientParams) {
   return fetch(FEDERATION_URL, {
