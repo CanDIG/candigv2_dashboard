@@ -23,6 +23,7 @@ function TableHeader({ headerGroups, getColumnSortSymbol, getGroupedSymbol }) {
           {headerGroup.headers.map((column) => (
             <th scope="row" {...column.getHeaderProps()} className={column.id}>
               <table>
+                <tbody>
                 <tr>
                   <th>
                     {column.canGroupBy ? (
@@ -51,6 +52,7 @@ function TableHeader({ headerGroups, getColumnSortSymbol, getGroupedSymbol }) {
                     </div>
                   </th>
                 </tr>
+                </tbody>
               </table>
 
               {/* Render the columns filter UI */}

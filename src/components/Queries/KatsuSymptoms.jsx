@@ -1,5 +1,5 @@
 import React, {
-  useState, useRef, useEffect,
+  useState, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,52 +9,16 @@ import {
 } from 'reactstrap';
 import Autosuggest from 'react-autosuggest';
 import AutoSuggestStyle from '../../assets/css/StyledComponents/AutoSuggestStyled';
-
-import { fetchIndividualsFederation } from '../../api/api';
 import Style from '../../assets/css/StyledComponents/ColumnControlStyled';
-import {
-  ProcessMetadata, ProcessSymptoms,
-} from '../Processing/ChordSchemas';
-import { notify, NotificationAlert } from '../../utils/alert';
-import { mergeFederatedResults } from '../../utils/utils';
+import { NotificationAlert } from '../../utils/alert';
 
-import {
-  trackPromise,
-} from '../LoadingIndicator/LoadingIndicator';
-
-function SearchBySymptom({ setSymptom }) {
+function SearchBySymptom({
+  setSymptom, fetchData, fetchedSuggestions,
+}) {
   const [search, setSearch] = useState('');
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
-
   const notifyEl = useRef(null);
-
-  useEffect(() => {
-    try {
-      trackPromise(
-        fetchIndividualsFederation()
-          .then((dataResponse) => {
-            /* eslint-disable */
-            const merged = mergeFederatedResults(dataResponse)
-            const [_, phenopackets] = ProcessMetadata(merged);
-            /* eslint-enable */
-            ProcessSymptoms(phenopackets).then((symptoms) => {
-              setFetchedSuggesions(symptoms);
-            });
-          })
-          .catch(() => {
-            notify(
-              notifyEl,
-              'The resources you requested were not available.',
-              'warning',
-            );
-          }),
-      );
-    } catch (err) {
-      // Need error logging
-    }
-  }, []);
 
   // From https://github.com/moroshko/react-autosuggest#installation
 
@@ -113,7 +77,9 @@ function SearchBySymptom({ setSymptom }) {
       <Style>
         <NotificationAlert ref={notifyEl} />
 
-        <Col xs="4" />
+        <Col xs="4">
+          <Button onClick={fetchData}> All Data</Button>
+        </Col>
         <Col xs="4">
 
           <AutoSuggestStyle>
@@ -139,10 +105,14 @@ function SearchBySymptom({ setSymptom }) {
 
 SearchBySymptom.propTypes = {
   setSymptom: PropTypes.func,
+  fetchData: PropTypes.func,
+  fetchedSuggestions: PropTypes.arrayOf(PropTypes.object),
 };
 
 SearchBySymptom.defaultProps = {
   setSymptom: () => {},
+  fetchData: () => {},
+  fetchedSuggestions: [],
 };
 
 export default SearchBySymptom;

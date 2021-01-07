@@ -1,19 +1,22 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect, useState, useRef, useLayoutEffect, useCallback
+} from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
-  Row, TabContent, TabPane, Nav, NavItem, NavLink, UncontrolledAlert,
+  Row, TabContent, TabPane, Nav, NavItem, NavLink, UncontrolledAlert, Col,
 } from 'reactstrap';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { fetchIndividualsFederation } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
-  ProcessMetadata, ProcessData, diseaseSchema, featureSchema, ProcessFeatures,
+  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessSymptoms, ProcessMetadata
 } from '../components/Processing/ChordSchemas';
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../utils/alert';
-import { fetchIndividualsFederation } from '../api/api';
 import { mergeFederatedResults } from '../utils/utils';
+import SearchBySymptom from '../components/Queries/KatsuSymptoms';
 
 function CreateColumns(columnNames, setState) {
   const columnList = [];
@@ -82,6 +85,7 @@ MissingAlert.defaultProps = {
 };
 
 function TableApp({ updateState }) {
+  const [selectedSymptom, setSelectedSymptom] = useState('');
   const [data, setData] = useState([]);
   const [phenopackets, setPhenopackets] = useState({});
   const [columns, setColumns] = useState([]);
@@ -96,6 +100,7 @@ function TableApp({ updateState }) {
   const [symptomsTableColumns, setSymptomsTableColumns] = useState([]);
   const [complicationsTableData, setComplicationsTableData] = useState([]);
   const [complicationsTableColumns, setComplicationsTableColumns] = useState([]);
+  const [fetchedSuggestions, setFetchedSuggesions] = useState([]);
 
   const { promiseInProgress } = usePromiseTracker();
   const [activeTab, setActiveTab] = useState('1');
@@ -112,6 +117,36 @@ function TableApp({ updateState }) {
     setComplicationsTableData([]);
   };
 
+  const getSymptomsAndFillTable = useCallback(() => {
+    trackPromise(
+      fetchIndividualsFederation(selectedSymptom)
+        .then((dataResponse) => {
+          const merged = mergeFederatedResults(dataResponse);
+          const [dataset, phenopackets] = ProcessMetadata(merged);
+          setData(dataset);
+          setPhenopackets(phenopackets);
+          setActiveID('');
+          clearSubTables();
+          setActiveTab('1')
+          ProcessSymptoms(phenopackets).then((symptoms) => {
+            setFetchedSuggesions(symptoms);
+          });
+        })
+        .catch(() => {
+          notify(
+            notifyEl,
+            'The resources you requested were not available.',
+            'warning',
+          );
+          setData([]);
+          setPhenopackets([]);
+          setActiveID('');
+          clearSubTables();
+          setActiveTab('1')
+        }),
+    );
+  }, [selectedSymptom]);
+
   useEffect(() => {
     updateState({ datasetVisible: false });
   }, [updateState]);
@@ -119,33 +154,12 @@ function TableApp({ updateState }) {
   useEffect(() => {
     // fetch data
     try {
-      trackPromise(
-        fetchIndividualsFederation()
-          .then((dataResponse) => {
-            const merged = mergeFederatedResults(dataResponse);
-            const [dataset, phenopacket] = ProcessMetadata(merged);
-            setData(dataset);
-            setPhenopackets(phenopacket);
-            setActiveID('');
-            clearSubTables();
-          })
-          .catch(() => {
-            notify(
-              notifyEl,
-              'The resources you requested were not available.',
-              'warning',
-            );
-            setData([]);
-            setPhenopackets([]);
-            setActiveID('');
-            clearSubTables();
-          }),
-      );
+      getSymptomsAndFillTable(selectedSymptom)
     } catch (err) {
       // Need better reporting
-
+      // console.log(err);
     }
-  }, []);
+  }, [selectedSymptom, getSymptomsAndFillTable]);
 
   useEffect(() => {
     // Separate Effect since state change is async and columns depends on data
@@ -158,7 +172,7 @@ function TableApp({ updateState }) {
     }
   }, [data]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
       if (activeID) {
         if (diseases[activeID]) {
@@ -181,15 +195,19 @@ function TableApp({ updateState }) {
     }
   }, [activeID, diseases, phenopackets]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
-      CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
+      if (diseaseTableData) {
+        if (diseaseTableData.length > 0) {
+          CreateColumns(Object.keys(diseaseTableData[0]), setDiseaseTableColumns);
+        }
+      }
     } catch (err) {
-      // Need better reporting
+      // console.log(err);
     }
   }, [diseaseTableData]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Want to store previously created tables rather than reprocessing them
     // each time the same sub tables are needed
     try {
@@ -216,7 +234,7 @@ function TableApp({ updateState }) {
     }
   }, [activeID, symptomsTable, phenopackets]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Want to store previously created tables rather than reprocessing them
     // each time the same sub tables are needed
 
@@ -244,18 +262,26 @@ function TableApp({ updateState }) {
     }
   }, [activeID, complicationsTable, phenopackets]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
-      CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
+      if (symptomsTableData) {
+        if (symptomsTableData.length > 0) {
+          CreateColumns(Object.keys(symptomsTableData[0]), setSymptomsTableColumns);
+        }
+      }
     } catch (err) {
       // Need better reporting
 
     }
   }, [symptomsTableData]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
-      CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
+      if (complicationsTableData) {
+        if (complicationsTableData.length > 0) {
+          CreateColumns(Object.keys(complicationsTableData[0]), setComplicationsTableColumns);
+        }
+      }
     } catch (err) {
       // Need better reporting
 
@@ -286,8 +312,35 @@ function TableApp({ updateState }) {
 
       <Row>
         <NotificationAlert ref={notifyEl} />
+        <UncontrolledAlert color="info" className="ml-auto mr-auto alert-with-icon" fade={false}>
+          <span
+            data-notify="icon"
+            className="nc-icon nc-zoom-split"
+          />
+
+          <b>
+            <span>
+              <p> CanCOGen Clincal Data. Narrow down data by searching for a symptom.</p>
+              <p>
+                {' '}
+                A table of individuals exhibiting the searched symptom will be generated.
+                Clicking on a row will bring up more tables about the specific individual,
+                including their symptoms and associated diseases.
+              </p>
+            </span>
+          </b>
+        </UncontrolledAlert>
         <MissingAlert activeID={activeID} disease={!diseaseFlag} complication={!complicationFlag} symptom={!symptomFlag} />
       </Row>
+      <Row>
+        <SearchBySymptom
+          setSymptom={setSelectedSymptom}
+          fetchData={getSymptomsAndFillTable}
+          fetchedSuggestions={fetchedSuggestions}
+        />
+      </Row>
+      <Row><Col>{' '}</Col></Row>
+      <Row><Col>{' '}</Col></Row>
 
       <TabStyle>
         <Nav tabs>
