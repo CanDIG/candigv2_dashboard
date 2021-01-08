@@ -6,7 +6,8 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import { fetchDatasets } from '../../api/api';
+import { fetchDatasetsFederation } from '../../api/api';
+import { mergeFederatedResults } from '../../utils/utils';
 
 /*
  * Dropdown component listing all the available Datasets
@@ -60,9 +61,10 @@ function DatasetsDropdown({ updateState }) {
   useEffect(() => {
     let isMounted = true;
     if (!selectedDataset) {
-      fetchDatasets().then((data) => {
+      fetchDatasetsFederation().then((data) => {
         if (isMounted) {
-          const datasetsList = processDatasetJson(data.results.datasets);
+          const merged = mergeFederatedResults(data);
+          const datasetsList = processDatasetJson(merged[0].datasets);
           setDatasets(datasetsList);
           setFirstDataset(datasetsList);
         }

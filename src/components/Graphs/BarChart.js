@@ -5,7 +5,8 @@ import HighchartsReact from 'highcharts-react-official';
 
 import LoadingIndicator, { trackPromise, usePromiseTracker } from '../LoadingIndicator/LoadingIndicator';
 import { notify, NotificationAlert } from '../../utils/alert';
-import { getCounts } from '../../api/api';
+import { getCountsFederation } from '../../api/api';
+import { mergeFederatedResults } from '../../utils/utils';
 
 // Hook
 // Used to keep the previous value of a state or prop
@@ -106,12 +107,13 @@ function BarChart({
 
   useEffect(() => {
     if (prevDatasetId !== datasetId && datasetId) {
-      trackPromise(getCounts(datasetId, table, field)
+      trackPromise(getCountsFederation(datasetId, table, field)
         .then((data) => {
-          if (!data.results[table][0]) {
+          if (!data.results[0].results[table][0]) {
             throw new Error();
           }
-          const [categories, dataList] = processCounts(data.results[table][0][field]);
+          const merged = mergeFederatedResults(data);
+          const [categories, dataList] = processCounts(merged[0][table][0][field]);
           createChart(dataList, categories);
         }).catch(() => {
           createChart([], []);
