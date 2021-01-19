@@ -30,7 +30,6 @@
         "react/jsx-props-no-spreading": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "max-len": "off",
-        "linebreak-style": ["error", "windows"],
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
         "jest/no-identical-title": "error",
