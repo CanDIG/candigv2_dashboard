@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useState, useRef, useLayoutEffect, useCallback
+  useEffect, useState, useRef, useLayoutEffect, useCallback,
 } from 'react';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import {
@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { fetchIndividualsFederation } from '../api/api';
 import ClinMetadataTable from '../components/Tables/ClinMetadataTable';
 import {
-  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessSymptoms, ProcessMetadata
+  ProcessData, diseaseSchema, featureSchema, ProcessFeatures, ProcessSymptoms, ProcessMetadata,
 } from '../components/Processing/ChordSchemas';
 import TabStyle from '../assets/css/StyledComponents/TabStyled';
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
@@ -122,13 +122,13 @@ function TableApp({ updateState }) {
       fetchIndividualsFederation(selectedSymptom)
         .then((dataResponse) => {
           const merged = mergeFederatedResults(dataResponse);
-          const [dataset, phenopackets] = ProcessMetadata(merged);
+          const [dataset, phenopacket] = ProcessMetadata(merged);
           setData(dataset);
-          setPhenopackets(phenopackets);
+          setPhenopackets(phenopacket);
           setActiveID('');
           clearSubTables();
-          setActiveTab('1')
-          ProcessSymptoms(phenopackets).then((symptoms) => {
+          setActiveTab('1');
+          ProcessSymptoms(phenopacket).then((symptoms) => {
             setFetchedSuggesions(symptoms);
           });
         })
@@ -142,7 +142,7 @@ function TableApp({ updateState }) {
           setPhenopackets([]);
           setActiveID('');
           clearSubTables();
-          setActiveTab('1')
+          setActiveTab('1');
         }),
     );
   }, [selectedSymptom]);
@@ -154,7 +154,7 @@ function TableApp({ updateState }) {
   useEffect(() => {
     // fetch data
     try {
-      getSymptomsAndFillTable(selectedSymptom)
+      getSymptomsAndFillTable(selectedSymptom);
     } catch (err) {
       // Need better reporting
       // console.log(err);

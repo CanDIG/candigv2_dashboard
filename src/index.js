@@ -25,8 +25,10 @@ const hist = createBrowserHistory();
 ReactDOM.render(
   <SideBar>
   <Router history={hist}>
+  <Redirect from="/" to="/dashboard/overview" />
+
   <Switch>
-    <Route exact path="/v2/dashboard" render={() => <Redirect to="/v2/dashboard/overview" />} />
+    <Route exact path="/dashboard" render={() => <Redirect to="/dashboard/overview" />} />
         {routes.map((prop, key) => {
           return (
             <Route

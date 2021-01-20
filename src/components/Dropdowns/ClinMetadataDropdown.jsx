@@ -18,7 +18,7 @@ function ClinMetadataDropdown({ metadataCallback, isActive }) {
     metadataCallback(entry);
   };
 
-  //TODO: Fix selected update to reflect chosen dataset
+  // TODO: Fix selected update to reflect chosen dataset
 
   const metadataList = [];
   CLIN_METADATA.forEach((entry) => {
