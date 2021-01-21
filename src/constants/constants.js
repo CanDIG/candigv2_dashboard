@@ -9,7 +9,7 @@ export const CHORD_METADATA_URL = process.env.REACT_APP_METADATA_URL;
 export const DRS = process.env.REACT_APP_DRS_URL;
 export const FEDERATION_URL = process.env.REACT_APP_FEDERATION_URL;
 export const HTSGET_URL = process.env.REACT_APP_HTSGET_URL;
-
+export const LOCATION = process.env.REACT_APP_LOCATION;
 export const CLIN_METADATA = [
   'celltransplants',
   'chemotherapies',
