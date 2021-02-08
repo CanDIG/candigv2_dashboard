@@ -27,12 +27,19 @@ import { LOCATION } from "constants/constants";
 let site = '/';
 (LOCATION == "GSC") ? (site = "/v2") : (site = '');
 const hist = createBrowserHistory();
+console.log(LOCATION)
+console.log(site)
 ReactDOM.render(
   <SideBar>
   <BrowserRouter history={hist} basename={site}>
-  <Redirect from="/" to={`dashboard/overview`} />
+  {/* <Redirect from="/" to={`dashboard/overview`} /> */}
+
+
 
   <Switch>
+    <Route exact path="/">
+      <Redirect to="/dashboard/overview"></Redirect>
+    </Route>
     <Route exact path="/dashboard" render={() => <Redirect to="/dashboard/overview" />} />
         {routes.map((prop, key) => {
           return (
