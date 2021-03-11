@@ -13,7 +13,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Router, BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import SideBar from "assets/css/StyledComponents/SideBarStyled"
 import "bootstrap/dist/css/bootstrap.css";
 import "assets/scss/paper-dashboard.scss?v=1.2.0";
@@ -21,12 +21,26 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import routes from "./routes";
 import AdminLayout from "layouts/Admin.js";
+import { LOCATION } from "constants/constants";
+// import LOCATION from "constants/constants.js";
+
+let site = '/';
+(LOCATION == "GSC") ? (site = "/v2") : (site = '');
 const hist = createBrowserHistory();
+console.log(LOCATION)
+console.log(site)
 ReactDOM.render(
   <SideBar>
-  <Router history={hist}>
+  <BrowserRouter history={hist} basename={site}>
+  {/* <Redirect from="/" to={`dashboard/overview`} /> */}
+
+
+
   <Switch>
-    <Route exact path="/v2/dashboard" render={() => <Redirect to="/v2/dashboard/overview" />} />
+    <Route exact path="/">
+      <Redirect to="/dashboard/overview"></Redirect>
+    </Route>
+    <Route exact path="/dashboard" render={() => <Redirect to="/dashboard/overview" />} />
         {routes.map((prop, key) => {
           return (
             <Route
@@ -37,7 +51,7 @@ ReactDOM.render(
           );
         })}
     </Switch>
-  </Router>
+  </BrowserRouter>
   </SideBar>,
   document.getElementById("root")
 );

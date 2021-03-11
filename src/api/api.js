@@ -43,8 +43,6 @@ function fetchIndividualsFederation(symptom) {
   });
 }
 
-
-
 function fetchIndividualsFederationWithParams(patientParams) {
   return fetch(FEDERATION_URL, {
     method: 'POST',

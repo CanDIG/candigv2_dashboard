@@ -30,6 +30,13 @@ export REACT_APP_DRS_URL='http://ga4ghdev01.bcgsc.ca:5000'
 export REACT_APP_FEDERATION_URL='http://ga4ghdev01.bcgsc.ca:8890/federation/search'
 ```
 
+**The following variable only needs to be exported for GSC specific deployments to comply with internal routing.**
+Site Specific Environmental Variables:
+```bash
+export REACT_APP_LOCATION='GSC'
+```
+
+
 Once the installation is completed, you may start the dashboard using:
 ```bash
 yarn start
