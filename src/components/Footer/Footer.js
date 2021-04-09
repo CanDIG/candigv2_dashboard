@@ -34,7 +34,7 @@ class Footer extends React.Component {
             <nav className="footer-nav">
               <ul>
                 <li>
-                  <a href="mailto:candig@bcgsc.ca" target="_blank">
+                  <a href="mailto:feedback@distributedgenomics.ca" target="_blank">
                     Contact Us
                   </a>
                 </li>
